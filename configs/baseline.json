@@ -1,0 +1,47 @@
+{
+  "sample_id": "baseline",
+  "laser": {
+    "lambda0_um": 0.8,
+    "I0_Wcm2": 2.0e20,
+    "tau_FWHM_fs": 30.0,
+    "w0_um": 5.0,
+    "incidence": "normal",
+    "polarization": "linear"
+  },
+  "ch_target": {
+    "x_front_um": 15.0,
+    "d_CH_um": 1.0,
+    "electron_density_nc": 200.0,
+    "carbon_density_nc": 28.5714285714,
+    "proton_density_nc": 28.5714285714,
+    "Te_eV": 10.0,
+    "Ti_eV": 10.0,
+    "L_pre_um": 0.2
+  },
+  "epoch2d_tier1": {
+    "x_min_um": 0.0,
+    "x_max_um": 60.0,
+    "y_min_um": -20.0,
+    "y_max_um": 20.0,
+    "dx_um": 0.02,
+    "dy_um": 0.05,
+    "x_diag_um": 50.0,
+    "t_end_fs": 800.0,
+    "ppc_per_species": 16
+  },
+  "geant4": {
+    "source_to_li_front_cm": 1.0,
+    "li_material": "pure_7Li",
+    "li_density_g_cm3": 0.534,
+    "li_radius_cm": 2.0,
+    "D_Li_cm_grid": [0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 3.0],
+    "detector_distance_behind_li_cm": 10.0,
+    "detector_radius_cm": 2.0,
+    "physics_list": "QGSP_BIC_AllHP"
+  },
+  "objectives": {
+    "maximize": "log10(Y_n_exit_per_J)",
+    "minimize": "tau_exit_FWHM_ps"
+  }
+}
+

@@ -1,0 +1,28 @@
+# macOS / external-drive metadata
+._*
+.DS_Store
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Heavy literature and generated outputs
+*.pdf
+runs/
+data/phase_space/
+data/objectives/*.json
+data/objectives/*.tmp
+
+# Simulation build artifacts
+geant4/build/
+epoch/bin/
+epoch/obj/
+
+# Large raw diagnostic outputs
+*.sdf
+*.h5
+*.hdf5
+*.root
+*.vtk
+*.vtu
+
