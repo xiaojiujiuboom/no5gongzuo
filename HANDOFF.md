@@ -23,7 +23,8 @@ minimize  tau_exit_FWHM_ps
 5. most recent CSV/JSON summaries under data/objectives/ if present
 ```
 
-After doing meaningful work, update this file before committing.
+After doing meaningful work, update this file before committing. If a GitHub
+remote is configured, push the new commit to GitHub before ending the session.
 
 ## Compute strategy
 
@@ -116,5 +117,31 @@ Before each commit:
 2. Run available lightweight checks, at minimum:
    python3 -m py_compile analysis/scripts/*.py
 3. Commit only source/config/docs, not PDFs or simulation output.
+4. Push to GitHub if `git remote -v` shows an origin remote.
 ```
 
+## GitHub sync protocol
+
+Current remote status:
+
+```text
+No GitHub remote configured yet.
+```
+
+When a GitHub repository URL is available:
+
+```text
+git remote add origin <github-repo-url>
+git push -u origin main
+```
+
+For future sessions, after each meaningful update:
+
+```text
+1. update HANDOFF.md
+2. run lightweight checks
+3. commit locally
+4. git push origin main
+```
+
+If `origin` is missing, ask for the GitHub repo URL before trying to push.
