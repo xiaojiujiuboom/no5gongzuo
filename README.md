@@ -32,6 +32,7 @@ Tracked content:
 ```text
 configs/                 parameter cards and scan grids
 analysis/scripts/        post-processing and initial-design tools
+geant4/li7_benchmark/    Stage 0 pure 7Li(p,n) benchmark app
 literature_notes/        notes distilled from the PDFs
 project_execution.md     unified execution plan
 HANDOFF.md               latest project state and next actions
@@ -39,3 +40,12 @@ HANDOFF.md               latest project state and next actions
 
 Large outputs, PDFs, phase-space dumps and simulation runs are intentionally ignored by git.
 
+Stage 0 Geant4 benchmark entry point:
+
+```bash
+cmake -S geant4/li7_benchmark -B geant4/build/li7_benchmark
+cmake --build geant4/build/li7_benchmark -j
+python3 geant4/li7_benchmark/scripts/run_stage0_grid.py \
+  --exe geant4/build/li7_benchmark/li7_benchmark \
+  --grid configs/stage0_benchmark_grid.json
+```

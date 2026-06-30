@@ -74,6 +74,10 @@ analysis/scripts/metrics.py
 analysis/scripts/pareto.py
 analysis/scripts/generate_initial_design.py
 data/objectives/objectives_template.csv
+geant4/li7_benchmark/CMakeLists.txt
+geant4/li7_benchmark/src/main.cc
+geant4/li7_benchmark/scripts/run_stage0_grid.py
+geant4/li7_benchmark/scripts/collect_stage0.py
 README.md
 .gitignore
 HANDOFF.md
@@ -81,20 +85,47 @@ HANDOFF.md
 
 ## Environment status
 
-Checked on 2026-06-30:
+Checked on 2026-07-01:
 
 ```text
 mpirun: found at /opt/homebrew/bin/mpirun
 geant4-config: not found in PATH
 cmake: not found in PATH
+Homebrew: found at /opt/homebrew/bin/brew
+Homebrew cmake: not installed
+Homebrew geant4: not installed
 ```
 
 Geant4/CMake need to be installed or added to PATH before the Stage 0 benchmark can run.
 
+## Stage 0 Geant4 benchmark status
+
+Added a headless Geant4 application under:
+
+```text
+geant4/li7_benchmark/
+```
+
+It models:
+
+```text
+monoenergetic proton pencil beam -> pure 7Li cylinder -> neutron birth, Li-rear-exit and detector-plane tallies
+```
+
+The batch runner:
+
+```text
+geant4/li7_benchmark/scripts/run_stage0_grid.py
+```
+
+generates the 7 x 7 benchmark grid from `configs/stage0_benchmark_grid.json`.
+Python syntax and dry-run command generation passed on 2026-07-01. C++ build
+has not been tested yet because CMake/Geant4 are not installed.
+
 ## Next actions
 
 1. Install or expose CMake and Geant4 in PATH.
-2. Build a minimal headless Geant4 application for pure 7Li slab/cylinder.
+2. Build `geant4/li7_benchmark`.
 3. Run the monoenergetic benchmark grid from `configs/stage0_benchmark_grid.json`.
 4. Confirm the 7Li(p,n) threshold behavior:
 
