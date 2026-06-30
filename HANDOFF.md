@@ -1,6 +1,6 @@
 # Handoff: CH-Li EPOCH-Geant4 neutron optimization
 
-Last updated: 2026-06-30
+Last updated: 2026-07-01
 
 ## Current goal
 
@@ -125,7 +125,7 @@ Before each commit:
 Current remote status:
 
 ```text
-No GitHub remote configured yet.
+origin = https://github.com/xiaojiujiuboom/no5gongzuo.git
 ```
 
 When a GitHub repository URL is available:
@@ -145,3 +145,8 @@ For future sessions, after each meaningful update:
 ```
 
 If `origin` is missing, ask for the GitHub repo URL before trying to push.
+The current GitHub repository is:
+
+```text
+https://github.com/xiaojiujiuboom/no5gongzuo
+```
