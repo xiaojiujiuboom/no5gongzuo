@@ -131,10 +131,8 @@ origin = git@github.com:xiaojiujiuboom/no5gongzuo.git
 Push status on 2026-07-01:
 
 ```text
-Blocked by GitHub authentication.
-HTTPS push failed because no username/token credential was available.
-SSH push failed with "Permission denied (publickey)".
-Need a GitHub token/credential helper or an SSH key with access to xiaojiujiuboom/no5gongzuo.
+SSH authentication is working.
+main has been pushed to origin/main.
 ```
 
 When a GitHub repository URL is available:
