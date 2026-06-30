@@ -125,7 +125,16 @@ Before each commit:
 Current remote status:
 
 ```text
-origin = https://github.com/xiaojiujiuboom/no5gongzuo.git
+origin = git@github.com:xiaojiujiuboom/no5gongzuo.git
+```
+
+Push status on 2026-07-01:
+
+```text
+Blocked by GitHub authentication.
+HTTPS push failed because no username/token credential was available.
+SSH push failed with "Permission denied (publickey)".
+Need a GitHub token/credential helper or an SSH key with access to xiaojiujiuboom/no5gongzuo.
 ```
 
 When a GitHub repository URL is available:
@@ -149,4 +158,5 @@ The current GitHub repository is:
 
 ```text
 https://github.com/xiaojiujiuboom/no5gongzuo
+git@github.com:xiaojiujiuboom/no5gongzuo.git
 ```
