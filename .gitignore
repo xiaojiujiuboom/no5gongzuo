@@ -9,6 +9,7 @@ __pycache__/
 # Heavy literature and generated outputs
 *.pdf
 runs/
+local_geant4_data/
 data/phase_space/
 data/objectives/*.json
 data/objectives/*.tmp
@@ -25,4 +26,3 @@ epoch/obj/
 *.root
 *.vtk
 *.vtu
-

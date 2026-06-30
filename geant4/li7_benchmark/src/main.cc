@@ -18,10 +18,12 @@
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
 #include "G4TransportationManager.hh"
+#include "G4Tubs.hh"
 #include "G4Types.hh"
 #include "G4UserEventAction.hh"
 #include "G4UserRunAction.hh"
 #include "G4UserSteppingAction.hh"
+#include "G4VProcess.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4VUserActionInitialization.hh"
 #include "G4VUserDetectorConstruction.hh"
@@ -88,6 +90,16 @@ class Tally {
     AddToHist(detectorHist_, timePs, weight);
   }
 
+  void AddPrimaryLiEntry() { primaryLiEntryCount_ += 1; }
+
+  void AddLiProcess(const std::string& processName) {
+    liProcessCounts_[processName] += 1;
+  }
+
+  void AddLiSecondary(const std::string& particleName) {
+    liSecondaryCounts_[particleName] += 1;
+  }
+
   void Write(const GeometryState& geom) const {
     fs::create_directories(cfg_.outDir);
     WriteHist(fs::path(cfg_.outDir) / "birth_neutron_time_hist.csv", birthHist_);
@@ -124,7 +136,12 @@ class Tally {
         << detectorWeight_ / static_cast<double>(cfg_.events) << ",\n";
     out << "  \"detector_neutron_count\": " << detectorCount_ << ",\n";
     out << "  \"detector_relative_error_approx\": " << detRelErr << ",\n";
-    out << "  \"time_bin_ps\": " << cfg_.timeBinPs << "\n";
+    out << "  \"time_bin_ps\": " << cfg_.timeBinPs << ",\n";
+    out << "  \"primary_li_entry_count\": " << primaryLiEntryCount_ << ",\n";
+    WriteStringCountMap(out, "li_process_counts", liProcessCounts_);
+    out << ",\n";
+    WriteStringCountMap(out, "li_secondary_counts", liSecondaryCounts_);
+    out << "\n";
     out << "}\n";
   }
 
@@ -143,7 +160,28 @@ class Tally {
     }
   }
 
+  void WriteStringCountMap(
+      std::ofstream& out,
+      const std::string& key,
+      const std::map<std::string, long long>& counts) const {
+    out << "  \"" << key << "\": {";
+    if (!counts.empty()) {
+      out << "\n";
+      size_t index = 0;
+      for (const auto& [name, count] : counts) {
+        out << "    \"" << name << "\": " << count;
+        if (++index < counts.size()) {
+          out << ",";
+        }
+        out << "\n";
+      }
+      out << "  ";
+    }
+    out << "}";
+  }
+
   const Config& cfg_;
+  long long primaryLiEntryCount_ = 0;
   long long birthCount_ = 0;
   long long exitCount_ = 0;
   long long detectorCount_ = 0;
@@ -153,6 +191,8 @@ class Tally {
   std::map<long long, double> birthHist_;
   std::map<long long, double> exitHist_;
   std::map<long long, double> detectorHist_;
+  std::map<std::string, long long> liProcessCounts_;
+  std::map<std::string, long long> liSecondaryCounts_;
 };
 
 class DetectorConstruction final : public G4VUserDetectorConstruction {
@@ -265,10 +305,24 @@ class SteppingAction final : public G4UserSteppingAction {
 
     const auto* preVolume = step->GetPreStepPoint()->GetPhysicalVolume();
     const bool inLi = preVolume && preVolume->GetName() == "LiConverter";
+    const double preZ = step->GetPreStepPoint()->GetPosition().z();
+    const double postZ = step->GetPostStepPoint()->GetPosition().z();
+
+    if (particle && particle->GetParticleName() == "proton" &&
+        preZ < geom_.liFrontZ && postZ >= geom_.liFrontZ) {
+      tally_.AddPrimaryLiEntry();
+    }
+
     if (inLi) {
+      const auto* process = step->GetPostStepPoint()->GetProcessDefinedStep();
+      if (process) {
+        tally_.AddLiProcess(process->GetProcessName());
+      }
       const auto* secondaries = step->GetSecondaryInCurrentStep();
       for (const auto* secondary : *secondaries) {
-        if (secondary->GetParticleDefinition()->GetParticleName() == "neutron") {
+        const auto particleName = secondary->GetParticleDefinition()->GetParticleName();
+        tally_.AddLiSecondary(particleName);
+        if (particleName == "neutron") {
           tally_.AddBirth(secondary->GetGlobalTime() / ps, secondary->GetWeight());
         }
       }
@@ -278,8 +332,6 @@ class SteppingAction final : public G4UserSteppingAction {
       return;
     }
 
-    const double preZ = step->GetPreStepPoint()->GetPosition().z();
-    const double postZ = step->GetPostStepPoint()->GetPosition().z();
     const double weight = track->GetWeight();
     const double postTimePs = step->GetPostStepPoint()->GetGlobalTime() / ps;
 

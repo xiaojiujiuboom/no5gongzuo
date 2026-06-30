@@ -49,3 +49,16 @@ python3 geant4/li7_benchmark/scripts/run_stage0_grid.py \
   --exe geant4/build/li7_benchmark/li7_benchmark \
   --grid configs/stage0_benchmark_grid.json
 ```
+
+Local macOS/Conda fallback currently used on this machine:
+
+```bash
+conda run -n no5-geant4 bash geant4/li7_benchmark/scripts/build_with_geant4_config.sh
+conda run -n no5-geant4 python3 geant4/li7_benchmark/scripts/run_stage0_grid.py \
+  --exe geant4/build/li7_benchmark_manual/li7_benchmark \
+  --grid configs/stage0_benchmark_grid.json
+```
+
+The local low-energy 7Li(p,n) benchmark uses `QGSP_BIC_AllHP` plus the optional
+Geant4 `G4TENDL1.4` charged-particle HP dataset. The dataset lives in
+`local_geant4_data/G4TENDL1.4` and is ignored by git.

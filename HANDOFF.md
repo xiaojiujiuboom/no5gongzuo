@@ -76,6 +76,7 @@ analysis/scripts/generate_initial_design.py
 data/objectives/objectives_template.csv
 geant4/li7_benchmark/CMakeLists.txt
 geant4/li7_benchmark/src/main.cc
+geant4/li7_benchmark/scripts/build_with_geant4_config.sh
 geant4/li7_benchmark/scripts/run_stage0_grid.py
 geant4/li7_benchmark/scripts/collect_stage0.py
 README.md
@@ -89,14 +90,34 @@ Checked on 2026-07-01:
 
 ```text
 mpirun: found at /opt/homebrew/bin/mpirun
-geant4-config: not found in PATH
-cmake: not found in PATH
+system PATH geant4-config: not found
+system PATH cmake: not found before install
 Homebrew: found at /opt/homebrew/bin/brew
-Homebrew cmake: not installed
-Homebrew geant4: not installed
+Homebrew cmake: installed at /opt/homebrew/bin/cmake, version 4.3.4
+Homebrew geant4: no formula available
+Conda env no5-geant4: installed
+Conda Geant4: /opt/miniconda3/envs/no5-geant4/bin/geant4-config, version 11.4.2
+Local G4TENDL charged-particle HP data: local_geant4_data/G4TENDL1.4
 ```
 
-Geant4/CMake need to be installed or added to PATH before the Stage 0 benchmark can run.
+The Conda Geant4 runtime works when commands are launched through:
+
+```bash
+conda run -n no5-geant4 <command>
+```
+
+Low-energy 7Li(p,n) requires `QGSP_BIC_AllHP` and `G4PARTICLEHPDATA` pointing to
+the optional Geant4 `G4TENDL1.4` dataset. `QGSP_BIC_HP` runs but did not trigger
+proton inelastic events for this benchmark. `local_geant4_data/` is ignored by
+git.
+
+The CMake route currently finds Geant4 but fails inside Conda's Geant4 CMake
+config because `G4HDF5Shim.cmake` requires HDF5 thread-safety metadata not
+provided by the installed Conda HDF5 package. The working local build path is:
+
+```bash
+conda run -n no5-geant4 bash geant4/li7_benchmark/scripts/build_with_geant4_config.sh
+```
 
 ## Stage 0 Geant4 benchmark status
 
@@ -119,15 +140,58 @@ geant4/li7_benchmark/scripts/run_stage0_grid.py
 ```
 
 generates the 7 x 7 benchmark grid from `configs/stage0_benchmark_grid.json`.
-Python syntax and dry-run command generation passed on 2026-07-01. C++ build
-has not been tested yet because CMake/Geant4 are not installed.
+Python syntax and dry-run command generation passed on 2026-07-01.
+
+Manual `geant4-config` build passed on 2026-07-01:
+
+```text
+geant4/build/li7_benchmark_manual/li7_benchmark
+```
+
+Smoke run passed on 2026-07-01:
+
+```bash
+conda run -n no5-geant4 geant4/build/li7_benchmark_manual/li7_benchmark \
+  --energy-MeV 1.5 \
+  --thickness-cm 0.1 \
+  --events 10 \
+  --out-dir runs/geant4/stage0_smoke/Ep_1p5MeV_DLi_0p1cm \
+  --physics-list QGSP_BIC_HP
+```
+
+The smoke output reported zero neutrons, which is a reasonable threshold sanity
+check for 1.5 MeV protons with only 10 events.
+
+Additional physics smoke tests passed after installing `G4TENDL1.4` locally and
+using `QGSP_BIC_AllHP`:
+
+```text
+5 MeV, 1 cm, 10000 primaries:
+  birth_neutron_count = 12
+  Y_n_exit = 7
+  Y_n_exit_per_primary = 7.0e-4
+
+20 MeV, 1 cm, 10000 primaries:
+  birth_neutron_count = 23
+  Y_n_exit = 15
+  Y_n_exit_per_primary = 1.5e-3
+```
+
+The Geant4 summary now also includes diagnostic fields:
+
+```text
+primary_li_entry_count
+li_process_counts
+li_secondary_counts
+```
+
+These verified that protons enter Li and that `protonInelastic` appears only
+with `QGSP_BIC_AllHP` plus `G4TENDL1.4`.
 
 ## Next actions
 
-1. Install or expose CMake and Geant4 in PATH.
-2. Build `geant4/li7_benchmark`.
-3. Run the monoenergetic benchmark grid from `configs/stage0_benchmark_grid.json`.
-4. Confirm the 7Li(p,n) threshold behavior:
+1. Run the monoenergetic benchmark grid from `configs/stage0_benchmark_grid.json`.
+2. Confirm the 7Li(p,n) threshold behavior:
 
 ```text
 1.5 MeV: nearly zero neutrons
@@ -136,8 +200,8 @@ higher Ep: yield increases reasonably
 larger D_Li: yield rises but tau_exit_FWHM broadens
 ```
 
-5. Then run EPOCH2D Tier 0 smoke and Tier 1 baseline from `configs/baseline.json`.
-6. Export `proton_phase_space.h5` and couple it into Geant4.
+3. Then run EPOCH2D Tier 0 smoke and Tier 1 baseline from `configs/baseline.json`.
+4. Export `proton_phase_space.h5` and couple it into Geant4.
 
 ## Commit protocol
 

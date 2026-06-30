@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -24,6 +25,12 @@ def main() -> None:
     parser.add_argument("--events-key", default="N_primary_debug")
     parser.add_argument("--out-root", type=Path, default=Path("runs/geant4/stage0_benchmark"))
     parser.add_argument("--time-bin-ps", type=float, default=1.0)
+    parser.add_argument(
+        "--particle-hp-data",
+        type=Path,
+        default=Path("local_geant4_data/G4TENDL1.4"),
+        help="Path to G4TENDL ParticleHP data. Used only if it exists.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -37,7 +44,12 @@ def main() -> None:
     detector_gap_cm = float(grid.get("detector_distance_behind_li_cm", 10.0))
 
     if not args.exe.exists() and not args.dry_run:
-      raise FileNotFoundError(f"executable not found: {args.exe}")
+        raise FileNotFoundError(f"executable not found: {args.exe}")
+
+    env = os.environ.copy()
+    if args.particle_hp_data.exists():
+        env.setdefault("G4PARTICLEHPDATA", str(args.particle_hp_data.resolve()))
+        print(f"G4PARTICLEHPDATA={env['G4PARTICLEHPDATA']}", flush=True)
 
     commands: list[list[str]] = []
     for ep in grid["proton_energy_MeV"]:
@@ -63,9 +75,8 @@ def main() -> None:
     for idx, cmd in enumerate(commands, 1):
         print(f"[{idx}/{len(commands)}] {' '.join(cmd)}", flush=True)
         if not args.dry_run:
-            subprocess.run(cmd, check=True)
+            subprocess.run(cmd, check=True, env=env)
 
 
 if __name__ == "__main__":
     main()
-
