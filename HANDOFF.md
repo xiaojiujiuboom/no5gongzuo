@@ -62,6 +62,22 @@ Inner cheap Geant4 scan:
 
 This keeps EPOCH evaluations manageable while still producing five-dimensional candidate points for the final Pareto front.
 
+Scope update after rereading `2604.23913v2.pdf` on 2026-07-01:
+
+```text
+Full Bayesian optimization is optional, not mandatory.
+
+The closest reference paper succeeds with mechanism-guided scans: MWA period P,
+converter material/thickness, and laser intensity, using EPOCH -> Geant4 as the
+integrated workflow. If the project feels too heavy, the recommended lower-risk
+deliverable is a staged scan and trade-off paper:
+
+1. validate Geant4 7Li(p,n) with QGSP_BIC_AllHP + G4TENDL1.4;
+2. run one baseline EPOCH2D CH source, or a small 3-5 point source scan;
+3. scan Li thickness in Geant4;
+4. report yield per joule vs Li-exit FWHM and discuss BO as future work.
+```
+
 ## Files created so far
 
 ```text

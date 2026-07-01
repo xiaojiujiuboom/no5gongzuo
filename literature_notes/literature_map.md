@@ -19,12 +19,16 @@ Project-relevant points:
 5. Separates neutron birth-time duration from converter rear-surface exit-time duration.
 6. Shows converter transport broadens neutron pulse duration from production-time scale to rear-surface exit-time scale.
 7. Reports yield per joule as the central comparison metric.
+8. Optimizes mainly by a physically motivated low-dimensional scan, especially microwire-array period P and converter material/thickness, not by a large black-box BO campaign.
+9. Appendix A confirms QGSP_BIC_AllHP plus TENDL charged-particle data for Geant4 below 200 MeV, matching the local Stage 0 setup.
+10. Their MC coupling treats the 2D PIC ion source as a point source and applies a 2D-to-3D geometric conversion factor, which is a pragmatic simplification we can cite if we avoid full 3D source reconstruction early.
 ```
 
 How to cite/use:
 
 ```text
 Use it to justify the complete PIC-MC chain, the Li-source geometry scale, the use of Geant4 for nuclear conversion, and the choice to measure FWHM at the converter rear surface.
+It also supports a lighter project scope: mechanism-guided scans can be enough, and full Bayesian optimization can be optional rather than mandatory.
 ```
 
 ## `2503.12154v1.pdf`
@@ -72,4 +76,3 @@ How to cite/use:
 ```text
 Use it as an analogy for our CH-Li pitcher-catcher chain, while clearly stating that our reaction is 7Li(p,n) and our secondary observable is neutron yield/FWHM rather than p-B alpha flux.
 ```
-

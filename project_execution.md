@@ -15,6 +15,23 @@ Optimization:
   find Pareto front between neutron yield per laser energy and Li-exit FWHM
 ```
 
+Scope note after rereading `2604.23913v2.pdf` on 2026-07-01:
+
+```text
+Full BO is optional, not mandatory.
+
+The paper's strongest result comes from a mechanism-guided scan rather than a
+large optimizer: identify a proton-source improvement mechanism, scan a small
+number of structural/source settings, and then compare converter material or
+thickness through Geant4. If project fatigue is high, the safer deliverable is:
+
+1. reproduce the EPOCH -> Geant4 workflow;
+2. run a small CH-source or surrogate source scan;
+3. run the Li-thickness Geant4 scan;
+4. report the yield/FWHM trade-off and explain why full optimization is left as
+   future work.
+```
+
 Primary objectives:
 
 ```text
@@ -88,6 +105,8 @@ For this project, it supports:
 3. using Li-exit FWHM as a converter/source pulse metric;
 4. expecting production-time FWHM around 70-100 ps and converter-exit FWHM around 460-670 ps for cm-scale converters under similar femtosecond laser conditions;
 5. using yield per joule as the fair yield metric when laser energy changes.
+6. using QGSP_BIC_AllHP with TENDL charged-particle data for sub-200 MeV proton reactions;
+7. replacing a heavy black-box optimization with a physically motivated low-dimensional scan if needed.
 ```
 
 ### 3.2 `2503.12154v1.pdf`
@@ -158,7 +177,8 @@ Geant4:
   Li radius = 2 cm
   D_Li_cm grid = 0.05, 0.10, 0.20, 0.50, 1.00, 2.00, 3.00
   detector plane = 10 cm behind Li rear surface
-  physics list = QGSP_BIC_AllHP or QGSP_BIC_HP
+  physics list = QGSP_BIC_AllHP
+  charged-particle HP data = G4TENDL1.4
 ```
 
 ## 5. Phase gates
@@ -334,4 +354,3 @@ Use this first-week order:
 7. append all summaries into data/objectives/objectives.csv
 8. run analysis/scripts/pareto.py on the objectives table
 ```
-
