@@ -20,8 +20,12 @@ FIELDS = [
     "exit_relative_error_approx",
     "Y_n_detector_10cm",
     "Y_n_detector_10cm_per_primary",
+    "Y_n_forward_detector",
+    "Y_n_forward_detector_per_primary",
     "detector_neutron_count",
+    "forward_detector_neutron_count",
     "detector_relative_error_approx",
+    "detector_radius_cm",
     "birth_neutron_count",
     "birth_neutron_weight",
     "time_bin_ps",
@@ -53,4 +57,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

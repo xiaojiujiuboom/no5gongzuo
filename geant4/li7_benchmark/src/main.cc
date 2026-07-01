@@ -55,6 +55,7 @@ struct Config {
   double liDensityGcm3 = 0.534;
   double sourceToLiFrontCm = 1.0;
   double detectorDistanceCm = 10.0;
+  double detectorRadiusCm = 2.0;
   double timeBinPs = 1.0;
   long seed = 20260701;
   std::string physicsList = "QGSP_BIC_HP";
@@ -121,6 +122,7 @@ class Tally {
     out << "  \"li_radius_cm\": " << cfg_.liRadiusCm << ",\n";
     out << "  \"source_to_li_front_cm\": " << cfg_.sourceToLiFrontCm << ",\n";
     out << "  \"detector_distance_behind_li_cm\": " << cfg_.detectorDistanceCm << ",\n";
+    out << "  \"detector_radius_cm\": " << cfg_.detectorRadiusCm << ",\n";
     out << "  \"source_z_cm\": " << geom.sourceZ / cm << ",\n";
     out << "  \"li_front_z_cm\": " << geom.liFrontZ / cm << ",\n";
     out << "  \"li_rear_z_cm\": " << geom.liRearZ / cm << ",\n";
@@ -134,7 +136,11 @@ class Tally {
     out << "  \"Y_n_detector_10cm\": " << detectorWeight_ << ",\n";
     out << "  \"Y_n_detector_10cm_per_primary\": "
         << detectorWeight_ / static_cast<double>(cfg_.events) << ",\n";
+    out << "  \"Y_n_forward_detector\": " << detectorWeight_ << ",\n";
+    out << "  \"Y_n_forward_detector_per_primary\": "
+        << detectorWeight_ / static_cast<double>(cfg_.events) << ",\n";
     out << "  \"detector_neutron_count\": " << detectorCount_ << ",\n";
+    out << "  \"forward_detector_neutron_count\": " << detectorCount_ << ",\n";
     out << "  \"detector_relative_error_approx\": " << detRelErr << ",\n";
     out << "  \"time_bin_ps\": " << cfg_.timeBinPs << ",\n";
     out << "  \"primary_li_entry_count\": " << primaryLiEntryCount_ << ",\n";
@@ -295,8 +301,8 @@ class RunAction final : public G4UserRunAction {
 
 class SteppingAction final : public G4UserSteppingAction {
  public:
-  SteppingAction(const GeometryState& geom, Tally& tally, EventAction& eventAction)
-      : geom_(geom), tally_(tally), eventAction_(eventAction) {}
+  SteppingAction(const Config& cfg, const GeometryState& geom, Tally& tally, EventAction& eventAction)
+      : cfg_(cfg), geom_(geom), tally_(tally), eventAction_(eventAction) {}
 
   void UserSteppingAction(const G4Step* step) override {
     const auto* track = step->GetTrack();
@@ -339,13 +345,18 @@ class SteppingAction final : public G4UserSteppingAction {
       tally_.AddExit(postTimePs, weight);
     }
 
+    const auto postPosition = step->GetPostStepPoint()->GetPosition();
+    const double detectorRadius = std::sqrt(
+        postPosition.x() * postPosition.x() + postPosition.y() * postPosition.y());
     if (preZ < geom_.detectorZ && postZ >= geom_.detectorZ &&
+        detectorRadius <= cfg_.detectorRadiusCm * cm &&
         eventAction_.MarkDetector(track->GetTrackID())) {
       tally_.AddDetector(postTimePs, weight);
     }
   }
 
  private:
+  const Config& cfg_;
   const GeometryState& geom_;
   Tally& tally_;
   EventAction& eventAction_;
@@ -361,7 +372,7 @@ class ActionInitialization final : public G4VUserActionInitialization {
     SetUserAction(new PrimaryGenerator(cfg_, geom_));
     SetUserAction(eventAction);
     SetUserAction(new RunAction(geom_, tally_));
-    SetUserAction(new SteppingAction(geom_, tally_, *eventAction));
+    SetUserAction(new SteppingAction(cfg_, geom_, tally_, *eventAction));
   }
 
  private:
@@ -411,6 +422,7 @@ void PrintUsage(const char* argv0) {
       << "  --li-radius-cm VALUE        Li cylinder radius. Default: 2\n"
       << "  --source-gap-cm VALUE       Source to Li front gap. Default: 1\n"
       << "  --detector-gap-cm VALUE     Li rear to detector gap. Default: 10\n"
+      << "  --detector-radius-cm VALUE  Forward detector radius. Default: 2\n"
       << "  --help                      Show this message.\n";
 }
 
@@ -448,13 +460,16 @@ Config ParseArgs(int argc, char** argv) {
       cfg.sourceToLiFrontCm = ParseDouble(requireValue(arg), arg);
     } else if (arg == "--detector-gap-cm") {
       cfg.detectorDistanceCm = ParseDouble(requireValue(arg), arg);
+    } else if (arg == "--detector-radius-cm") {
+      cfg.detectorRadiusCm = ParseDouble(requireValue(arg), arg);
     } else {
       throw std::runtime_error("unknown argument: " + arg);
     }
   }
 
   if (cfg.energyMeV <= 0 || cfg.thicknessCm <= 0 || cfg.liRadiusCm <= 0 ||
-      cfg.sourceToLiFrontCm < 0 || cfg.detectorDistanceCm <= 0 || cfg.timeBinPs <= 0) {
+      cfg.sourceToLiFrontCm < 0 || cfg.detectorDistanceCm <= 0 ||
+      cfg.detectorRadiusCm <= 0 || cfg.timeBinPs <= 0) {
     throw std::runtime_error("all geometry, energy and time-bin values must be positive");
   }
 

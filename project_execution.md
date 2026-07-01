@@ -12,47 +12,56 @@ Geant4 Monte Carlo:
   weighted/resampled protons -> pure 7Li converter -> neutron yield and timing
 
 Optimization:
-  find Pareto front between neutron yield per laser energy and Li-exit FWHM
+  find Pareto front between forward neutron yield per laser energy and forward-pulse FWHM
 ```
 
-Scope note after rereading `2604.23913v2.pdf` on 2026-07-01:
+Scope note updated on 2026-07-01:
 
 ```text
-Full BO is optional, not mandatory.
+Return to the original BO direction:
 
-The paper's strongest result comes from a mechanism-guided scan rather than a
-large optimizer: identify a proton-source improvement mechanism, scan a small
-number of structural/source settings, and then compare converter material or
-thickness through Geant4. If project fatigue is high, the safer deliverable is:
+laser -> CH foil -> TNSA proton source -> converter -> directional neutron
+yield and FWHM.
 
-1. reproduce the EPOCH -> Geant4 workflow;
-2. run a small CH-source or surrogate source scan;
-3. run the Li-thickness Geant4 scan;
-4. report the yield/FWHM trade-off and explain why full optimization is left as
-   future work.
+The project should not stop at a Li-thickness scan, because thickness scans have
+already been explored extensively. The thickness scan remains useful as a cheap
+inner Geant4 scan for each expensive EPOCH source point. The outer BO target is
+the CH-source parameter space.
 ```
 
 Primary objectives:
 
 ```text
-maximize  log10(Y_n_exit / E_L)
-minimize  tau_exit_FWHM_ps
+maximize  log10(Y_n_forward_detector / E_L)
+minimize  tau_forward_detector_FWHM_ps
 ```
 
 Definitions:
 
 ```text
+Y_n_forward_detector:
+  weighted number of neutrons crossing the finite-radius forward detector plane
+  behind the converter
+
 Y_n_exit:
-  weighted number of neutrons crossing the rear surface of the Li converter
+  weighted number of neutrons crossing the rear surface of the Li converter;
+  diagnostic, not the primary BO yield
+
+tau_forward_detector_FWHM_ps:
+  full width at half maximum of the forward detector neutron time distribution
 
 tau_exit_FWHM_ps:
-  full width at half maximum of the neutron exit-time distribution at the Li rear surface
+  full width at half maximum of the neutron exit-time distribution at the Li rear surface;
+  diagnostic for separating converter broadening from detector/TOF broadening
 
 E_L:
   laser energy used for the EPOCH source point
 ```
 
-The detector plane 10 cm behind the Li rear surface should still be recorded, but only as an application-side TOF diagnostic. It should not be the main FWHM objective because neutron spectral time-of-flight dispersion dominates over the intrinsic converter pulse width.
+Use a finite-radius detector plane 10 cm behind the converter as the directional
+objective surface. Also record the Li rear-surface exit distribution so that the
+intrinsic converter broadening can be separated from detector time-of-flight
+broadening.
 
 ## 2. Decision that resolves the two existing md documents
 
@@ -102,11 +111,12 @@ For this project, it supports:
 ```text
 1. importing all PIC ion positions, momenta, energies and weights into Geant4;
 2. recording both neutron birth-time and rear-surface exit-time distributions;
-3. using Li-exit FWHM as a converter/source pulse metric;
+3. using Li-exit FWHM as a converter/source diagnostic;
 4. expecting production-time FWHM around 70-100 ps and converter-exit FWHM around 460-670 ps for cm-scale converters under similar femtosecond laser conditions;
 5. using yield per joule as the fair yield metric when laser energy changes.
 6. using QGSP_BIC_AllHP with TENDL charged-particle data for sub-200 MeV proton reactions;
-7. replacing a heavy black-box optimization with a physically motivated low-dimensional scan if needed.
+7. keeping BO focused on expensive CH-source variables while using low-dimensional converter scans as inner evaluations;
+8. motivating forward detector yield/FWHM as an application-facing objective while keeping rear-surface timing as a diagnostic.
 ```
 
 ### 3.2 `2503.12154v1.pdf`
@@ -177,6 +187,7 @@ Geant4:
   Li radius = 2 cm
   D_Li_cm grid = 0.05, 0.10, 0.20, 0.50, 1.00, 2.00, 3.00
   detector plane = 10 cm behind Li rear surface
+  detector radius = 2 cm
   physics list = QGSP_BIC_AllHP
   charged-particle HP data = G4TENDL1.4
 ```
@@ -220,7 +231,7 @@ Pass criteria:
 ```text
 1. Geant4 injected proton spectrum matches EPOCH exported spectrum;
 2. baseline source gives nonzero Y_n_exit;
-3. D_Li scan gives a visible yield-FWHM trade-off;
+3. D_Li scan gives a visible forward-yield/FWHM trade-off;
 4. exit-time and detector-time FWHM differ in the expected direction, with detector-time broader.
 ```
 
@@ -286,6 +297,9 @@ Each Geant4 task should produce:
   "N_primary": 1000000,
   "source_total_proton_weight": 3.2e11,
   "laser_energy_J": 30.0,
+  "Y_n_forward_detector": 7.5e7,
+  "Y_n_forward_detector_per_J": 2.5e6,
+  "tau_forward_detector_FWHM_ps": 5200.0,
   "Y_n_exit": 1.2e8,
   "Y_n_exit_per_J": 4.0e6,
   "tau_exit_FWHM_ps": 320.0,
@@ -309,7 +323,7 @@ Recommended local sequence:
 3. Stage 2 EPOCH Tier 1 baseline and phase-space export.
 4. Stage 3 baseline EPOCH -> Geant4 coupled run with full Li-thickness scan.
 5. Stage 4 9-12 source-point manual/LHS scan.
-6. Stage 5 optional BO to 30-40 total EPOCH2D points.
+6. Stage 5 BO to 30-40 total EPOCH2D points.
 7. Stage 6 high-stat Geant4 rerun of Pareto candidates.
 8. Stage 7 4-6 selected 3D EPOCH validation points on HPC.
 ```
@@ -333,8 +347,8 @@ Minimum final figures:
 Fig. 1 workflow: laser -> CH -> proton phase space -> Li -> neutron objectives
 Fig. 2 Geant4 benchmark: Ep and D_Li vs Y_n_exit and tau_exit_FWHM
 Fig. 3 EPOCH baseline: proton spectrum, angular distribution, time profile
-Fig. 4 coupled baseline: Li thickness scan, yield-FWHM trade-off
-Fig. 5 scan/BO Pareto front: tau_exit_FWHM_ps vs log10(Y_n_exit / E_L)
+Fig. 4 coupled baseline: Li thickness scan, forward-yield/FWHM trade-off
+Fig. 5 scan/BO Pareto front: tau_forward_detector_FWHM_ps vs log10(Y_n_forward_detector / E_L)
 Fig. 6 selected neutron time profiles: baseline, best-yield, shortest-pulse, knee
 Fig. 7 physical interpretation: Np(Ep > 2 MeV), Ep_max, D_Li vs objectives
 Fig. 8 3D validation: 2D ranking vs 3D rerun results

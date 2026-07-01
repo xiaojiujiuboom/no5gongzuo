@@ -40,8 +40,7 @@
     "physics_list": "QGSP_BIC_AllHP"
   },
   "objectives": {
-    "maximize": "log10(Y_n_exit_per_J)",
-    "minimize": "tau_exit_FWHM_ps"
+    "maximize": "log10(Y_n_forward_detector_per_J)",
+    "minimize": "tau_forward_detector_FWHM_ps"
   }
 }
-

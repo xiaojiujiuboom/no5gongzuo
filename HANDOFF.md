@@ -7,11 +7,15 @@ Last updated: 2026-07-01
 Use EPOCH PIC plus Geant4 Monte Carlo to optimize a CH-foil-driven Li neutron source:
 
 ```text
-maximize  log10(Y_n_exit / E_L)
-minimize  tau_exit_FWHM_ps
+maximize  log10(Y_n_forward_detector / E_L)
+minimize  tau_forward_detector_FWHM_ps
 ```
 
-`Y_n_exit` is the weighted number of neutrons crossing the Li rear surface. `tau_exit_FWHM_ps` is the FWHM of the neutron exit-time distribution at the Li rear surface.
+`Y_n_forward_detector` is the weighted number of neutrons crossing the finite
+forward detector plane behind the converter. `tau_forward_detector_FWHM_ps` is
+the FWHM of that forward neutron time distribution. Rear-surface Li-exit yield
+and FWHM remain diagnostics, but the BO target is directional yield and pulse
+width.
 
 ## Required reading order for every new session
 
@@ -35,7 +39,7 @@ Local machine:
 2. EPOCH2D Tier 1 baseline and 9-12 source-point scans.
 3. Geant4 monoenergetic 7Li(p,n) benchmark.
 4. EPOCH phase-space -> Geant4 coupling.
-5. Local Pareto sorting and optional low-cost BO.
+5. Local Pareto sorting and low-cost BO.
 ```
 
 HPC:
@@ -62,20 +66,18 @@ Inner cheap Geant4 scan:
 
 This keeps EPOCH evaluations manageable while still producing five-dimensional candidate points for the final Pareto front.
 
-Scope update after rereading `2604.23913v2.pdf` on 2026-07-01:
+Scope update on 2026-07-01:
 
 ```text
-Full Bayesian optimization is optional, not mandatory.
+Return to the BO project agreed earlier:
 
-The closest reference paper succeeds with mechanism-guided scans: MWA period P,
-converter material/thickness, and laser intensity, using EPOCH -> Geant4 as the
-integrated workflow. If the project feels too heavy, the recommended lower-risk
-deliverable is a staged scan and trade-off paper:
+laser -> CH foil -> TNSA protons -> converter -> forward neutron objective.
 
-1. validate Geant4 7Li(p,n) with QGSP_BIC_AllHP + G4TENDL1.4;
-2. run one baseline EPOCH2D CH source, or a small 3-5 point source scan;
-3. scan Li thickness in Geant4;
-4. report yield per joule vs Li-exit FWHM and discuss BO as future work.
+The BO target is directional neutron yield per laser energy versus forward
+detector FWHM. Li thickness scanning is not the final novelty; it is the cheap
+inner scan run for every EPOCH source point so that each expensive source point
+produces a local yield-duration curve. BO remains on the expensive CH source
+variables.
 ```
 
 ## Files created so far
@@ -146,7 +148,7 @@ geant4/li7_benchmark/
 It models:
 
 ```text
-monoenergetic proton pencil beam -> pure 7Li cylinder -> neutron birth, Li-rear-exit and detector-plane tallies
+monoenergetic proton pencil beam -> pure 7Li cylinder -> neutron birth, Li-rear-exit and finite-radius forward detector-plane tallies
 ```
 
 The batch runner:
@@ -193,9 +195,27 @@ using `QGSP_BIC_AllHP`:
   Y_n_exit_per_primary = 1.5e-3
 ```
 
+Forward detector smoke after switching the BO objective to directional yield:
+
+```text
+20 MeV, 1 cm, 10000 primaries, detector radius 2 cm at 10 cm:
+  Y_n_forward_detector = 0
+
+20 MeV, 1 cm, 10000 primaries, detector radius 10 cm at 10 cm:
+  Y_n_forward_detector = 2
+```
+
+Interpretation: the finite-radius forward tally is working, but the strict
+2 cm detector is statistically noisy at 10000 monoenergetic primaries. BO runs
+using directional yield need higher Geant4 statistics, larger debug detector
+radii, or both.
+
 The Geant4 summary now also includes diagnostic fields:
 
 ```text
+Y_n_forward_detector
+Y_n_forward_detector_per_primary
+forward_detector_neutron_count
 primary_li_entry_count
 li_process_counts
 li_secondary_counts

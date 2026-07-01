@@ -11,7 +11,14 @@ literature_notes/literature_map.md
 Project objective:
 
 ```text
-CH foil + intense laser -> TNSA protons -> 7Li converter -> neutron yield and FWHM optimization
+CH foil + intense laser -> TNSA protons -> 7Li converter -> BO of forward neutron yield and FWHM
+```
+
+Primary BO objective:
+
+```text
+maximize  log10(Y_n_forward_detector / E_L)
+minimize  tau_forward_detector_FWHM_ps
 ```
 
 Compute split:

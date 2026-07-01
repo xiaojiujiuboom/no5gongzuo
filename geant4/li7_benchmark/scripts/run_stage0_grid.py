@@ -42,6 +42,7 @@ def main() -> None:
     li_radius_cm = float(grid.get("li_radius_cm", 2.0))
     source_gap_cm = float(grid.get("source_to_li_front_cm", 1.0))
     detector_gap_cm = float(grid.get("detector_distance_behind_li_cm", 10.0))
+    detector_radius_cm = float(grid.get("detector_radius_cm", 2.0))
 
     if not args.exe.exists() and not args.dry_run:
         raise FileNotFoundError(f"executable not found: {args.exe}")
@@ -69,6 +70,7 @@ def main() -> None:
                 "--li-radius-cm", str(li_radius_cm),
                 "--source-gap-cm", str(source_gap_cm),
                 "--detector-gap-cm", str(detector_gap_cm),
+                "--detector-radius-cm", str(detector_radius_cm),
             ]
             commands.append(cmd)
 

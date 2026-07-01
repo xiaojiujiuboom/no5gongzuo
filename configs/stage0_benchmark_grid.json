@@ -7,8 +7,8 @@
   "li_radius_cm": 2.0,
   "source_to_li_front_cm": 1.0,
   "detector_distance_behind_li_cm": 10.0,
+  "detector_radius_cm": 2.0,
   "physics_list": "QGSP_BIC_AllHP",
   "N_primary_debug": 100000,
   "N_primary_nominal": 1000000
 }
-

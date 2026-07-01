@@ -18,6 +18,11 @@ Li rear:      z = Li front + D_Li_cm
 detector:     z = Li rear + detector_distance_behind_li_cm
 ```
 
+The forward detector tally is restricted to a finite radius
+`detector_radius_cm`; this is the directional-yield observable used by the BO
+workflow. The Li rear-surface exit tally is still recorded as a transport
+diagnostic.
+
 Build:
 
 ```bash
@@ -70,7 +75,8 @@ G4PARTICLEHPDATA="$PWD/local_geant4_data/G4TENDL1.4" \
   --thickness-cm 1 \
   --events 10000 \
   --out-dir runs/geant4/stage0_debug/Ep_5MeV_DLi_1cm \
-  --physics-list QGSP_BIC_AllHP
+  --physics-list QGSP_BIC_AllHP \
+  --detector-radius-cm 2
 ```
 
 Run the configured Stage 0 grid:
