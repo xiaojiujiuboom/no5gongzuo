@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 
+E_MIN_KEV = 0.5
+E_MAX_KEV = 4900.0
 BG = 31.3970
 A1 = 5.3701e4
 A2 = 3.3027e2
@@ -21,13 +23,12 @@ def sigma_ddn_bosch_hale_mb(E_cm_keV: np.ndarray | float) -> np.ndarray:
     """
     E = np.asarray(E_cm_keV, dtype=float)
     sigma = np.zeros_like(E, dtype=float)
-    mask = E > 0.0
+    mask = (E >= E_MIN_KEV) & (E <= E_MAX_KEV)
     Em = E[mask]
     S = A1 + Em * (A2 + Em * (A3 + Em * (A4 + Em * A5)))
-    sigma[mask] = S / (Em * np.exp(BG / np.sqrt(Em)))
+    sigma[mask] = np.maximum(S / (Em * np.exp(BG / np.sqrt(Em))), 0.0)
     return sigma
 
 
 def sigma_ddn_cm2(E_cm_keV: np.ndarray | float) -> np.ndarray:
     return sigma_ddn_bosch_hale_mb(E_cm_keV) * MB_TO_CM2
-

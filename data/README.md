@@ -10,3 +10,4 @@ PSTAR proton stopping in polyethylene or SRIM D-in-CD2
 
 The current committed CSV is a provisional PSTAR-style seed table for software and sensitivity work. Before final paper numbers, replace it with a directly exported SRIM/PSTAR table and record the source, density, and conversion in this directory.
 
+Also note that the current Bosch-Hale D(d,n)3He fit is only evaluated in its nominal 0.5-4900 keV center-of-mass range. Values outside that interval are set to zero in code until a verified evaluated-data treatment is added.

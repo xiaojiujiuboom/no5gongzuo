@@ -61,6 +61,9 @@ def gate_cross_section() -> None:
         raise AssertionError("cross section must be finite and positive")
     if not sigma[2] > sigma[1] > sigma[0]:
         raise AssertionError("D-D cross section should rise from 10 to 100 keV")
+    outside = sigma_ddn_bosch_hale_mb(np.array([0.1, 6000.0]))
+    if not np.all(outside == 0.0):
+        raise AssertionError("cross section should be zero outside Bosch-Hale fit range")
 
 
 def gate_stopping_and_yield() -> None:
