@@ -8,6 +8,7 @@ mkdir -p \
   "$REMOTE_ROOT/runs" \
   "$REMOTE_ROOT/results" \
   "$REMOTE_ROOT/logs" \
+  "$REMOTE_ROOT/manifests" \
   "$REMOTE_ROOT/tools" \
   "$REMOTE_ROOT/archive"
 
@@ -22,6 +23,7 @@ Layout:
   runs/     expanded active runs, one directory per run_id
   results/  compact results copied out of runs
   logs/     bookkeeping logs
+  manifests/ run manifests copied from the local repo
   tools/    helper scripts
   archive/  inactive old runs
 
@@ -34,4 +36,3 @@ Rules:
 EOF
 
 printf "initialized %s\n" "$REMOTE_ROOT"
-

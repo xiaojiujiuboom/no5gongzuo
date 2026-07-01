@@ -18,6 +18,7 @@ Directory layout:
   runs/          # expanded runnable jobs, one directory per run_id
   results/       # compact fetched or copied outputs
   logs/          # remote bookkeeping logs
+  manifests/     # copied run manifests
   tools/         # helper scripts copied from this repo
   archive/       # old runs moved out of active workspace
 ```
@@ -31,6 +32,28 @@ summary.json
 metrics.json
 quicklook plots
 small CSV files
+```
+
+## Verified Connection
+
+Verified on 2026-07-01 from this Mac:
+
+```bash
+ssh -i ~/.ssh/id_ed25519 -p 22 -l 'm9s003861@BSCC-M9' ssh.cn-hongkong-1.paracloud.com
+```
+
+Important: the web login email is not the SSH user. The SSH user for this
+account is `m9s003861@BSCC-M9`.
+
+Verified remote state:
+
+```text
+login node: ln1
+home: /publicfs10/fs10-m9/home/m9s003861
+Slurm: /opt/slurm/slurm/bin/sbatch
+EPOCH: ~/pic/bin/epoch3d
+EPOCH photons: ~/pic/bin/epoch3d_photons
+project root: ~/pic/no5_dd_li_tpr
 ```
 
 ## Run Naming
@@ -58,4 +81,3 @@ Rules:
 - Never overwrite an existing run directory. Increment `r002`, `r003`, etc.
 - Keep raw SDF on the supercomputer unless explicitly needed locally.
 - Record every submitted run in a manifest CSV before submitting.
-

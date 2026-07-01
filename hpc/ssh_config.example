@@ -1,9 +1,8 @@
 Host blsc-m9-no5
   HostName ssh.cn-hongkong-1.paracloud.com
   Port 22
-  User YOUR_ACCOUNT@BSCC-M9
+  User m9s003861@BSCC-M9
   IdentityFile ~/.ssh/id_ed25519
   IdentitiesOnly yes
   ServerAliveInterval 30
   ServerAliveCountMax 4
-

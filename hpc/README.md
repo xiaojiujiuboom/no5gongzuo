@@ -32,8 +32,8 @@ Optional local SSH config template:
 cat hpc/ssh_config.example >> ~/.ssh/config
 ```
 
-Then replace `YOUR_ACCOUNT@BSCC-M9` with the real supercomputer SSH user and
-make sure the selected public key is authorized on the supercomputer.
+The verified SSH user is `m9s003861@BSCC-M9`. The web login email is not the
+SSH user.
 
 Initialize it after logging into the supercomputer:
 
