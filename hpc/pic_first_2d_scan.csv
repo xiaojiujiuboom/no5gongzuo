@@ -1,7 +1,7 @@
-run_id,dimension,a0,preplasma_L_um,target_thickness_um,diagnostic,expected_return
-dd_cd2_2d_a0_5_L_0_t_5,2d3v,5,0,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
-dd_cd2_2d_a0_5_L_1_t_5,2d3v,5,1,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
-dd_cd2_2d_a0_10_L_0_t_5,2d3v,10,0,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
-dd_cd2_2d_a0_10_L_1_t_5,2d3v,10,1,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
-dd_cd2_2d_a0_20_L_0_t_5,2d3v,20,0,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
-dd_cd2_2d_a0_20_L_1_t_5,2d3v,20,1,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
+run_id,remote_root,remote_run_dir,dimension,a0,preplasma_L_um,target_thickness_um,diagnostic,expected_return
+pic2d_dd_cd2_a0_5_L_0_t_5um_20260701_r001,~/pic/no5_dd_li_tpr,~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_a0_5_L_0_t_5um_20260701_r001,2d3v,5,0,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
+pic2d_dd_cd2_a0_5_L_1_t_5um_20260701_r001,~/pic/no5_dd_li_tpr,~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_a0_5_L_1_t_5um_20260701_r001,2d3v,5,1,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
+pic2d_dd_cd2_a0_10_L_0_t_5um_20260701_r001,~/pic/no5_dd_li_tpr,~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_a0_10_L_0_t_5um_20260701_r001,2d3v,10,0,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
+pic2d_dd_cd2_a0_10_L_1_t_5um_20260701_r001,~/pic/no5_dd_li_tpr,~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_a0_10_L_1_t_5um_20260701_r001,2d3v,10,1,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
+pic2d_dd_cd2_a0_20_L_0_t_5um_20260701_r001,~/pic/no5_dd_li_tpr,~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_a0_20_L_0_t_5um_20260701_r001,2d3v,20,0,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
+pic2d_dd_cd2_a0_20_L_1_t_5um_20260701_r001,~/pic/no5_dd_li_tpr,~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_a0_20_L_1_t_5um_20260701_r001,2d3v,20,1,5,deuteron_phase_space_at_rear_plane,"deuteron_beam.h5,summary.json,quicklook.png"
