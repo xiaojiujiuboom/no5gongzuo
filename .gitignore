@@ -2,12 +2,16 @@
 ._*
 .DS_Store
 
+# Local secrets and machine-specific paths
+.env
+
 # Python caches
 __pycache__/
 *.py[cod]
 
 # Heavy literature and generated outputs
 *.pdf
+outputs/
 runs/
 local_geant4_data/
 data/phase_space/

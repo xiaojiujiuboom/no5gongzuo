@@ -34,13 +34,26 @@ def _histogram_tabular(openmc, E_eV: np.ndarray, weight: np.ndarray, n_bins: int
     return openmc.stats.Tabular(edges, p, interpolation="histogram")
 
 
-def make_case_b_sources(neutron_h5: str | Path, n_mu: int = 15, n_E: int = 100):
-    """Build angular-bin sources that preserve E-mu correlation."""
+def make_case_b_sources(
+    neutron_h5: str | Path,
+    n_mu: int = 15,
+    n_E: int = 100,
+    normalize_strength: bool = True,
+):
+    """Build angular-bin sources that preserve E-mu correlation.
+
+    By default, bin strengths are normalized to sum to one so OpenMC tallies
+    remain per source neutron. Multiply postprocessed tallies by Y_total from
+    neutron_source.h5 only when reporting per-shot absolute tritium yield.
+    """
     openmc = require_openmc()
     src = read_neutron_source(neutron_h5)
     E_eV = src.E * 1.0e6
     mu = src.dir[:, 2]
     weight = src.weight
+    total_weight = float(np.sum(weight))
+    if total_weight <= 0.0:
+        raise ValueError(f"{neutron_h5} has non-positive total source weight")
     bins = np.linspace(-1.0, 1.0, n_mu + 1)
     sources = []
     for i in range(n_mu):
@@ -57,11 +70,10 @@ def make_case_b_sources(neutron_h5: str | Path, n_mu: int = 15, n_E: int = 100):
                 reference_uvw=(0.0, 0.0, 1.0),
             ),
             energy=_histogram_tabular(openmc, E_eV[sel], weight[sel], n_E),
-            strength=float(np.sum(weight[sel])),
+            strength=float(np.sum(weight[sel]) / total_weight if normalize_strength else np.sum(weight[sel])),
             particle="neutron",
         )
         sources.append(source)
     if not sources:
         raise ValueError(f"no nonempty source bins found in {neutron_h5}")
     return sources
-

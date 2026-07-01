@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 import sys
 
@@ -18,7 +19,15 @@ from moduleC_openmc.tallies import make_tallies
 from utils.config import load_config
 
 
-def build_model(case: str, li6_atpct: float, config_path: str, neutron_h5: str | None = None, production: bool = False):
+def build_model(
+    case: str,
+    li6_atpct: float,
+    config_path: str,
+    neutron_h5: str | None = None,
+    production: bool = False,
+    batches: int | None = None,
+    particles: int | None = None,
+):
     openmc = require_openmc()
     cfg = load_config(config_path)
     li_cfg = cfg.get("lithium", {})
@@ -35,8 +44,14 @@ def build_model(case: str, li6_atpct: float, config_path: str, neutron_h5: str |
 
     settings = openmc.Settings()
     settings.run_mode = "fixed source"
-    settings.batches = int(omc_cfg.get("batches_production" if production else "batches_debug", 20))
-    settings.particles = int(omc_cfg.get("particles_production" if production else "particles_debug", 100_000))
+    settings.batches = int(
+        batches if batches is not None else omc_cfg.get("batches_production" if production else "batches_debug", 20)
+    )
+    settings.particles = int(
+        particles
+        if particles is not None
+        else omc_cfg.get("particles_production" if production else "particles_debug", 100_000)
+    )
     settings.photon_transport = False
     if case.upper() == "A":
         settings.source = make_case_a_source()
@@ -62,13 +77,26 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--nsrc", default=None, help="neutron_source.h5 for Case B")
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--production", action="store_true")
+    parser.add_argument("--batches", type=int, default=None)
+    parser.add_argument("--particles", type=int, default=None)
+    parser.add_argument("--cross-sections", default=None, help="Path to OpenMC cross_sections.xml")
     parser.add_argument("--run", action="store_true", help="run OpenMC after exporting XML")
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
-    model = build_model(args.case, args.li6, args.config, args.nsrc, args.production)
+    if args.cross_sections:
+        os.environ["OPENMC_CROSS_SECTIONS"] = str(Path(args.cross_sections).expanduser().resolve())
+    model = build_model(
+        args.case,
+        args.li6,
+        args.config,
+        args.nsrc,
+        args.production,
+        batches=args.batches,
+        particles=args.particles,
+    )
     outdir = Path(args.output_dir or f"openmc_case_{args.case}_li6_{args.li6:g}")
     outdir.mkdir(parents=True, exist_ok=True)
     model.export_to_xml(outdir)
@@ -79,4 +107,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

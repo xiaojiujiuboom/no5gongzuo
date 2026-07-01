@@ -6,6 +6,8 @@ import argparse
 from pathlib import Path
 import sys
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -20,8 +22,10 @@ def summarize_statepoint(path: str | Path) -> None:
             tally = sp.get_tally(name=name)
             mean = tally.mean
             std = tally.std_dev
-            rel = std / mean
-            finite = rel[(mean > 0)]
+            rel = np.full_like(mean, np.nan, dtype=float)
+            mask = mean > 0
+            rel[mask] = std[mask] / mean[mask]
+            finite = rel[mask]
             worst = float(finite.max()) if finite.size else float("nan")
             print(f"{name}: mean_sum={float(mean.sum()):.6e}, worst_rel_err={worst:.3g}")
 
@@ -35,4 +39,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -36,6 +36,8 @@ python3 moduleA_pic/parametric_scan.py --n 50000
 
 说明：当前 Stage B 从 `data/stopping_D_in_CD2.csv` 读取 D-in-CD2 阻止本领。仓库内表格是 provisional PSTAR-style seed，正式产额和论文结果前必须替换为 SRIM/PSTAR 导出的可靠数据。
 
+本机 OpenMC 运行记录见 [docs/OPENMC_LOCAL_RUN.md](docs/OPENMC_LOCAL_RUN.md)。机器相关路径放在本地 `.env`，不要提交。
+
 ## 建议实现结构
 
 ```text
