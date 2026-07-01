@@ -24,6 +24,14 @@ platform: x86_64 under Rosetta
 
 ## Smoke Run
 
+一键运行：
+
+```bash
+bash scripts/run_openmc_smoke.sh
+```
+
+该脚本会生成参数化氘束、半解析 D-D 中子源、OpenMC Case A/B，并调用 `compare_cases.py` 输出表格和图。
+
 先跑 Stage A/B 小源：
 
 ```bash
@@ -61,6 +69,26 @@ Case B：畸变 D-D 源：
   outputs/openmc_smoke_B/statepoint.20.h5
 ```
 
+生成 A/B 对比表和图：
+
+```bash
+/opt/miniconda3/bin/conda run -n openmc-env python moduleC_openmc/compare_cases.py \
+  --case-a outputs/openmc_smoke_A/statepoint.20.h5 \
+  --case-b outputs/openmc_smoke_B/statepoint.20.h5 \
+  --source-b outputs/smoke_neutron_source.h5 \
+  --output-dir outputs/analysis/openmc_smoke_compare
+```
+
+主要输出：
+
+```text
+case_comparison_summary.csv
+case_B_source_stats.csv
+li7_tpr_vs_energy.csv
+li6_li7_tpr_bar.png
+li7_tpr_vs_energy.png
+```
+
 ## 已验证的 Smoke 物理信号
 
 用 `Li6=90 at%`、`20 x 100000` 粒子：
@@ -80,4 +108,3 @@ Case B:
 ## 归一化规则
 
 Case B 的多源 `IndependentSource.strength` 已默认归一化到总和 1，因此 OpenMC tally 是“每源中子”的量。只有在报告每 shot 绝对产额时，才乘 `neutron_source.h5` 里的 `Y_total`。
-

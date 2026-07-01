@@ -60,6 +60,14 @@ target = CD2, thickness = 5 um
 
 这是第一轮 6 点扫描。若结果对靶厚敏感或审稿/组会需要，再补 `3 um` 厚度形成 12 点扫描。
 
+扫描 manifest 由配置自动生成：
+
+```bash
+python3 scripts/make_pic_scan_manifest.py
+```
+
+输出见 `hpc/pic_first_2d_scan.csv`。
+
 先只追求每个 case 导出穿过靶后采样面的氘束相空间：
 
 ```text
