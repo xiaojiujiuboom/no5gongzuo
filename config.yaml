@@ -1,0 +1,39 @@
+beam:
+  source_type: parametric
+  n_macroparticles: 200000
+  n_deuterons: 1.0e12
+  kT_MeV: 2.0
+  theta_max_deg: 15.0
+  E_min_MeV: 0.1
+  E_max_MeV: 10.0
+  seed: 20260701
+
+target_cd2:
+  rho_g_cm3: 1.06
+
+source_bins:
+  n_mu: 15
+  n_E: 100
+
+lithium:
+  radius_cm: 10.0
+  height_cm: 20.0
+  cavity_radius_cm: 1.0
+  li6_atpct_list: [7.59, 90.0]
+  density_g_cm3: 0.534
+
+openmc:
+  batches_debug: 20
+  particles_debug: 100000
+  batches_production: 100
+  particles_production: 1000000
+  preferred_library: FENDL-3.2
+
+hpc_pic:
+  first_2d_scan:
+    a0: [5, 10, 20]
+    preplasma_L_um: [0, 1]
+    target_thickness_um: [3, 5]
+  production_dimension: 2d3v
+  validation_3d_cases: 1
+
