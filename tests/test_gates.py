@@ -17,7 +17,10 @@ from moduleA_pic.parametric_beam import generate_parametric_beam
 from moduleB_source.build_source import build_neutron_source
 from moduleB_source.cross_section import sigma_ddn_bosch_hale_mb
 from moduleB_source.kinematics import dd_neutron_lab
+from moduleB_source.stopping import stopping_power_MeV_per_cm
+from moduleB_source.thick_target import thick_target_yield
 from interfaces.schema import write_deuteron_beam
+from utils.config import load_config
 
 
 def assert_close(value: float, expected: float, tol: float, name: str) -> None:
@@ -60,6 +63,29 @@ def gate_cross_section() -> None:
         raise AssertionError("D-D cross section should rise from 10 to 100 keV")
 
 
+def gate_stopping_and_yield() -> None:
+    E = np.array([0.1, 1.0, 10.0])
+    S = stopping_power_MeV_per_cm(E)
+    if not np.all(np.isfinite(S)) or not np.all(S > 0):
+        raise AssertionError("stopping power must be finite and positive")
+    if not S[0] > S[1] > S[2]:
+        raise AssertionError("expected stopping power to decrease from 0.1 to 10 MeV")
+    y1 = thick_target_yield(1.0)
+    y3 = thick_target_yield(3.0)
+    if not (0.0 < y1 < y3):
+        raise AssertionError("thick-target yield should be positive and rise with E0")
+
+
+def gate_config() -> None:
+    cfg = load_config()
+    geom = cfg.get("physics", {}).get("geometry_lock")
+    if geom != "laser_thin_foil_deuteron_source_plus_external_thick_cd2_converter":
+        raise AssertionError("physics.geometry_lock is not set to the external converter geometry")
+    thickness = cfg.get("hpc_pic", {}).get("first_2d_scan", {}).get("target_thickness_um")
+    if thickness != [5]:
+        raise AssertionError("first 2D scan should be the 6-source matrix with thickness fixed at 5 um")
+
+
 def gate_kinematics() -> None:
     z = np.array([0.0, 0.0, 1.0])
     E0, _ = dd_neutron_lab(0.0, z, cm_dir_unit=z)
@@ -71,11 +97,13 @@ def gate_kinematics() -> None:
 
 
 def main() -> None:
+    gate_config()
     gate_cross_section()
+    gate_stopping_and_yield()
     gate_kinematics()
     with tempfile.TemporaryDirectory() as td:
         gate_schema_and_pipeline(Path(td))
-    print("PASS: schema, sigma, kinematics, and placeholder Stage A->B pipeline gates")
+    print("PASS: config, schema, stopping table, sigma, kinematics, and Stage A->B gates")
 
 
 if __name__ == "__main__":

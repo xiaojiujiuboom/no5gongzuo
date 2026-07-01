@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from interfaces.schema import write_deuteron_beam
+from utils.config import load_config
 
 
 def sample_cone(n: int, theta_max_deg: float, rng: np.random.Generator) -> np.ndarray:
@@ -60,29 +61,44 @@ def generate_parametric_beam(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", default="config.yaml", help="YAML config path")
     parser.add_argument("-o", "--output", default="deuteron_beam.h5")
-    parser.add_argument("--n", type=int, default=200_000)
-    parser.add_argument("--total-deuterons", type=float, default=1.0e12)
-    parser.add_argument("--kT-MeV", type=float, default=2.0)
-    parser.add_argument("--theta-max-deg", type=float, default=15.0)
-    parser.add_argument("--E-min-MeV", type=float, default=0.1)
-    parser.add_argument("--E-max-MeV", type=float, default=10.0)
-    parser.add_argument("--seed", type=int, default=20260701)
+    parser.add_argument("--n", type=int, default=None)
+    parser.add_argument("--total-deuterons", type=float, default=None)
+    parser.add_argument("--kT-MeV", type=float, default=None)
+    parser.add_argument("--theta-max-deg", type=float, default=None)
+    parser.add_argument("--E-min-MeV", type=float, default=None)
+    parser.add_argument("--E-max-MeV", type=float, default=None)
+    parser.add_argument("--seed", type=int, default=None)
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
-    if args.n <= 0:
+    cfg = load_config(args.config)
+    beam_cfg = cfg.get("beam", {})
+    n = args.n if args.n is not None else int(beam_cfg.get("n_macroparticles", 200_000))
+    total_deuterons = (
+        args.total_deuterons if args.total_deuterons is not None else float(beam_cfg.get("n_deuterons", 1.0e12))
+    )
+    kT_MeV = args.kT_MeV if args.kT_MeV is not None else float(beam_cfg.get("kT_MeV", 2.0))
+    theta_max_deg = (
+        args.theta_max_deg if args.theta_max_deg is not None else float(beam_cfg.get("theta_max_deg", 15.0))
+    )
+    E_min_MeV = args.E_min_MeV if args.E_min_MeV is not None else float(beam_cfg.get("E_min_MeV", 0.1))
+    E_max_MeV = args.E_max_MeV if args.E_max_MeV is not None else float(beam_cfg.get("E_max_MeV", 10.0))
+    seed = args.seed if args.seed is not None else int(beam_cfg.get("seed", 20260701))
+
+    if n <= 0:
         raise SystemExit("--n must be positive")
     E, direction, weight, t = generate_parametric_beam(
-        n=args.n,
-        total_deuterons=args.total_deuterons,
-        kT_MeV=args.kT_MeV,
-        theta_max_deg=args.theta_max_deg,
-        E_min_MeV=args.E_min_MeV,
-        E_max_MeV=args.E_max_MeV,
-        seed=args.seed,
+        n=n,
+        total_deuterons=total_deuterons,
+        kT_MeV=kT_MeV,
+        theta_max_deg=theta_max_deg,
+        E_min_MeV=E_min_MeV,
+        E_max_MeV=E_max_MeV,
+        seed=seed,
     )
     write_deuteron_beam(
         Path(args.output),
@@ -92,14 +108,14 @@ def main() -> None:
         t,
         attrs={
             "source_type": "parametric_tnsa",
-            "kT_MeV": args.kT_MeV,
-            "theta_max_deg": args.theta_max_deg,
-            "E_min_MeV": args.E_min_MeV,
-            "E_max_MeV": args.E_max_MeV,
-            "seed": args.seed,
+            "kT_MeV": kT_MeV,
+            "theta_max_deg": theta_max_deg,
+            "E_min_MeV": E_min_MeV,
+            "E_max_MeV": E_max_MeV,
+            "seed": seed,
         },
     )
-    print(f"wrote {args.output} with {args.n} macroparticles")
+    print(f"wrote {args.output} with {n} macroparticles")
 
 
 if __name__ == "__main__":

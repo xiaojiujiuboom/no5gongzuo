@@ -55,8 +55,10 @@ batches = 50-100
 ```text
 a0 = 5, 10, 20
 preplasma L = 0, 1 um
-target = CD2, thickness = 3-5 um
+target = CD2, thickness = 5 um
 ```
+
+这是第一轮 6 点扫描。若结果对靶厚敏感或审稿/组会需要，再补 `3 um` 厚度形成 12 点扫描。
 
 先只追求每个 case 导出穿过靶后采样面的氘束相空间：
 
@@ -99,3 +101,11 @@ python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 - `7Li` 通道应对 >2.82 MeV 的前向高能尾敏感。
 - A/B 对比优先用“每源中子 TPR”，避免总产额归一化掩盖谱形效应。
 
+## OpenMC API 依据
+
+按 OpenMC stable 文档实现 Stage C：
+
+- `EnergyFilter` 的能量边界使用 eV。
+- `H3-production` 属于 particle production score，可用于产氚 tally。
+- 多个外源可通过 `Settings.source = [IndependentSource, ...]` 设置，并用 `strength` 表示相对源强。
+- `PolarAzimuthal` 可用 `mu` 和 `phi` 分布指定相对于 +z 的角分布。

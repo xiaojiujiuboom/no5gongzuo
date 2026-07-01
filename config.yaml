@@ -7,9 +7,15 @@ beam:
   E_min_MeV: 0.1
   E_max_MeV: 10.0
   seed: 20260701
+  parametric_scan:
+    kT_MeV: [1.0, 2.0, 3.0]
+    theta_max_deg: [10.0, 20.0]
 
 target_cd2:
   rho_g_cm3: 1.06
+  source_geometry: external_thick_cd2_converter
+  converter_policy: stop_to_rest
+  stopping_table: data/stopping_D_in_CD2.csv
 
 source_bins:
   n_mu: 15
@@ -33,7 +39,12 @@ hpc_pic:
   first_2d_scan:
     a0: [5, 10, 20]
     preplasma_L_um: [0, 1]
-    target_thickness_um: [3, 5]
+    target_thickness_um: [5]
+  optional_followup_2d_scan:
+    target_thickness_um: [3]
   production_dimension: 2d3v
   validation_3d_cases: 1
 
+physics:
+  geometry_lock: laser_thin_foil_deuteron_source_plus_external_thick_cd2_converter
+  compare_case_A_B_per_source_neutron: true
