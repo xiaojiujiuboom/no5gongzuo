@@ -10,13 +10,13 @@
 ### 改动内容
 - 记录 `L_pre=1` 三个 4 ps 作业的 walltime 事故：`a0=5/10/20,L_pre=1` 均因 `#SBATCH -t 04:00:00` 到时被 Slurm 停止。
 - 已把 `hpc/pic_scan4ps_first_20260702_jobs.csv` 中三个 L1 作业标记为 `TIMEOUT_PARTIAL_NOT_ACCEPTED`。
-- 已把 `config.yaml` 的 first 2D scan 默认 walltime 从 4 h 改为 8 h。
-- 已把 `hpc/tools/render_epoch_4ps_scan.py` 的 `--hours` 默认值从 4 改为 8，并补充说明生产 run 要按 ETA 加余量设置墙时。
+- 已把 `config.yaml` 的 first 2D scan walltime 改为 `null`，表示每次提交必须显式选择。
+- 已把 `hpc/tools/render_epoch_4ps_scan.py` 的 `--hours` 改为必填参数；没有显式 walltime 就拒绝生成 Slurm 文件。
 - `hpc/RUN_LOG.md` 已记录事故成本：三个 timeout 约 1,921 core-hours，按 0.1 CNY/core-hour 约 192 CNY，且没有产生 accepted source。
 
 ### 给后续 agent 的注意
 - 这三个 L1 partial 输出不得进入 Stage B，只能用于趋势/运行时间估计。
-- 后续不要再用过紧墙时提交生产 PIC；必须用 EPOCH ETA 或短 benchmark 决定 walltime/ranks。
+- 后续不要再用过紧墙时提交生产 PIC；必须用 EPOCH ETA 或短 benchmark 决定 walltime/ranks，并在命令里显式写 `--hours`。
 - 当前可推进 Stage B 的正式源仍是 `L_pre=0` 的 `a0={5,10,20}` 三个 5 ps accepted sources。
 
 ---

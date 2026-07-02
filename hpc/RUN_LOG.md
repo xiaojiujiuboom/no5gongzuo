@@ -583,5 +583,5 @@ Cost note:
 Process correction:
 
 - Do not submit production PIC scans with an optimistic hard walltime. Set walltime from observed EPOCH ETA plus safety margin, or run a short benchmark first.
-- The first-scan config and renderer default walltime were changed from 4 h to 8 h to avoid repeating this failure mode.
+- The first-scan config now marks walltime as required per submission, and the renderer no longer has a walltime default. It refuses to render Slurm files unless `--hours` is provided explicitly.
 - Future `L_pre=1` reruns should either use at least 8 h walltime or first benchmark a higher-rank run to prove the higher rank count reduces wall-clock time enough to justify its cost.

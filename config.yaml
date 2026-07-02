@@ -52,7 +52,7 @@ hpc_pic:
     slurm:
       partition: amd_m9_768
       ranks: 160
-      walltime_h: 8
+      walltime_h: null  # Required per submission; do not rely on a script default.
   optional_followup_2d_scan:
     target_thickness_um: [3]
   production_dimension: 2d3v

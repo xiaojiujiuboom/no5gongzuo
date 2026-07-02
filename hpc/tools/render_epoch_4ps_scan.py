@@ -249,8 +249,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--hours",
         type=int,
-        default=8,
-        help="Slurm walltime in hours. Use ETA plus margin for production runs.",
+        required=True,
+        help="Required Slurm walltime in hours. Use ETA plus margin for production runs.",
     )
     return parser
 
@@ -260,6 +260,8 @@ def main() -> None:
     ppc = tuple(int(x) for x in args.ppc.split(","))
     if len(ppc) != 3:
         raise SystemExit("--ppc must be e,d,c")
+    if args.hours <= 0:
+        raise SystemExit("--hours must be a positive integer chosen from an ETA or benchmark.")
     out_root = Path(args.output_root)
     out_root.mkdir(parents=True, exist_ok=True)
 
