@@ -272,11 +272,37 @@ Interpretation:
 - Purpose: faster 4.0 ps source-completion check with unchanged physics and higher MPI rank count.
 - Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r002`
 - Job ID: `1348703`
-- State at submission check: `PENDING`.
+- State: `CANCELLED` after about 40 seconds; no accepted physics data.
 - MPI ranks: 160 on one 256-CPU node.
 - Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
 - Target: 5 um CD2, transverse half-width 12 um, real-density `n_C=20 nc`, `n_D=40 nc`, `n_e=160 nc`.
 - PPC: electron/deuteron/carbon = 8/8/4.
 - Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
 - Wall-time estimate: scaling from the 3.5 ps / 64-rank run gives an ideal estimate near 30 minutes; practical runtime may be closer to 30-45 minutes because probe and MPI overhead do not scale perfectly.
+- Acceptance target: `rear+20 um` final-window fraction `<= 10%`, with cumulative mean energy and theta RMS changing by no more than about `5-10%` after appending the last window.
+- Reason for cancellation: the Slurm script did not explicitly set the partition. The cluster engineer recommended adding `#SBATCH -p amd_m9_768`, cancelling existing jobs, and resubmitting.
+
+## pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r003
+
+- Purpose: temporary 64-rank backup queue attempt while the 160-rank job was pending.
+- Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r003`
+- Job ID: `1353498`
+- State: `CANCELLED` before start; no physics data.
+- MPI ranks: 64 on one 256-CPU node.
+- Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
+- Reason for cancellation: replaced by an explicitly partitioned 160-rank submission after cluster-engineer feedback.
+
+## pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r004
+
+- Purpose: 4.0 ps source-completion check with unchanged physics, 160 MPI ranks, and explicit Slurm partition selection.
+- Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r004`
+- Job ID: `1355962`
+- State at submission check: `PENDING`.
+- Slurm partition: `amd_m9_768` explicitly set with `#SBATCH -p amd_m9_768`.
+- MPI ranks: 160 on one 256-CPU node.
+- Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
+- Target: 5 um CD2, transverse half-width 12 um, real-density `n_C=20 nc`, `n_D=40 nc`, `n_e=160 nc`.
+- PPC: electron/deuteron/carbon = 8/8/4.
+- Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
+- Wall-time estimate: about 30-45 minutes once scheduled.
 - Acceptance target: `rear+20 um` final-window fraction `<= 10%`, with cumulative mean energy and theta RMS changing by no more than about `5-10%` after appending the last window.

@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH -J no5_pic2d_smoke
+#SBATCH -p amd_m9_768
 #SBATCH -N 1
 #SBATCH -n 4
 #SBATCH -t 00:10:00
@@ -37,4 +38,3 @@ find Data -maxdepth 1 -type f -printf "%f %s bytes\n" | sort
 
 echo "=== DONE ==="
 date
-

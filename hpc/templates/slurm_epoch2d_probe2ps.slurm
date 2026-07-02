@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH -J no5_probe2ps
+#SBATCH -p amd_m9_768
 #SBATCH -N 1
 #SBATCH -n 32
 #SBATCH -t 04:00:00

@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH -J no5_phasecheck1ps
+#SBATCH -p amd_m9_768
 #SBATCH -N 1
 #SBATCH -n 32
 #SBATCH -t 02:00:00
