@@ -394,3 +394,64 @@ Interpretation:
 
 - The final 250 fs window contributes 18.1% of the integrated `rear+20 um` source weight, above the `<= 10%` gate.
 - This case is not accepted for Stage B at 4 ps. A 5 ps extension was submitted as `pic2d_dd_cd2_scan5ps_a0_10_L_0_t_5um_20260703_r001` (Job ID `1377658`).
+
+### pic2d_dd_cd2_scan4ps_a0_20_L_0_t_5um_20260702_r001
+
+- Job ID: `1367959`
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 1 hour 2 minutes 38 seconds by Slurm.
+- Result: failed the accepted-source time-completeness gate at `rear+20 um`.
+
+Final `rear+20 um` integrated metrics at 4.0 ps:
+
+| integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---:|---:|---:|---:|
+| 1.68e18 | 0.142 | 1.73 MeV | 21.47 deg |
+
+Final-by-probe cross-check at 4.0 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 2.86e18 | 0.063 | 1.17 MeV | 28.17 deg |
+| rear+20 um | 1.68e18 | 0.142 | 1.73 MeV | 21.47 deg |
+| rear+30 um | 8.10e17 | 0.242 | 2.27 MeV | 16.09 deg |
+| rear+40 um | 3.04e17 | 0.376 | 2.79 MeV | 12.06 deg |
+| rear+50 um | 7.53e16 | 0.554 | 3.34 MeV | 10.06 deg |
+
+High-energy-tail check for the Bosch-Hale upper range:
+
+- Cumulative `rear+20 um` deuteron weight with `E_D > 9.8 MeV`: 1.25e14.
+- Cumulative fraction with `E_D > 9.8 MeV`: 7.47e-5.
+- High-energy macro-particles above the threshold: 46.
+- Interpretation: the above-threshold tail is far below the 1% action threshold for this 4 ps output, so the current Bosch-Hale cutoff is not an immediate blocker for this case. Recheck the accepted 5 ps `a0=20` source before final Stage B production.
+
+The final 250 fs window contributes 14.2% of the integrated `rear+20 um` source weight, above the `<= 10%` gate. This case is not accepted for Stage B at 4 ps. A 5 ps extension was submitted as `pic2d_dd_cd2_scan5ps_a0_20_L_0_t_5um_20260703_r001` (Job ID `1380981`).
+
+### pic2d_dd_cd2_scan4ps_a0_5_L_0_t_5um_20260702_r001
+
+- Job ID: `1367961`
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 1 hour 7 minutes 57 seconds by Slurm.
+- Result: failed the accepted-source time-completeness gate at `rear+20 um`.
+
+Final `rear+20 um` integrated metrics at 4.0 ps:
+
+| integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---:|---:|---:|---:|
+| 1.19e18 | 0.216 | 1.84 MeV | 19.11 deg |
+
+Final-by-probe cross-check at 4.0 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 2.47e18 | 0.100 | 1.18 MeV | 26.49 deg |
+| rear+20 um | 1.19e18 | 0.216 | 1.84 MeV | 19.11 deg |
+| rear+30 um | 4.27e17 | 0.371 | 2.49 MeV | 13.45 deg |
+| rear+40 um | 9.51e16 | 0.571 | 3.15 MeV | 9.79 deg |
+| rear+50 um | 9.92e15 | 0.663 | 3.94 MeV | 9.40 deg |
+
+Interpretation:
+
+- The final 250 fs window contributes 21.6% of the integrated `rear+20 um` source weight, above the `<= 10%` gate.
+- Although the earlier lower-PPC 4 ps diagnostic passed the time gate, the formal 16/16/8 PPC scan point must be judged on its own output. This case is not accepted for Stage B at 4 ps.
+- A 5 ps extension was submitted as `pic2d_dd_cd2_scan5ps_a0_5_L_0_t_5um_20260703_r001` (Job ID `1381095`).

@@ -8,6 +8,22 @@
 ## 2026-07-03 codex changed
 
 ### 改动内容
+- 继续监控第一轮 PIC 扫描；新增完成并解析 `a0=20, L_pre=0` 和 `a0=5, L_pre=0` 两个 4 ps 作业。
+- `a0=20, L_pre=0` 的 `rear+20 um` final-window fraction = 14.2%，未通过 `<=10%` 源时间完整性门槛。
+- `a0=5, L_pre=0` 的正式 16/16/8 PPC 扫描 `rear+20 um` final-window fraction = 21.6%，也未通过门槛。
+- 已提交 5 ps 延长作业：`a0=20, L_pre=0` Job ID `1380981`；`a0=5, L_pre=0` Job ID `1381095`。
+- 完成了 `a0=20, L_pre=0` 的 Bosch-Hale 高能截断检查：`E_D > 9.8 MeV` 累计权重占比约 7.47e-5，远低于 1% 动作阈值。
+
+### 给后续 agent 的注意
+- `a0=5/10/20, L_pre=0` 的 4 ps 正式源都不得进入 Stage B；必须等对应 5 ps 延长版解析通过，若仍不过门槛再继续延长。
+- 继续监控仍在跑的 4 ps 作业：`a0=10,L_pre=1`、`a0=20,L_pre=1`、`a0=5,L_pre=1`。
+- `a0=20,L_pre=1` 完成后仍需重复 `E_D > 9.8 MeV` 高能尾统计；5 ps 的 `a0=20,L_pre=0` 接受前也要复查。
+
+---
+
+## 2026-07-03 codex changed
+
+### 改动内容
 - 合并了 Claude 的只读审查文档到 `main`。
 - 监控第一轮 6 点 PIC 扫描；`a0=10, L_pre=0` 的 4 ps 作业已完成并解析。
 - 该点 `rear+20 um` final-window fraction = 18.1%，未通过 `<=10%` 源时间完整性门槛。
