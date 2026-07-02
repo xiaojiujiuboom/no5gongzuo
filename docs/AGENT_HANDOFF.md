@@ -7,6 +7,13 @@
 
 ## 2026-07-03 codex changed - 3D strategy reset
 
+### 后续执行更新
+- 第一发 3D compact-deck 微基准 `r001`，Job ID `1417042`，在 35 秒内 `FAILED`，原因是 EPOCH3D parser 拒绝带中文/特殊字符注释的 deck；未进入物理计算，成本约 `2.5` core-hours。
+- 已提交 ASCII/comment-stripped 重跑：
+  `pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002`，Job ID `1417631`。
+- Slurm 设置：`amd_m9_768`，1 节点，256 MPI ranks，墙时 `2:00:00`；满墙时成本上限约 `512` core-hours，即约 `51.2 CNY`。
+- 该 run 只用于 wall-clock、内存、scratch、restart 和输出格式验证，不是 production source。
+
 ### 改动内容
 - 按用户指示采用 Claude 最新策略：3D PIC 作为真实性锚点，不再把高精度 2D 参数矩阵当最终可信度核心。
 - 从 `origin/claude/supervisor-review` 引入 `docs/PROJECT_POSITIONING.md` 和 `hpc/templates/epoch3d_dd_cd2_source_compact.deck`。

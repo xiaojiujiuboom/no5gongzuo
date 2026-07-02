@@ -1,37 +1,36 @@
 # =====================================================================
-# no5 DD-neutron  |  3D EPOCH 源生成 deck  (候选版, 省算力配置)
-# 激光打 CD2 箔 -> 前向氘束(TNSA) -> 在 rear+20um 源面记录氘相空间
-# -> Stage B(半解析 D-D 中子源)输入锚点。
+# no5 DD-neutron | 3D EPOCH source deck candidate
+# Laser on CD2 foil -> forward deuteron beam (TNSA)
+# -> record deuteron phase space at rear+20um for Stage B.
 #
-# 配置(当前候选):
-#   - 网格各向异性: dx≈22.5nm(激光轴, nx=2000) / dy=dz=40nm(横向, 更省)。
-#     依据: 用户已发表 3D 经验(~25-30nm 可发) + 文献常用 10-25nm;
-#     可信度主要靠 Stage B 参数化扫描承载, 3D 仅作物理锚点。
-#   - 薄靶 3um CD2(能省则省)。
-#   - 盒子按本问题物理定, 非照搬旧文章。
+# Current candidate:
+#   - Anisotropic grid: dx ~= 22.5 nm, dy = dz = 40 nm.
+#   - 3 um CD2 target.
+#   - Box chosen for this source problem, not copied from older decks.
 #
-# 单例成本只是提交前估算,不得当作报价。正式价格以 300fs 微基准外推为准。
+# Cost is only a pre-run estimate. Use the 300 fs benchmark to extrapolate.
 #
-# [!] 提交前: 300fs 微基准(测开销 + 看氘是否在到 rear+20 前打横向边界, 确认 ±10um 够);
-#     restart 全量转储, 确认 scratch。
+# IMPORTANT: keep comments ASCII-only. EPOCH3D v4.20.1 on BSCC rejected this
+# deck when Chinese/special-character comments were present before constants.
+# Run 300 fs benchmark before any production submission.
 # =====================================================================
 
 begin:constant
   lambda0 = 0.8 * micron
   omega0  = 2.0 * pi * c / lambda0
 
-  a0  = 10.0                     # 扫描 {5,10,20}
-  w0  = 3.0 * micron             # 焦斑 1/e 半宽
-  tau = 30.0 * femto             # 脉宽(高斯)
-  t0  = 3.0 * tau                # 峰值到达时间
+  a0  = 10.0                     # planned scan values: 5, 10, 20
+  w0  = 3.0 * micron             # Gaussian spot size
+  tau = 30.0 * femto             # pulse duration
+  t0  = 3.0 * tau                # pulse peak arrival time
 
-  thickness   = 3.0 * micron     # CD2 靶厚(省)
+  thickness   = 3.0 * micron     # CD2 target thickness
   x_front     = 0.0 * micron
   x_rear      = x_front + thickness
-  target_half = 6.0 * micron     # 靶横向半宽(< 盒子 ±10um)
-  src_plane   = x_rear + 20.0 * micron   # rear+20um 源面 = 23um
+  target_half = 6.0 * micron     # target transverse half-width
+  src_plane   = x_rear + 20.0 * micron   # rear+20um source plane = 23um
 
-  # CD2 全电离(rho≈1.06 g/cc): 每单元 1C + 2D, 电子 = 6 + 2 = 8
+  # Fully ionized CD2, rho ~= 1.06 g/cc: one C and two D per unit.
   n_unit = 3.98e28               # /m^3
   n_D = 2.0 * n_unit             # 7.96e28
   n_C = 1.0 * n_unit             # 3.98e28
@@ -40,7 +39,7 @@ end:constant
 
 
 begin:control
-  nx = 2000                      # x:[-10,35]um, nx=2000 -> dx=22.5nm (front10 + 3um靶 + rear+20源面(23) + 余量)
+  nx = 2000                      # x:[-10,35]um, nx=2000 -> dx=22.5nm
   ny = 500                       # y:[-10,10]um @ dy=40nm
   nz = 500                       # z:[-10,10]um @ dz=40nm
   x_min = -10.0 * micron
@@ -49,7 +48,7 @@ begin:control
   y_max =  10.0 * micron
   z_min = -10.0 * micron
   z_max =  10.0 * micron
-  t_end = 2500.0 * femto         # 省; 产额加权门确认完整度, 不够再延
+  t_end = 2500.0 * femto         # first-pass source run; extend if needed
   dt_multiplier = 0.95
   dlb_threshold = 0.5
   stdout_frequency = 500
@@ -91,7 +90,7 @@ begin:species
   name = deuteron
   charge = 1.0
   mass = 3670.5                  # m_D / m_e
-  nparticles_per_cell = 32       # 氘优先: 高能尾统计(观测量)
+  nparticles_per_cell = 32       # prioritize D statistics for the high-energy tail
   temp = 0.0
   number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_D, 0.0)
 end:species
@@ -106,7 +105,7 @@ begin:species
 end:species
 
 
-# --- 源面探针: 记录穿过 rear+20um 的氘(相空间) -> Stage B 输入 ---
+# --- Source-plane probe: deuterons crossing rear+20um for Stage B ---
 begin:probe
   name = D_source_rear20
   point = (src_plane, 0.0, 0.0)
@@ -118,13 +117,13 @@ begin:probe
 end:probe
 
 
-# --- 轻量氘能谱诊断 ---
+# --- Lightweight deuteron energy diagnostic ---
 begin:dist_fn
   name = deuteron_en
   ndims = 1
   dumpmask = always
   direction1 = dir_en
-  range1 = (0.0, 8.0e-12)        # 0 ~ 50 MeV (焦耳); 视 a0 调
+  range1 = (0.0, 8.0e-12)        # 0 to about 50 MeV
   resolution1 = 1000
   include_species:deuteron
 end:dist_fn
@@ -145,6 +144,6 @@ begin:output
   particle_probes = always
   distribution_functions = always
 
-  restart_dump_every = 4         # ~1ps 一次全量 restart(墙钟超时可续)
+  restart_dump_every = 4         # full restart about every 1 ps
   force_final_to_be_restartable = T
 end:output

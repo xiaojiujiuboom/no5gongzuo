@@ -1,0 +1,3 @@
+run_id,job_id,state,partition,nodes,tasks,walltime_h,a0,target_thickness_um,t_end_fs,notes
+pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r001,1417042,FAILED_PARSE,amd_m9_768,1,256,2,10,3,300,failed before physics because EPOCH3D parser rejected non-ASCII comments in the deck; cost negligible
+pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002,1417631,RUNNING,amd_m9_768,1,256,2,10,3,300,ASCII/comment-stripped rerun of the full-size 300 fs microbenchmark; not a production source

@@ -11,6 +11,69 @@ Postprocessing note:
 - For long runs, use `Data/*.sdf` in postprocessing so files beyond `0009.sdf`
   are included.
 
+## pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002
+
+- Purpose: ASCII/comment-stripped rerun of the first full-size EPOCH3D
+  compact-deck microbenchmark.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002`
+- Job ID: `1417631`
+- Current state after first queue check: `RUNNING`.
+- Start time: `2026-07-03T07:08:25` on node `wqd10nbf04c01`.
+- Slurm: partition `amd_m9_768`, `1` node, `256` MPI ranks, walltime `2:00:00`.
+- Cost cap at full walltime: `512` core-hours, about `51.2 CNY` at
+  `0.1 CNY/core-hour`.
+- Difference from `r001`: all comments were stripped before submission. A
+  small-grid parser test passed with the same syntax after comments were
+  stripped, confirming the `r001` failure was a deck-parser/comment issue rather
+  than a physics-expression issue.
+- Same physics dimensions and 300 fs benchmark purpose as `r001`.
+- Early runtime check:
+  - EPOCH3D input parsing passed.
+  - Initial conditions were valid.
+  - Loaded macro-particles: electron `192,960,000`, deuteron `385,920,000`,
+    carbon `96,480,000`.
+  - The job entered the time loop, so the remaining question is wall-clock,
+    memory/scratch, and restart/output behavior.
+
+## pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r001
+
+- Purpose: first full-size EPOCH3D compact-deck microbenchmark after the
+  2026-07-03 strategy reset to 3D-first source anchoring.
+- This is **not** a production deuteron source. It is a cost/memory/syntax/output
+  benchmark before any 2.5 ps 3D source submission.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r001`
+- Job ID: `1417042`
+- Final state: `FAILED`, exit code `14:0`.
+- Runtime: `00:00:35` by Slurm; about `2.5` core-hours, or roughly `0.25 CNY`
+  at `0.1 CNY/core-hour`.
+- Failure mode: EPOCH3D rejected the deck while parsing `begin:constant`.
+  Small-grid testing showed the same deck parses after comments are stripped, so
+  the practical fix is to keep EPOCH input decks ASCII/comment-safe.
+- Slurm: partition `amd_m9_768`, `1` node, `256` MPI ranks, walltime `2:00:00`.
+- Cost cap at full walltime: `512` core-hours, about `51.2 CNY` at
+  `0.1 CNY/core-hour`.
+- Deck basis: `hpc/templates/epoch3d_dd_cd2_source_compact.deck`.
+- Run-specific deck changes:
+  - `t_end = 300 fs`
+  - `dt_snapshot = 100 fs`
+  - `restart_dump_every = 3`
+  - `stdout_frequency = 100`
+- Physics dimensions left unchanged from the compact deck:
+  - `a0 = 10`
+  - `target = 3 um CD2`
+  - `x = [-10, 35] um`, `nx = 2000`, `dx = 22.5 nm`
+  - `y,z = [-10, 10] um`, `ny = nz = 500`, `dy = dz = 40 nm`
+  - source plane remains `rear+20 um`
+- Acceptance/decision criteria after completion:
+  - EPOCH3D starts cleanly and exits normally.
+  - Wall-clock per simulated fs supports a credible 2.5 ps estimate.
+  - Memory and scratch use fit one `amd_m9_768` node with margin.
+  - Probe/dist_fn output and final restart behavior are verified.
+  - If the benchmark fails or is too expensive, do not submit production 3D
+    without revising the deck or resource plan.
+
 ## pic2d_dd_cd2_a0_5_L_0_t_5um_20260701_r001
 
 - Purpose: first no5 EPOCH2D smoke in dedicated remote workspace.
