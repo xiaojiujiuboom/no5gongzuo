@@ -455,3 +455,37 @@ Interpretation:
 - The final 250 fs window contributes 21.6% of the integrated `rear+20 um` source weight, above the `<= 10%` gate.
 - Although the earlier lower-PPC 4 ps diagnostic passed the time gate, the formal 16/16/8 PPC scan point must be judged on its own output. This case is not accepted for Stage B at 4 ps.
 - A 5 ps extension was submitted as `pic2d_dd_cd2_scan5ps_a0_5_L_0_t_5um_20260703_r001` (Job ID `1381095`).
+
+### pic2d_dd_cd2_scan5ps_a0_10_L_0_t_5um_20260703_r001
+
+- Job ID: `1377658`
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 1 hour 18 minutes 55 seconds for the EPOCH core.
+- Purpose: source-completion extension for the 4 ps `a0=10, L_pre=0` scan point, which had failed with a final-window fraction of 18.1%.
+- Result: accepted for Stage B source generation at `rear+20 um`, integrated from the start through 5.0 ps.
+
+Selected `rear+20 um` integrated metrics:
+
+| time | window weight | integrated weight | latest-window fraction | window mean E | integrated mean E | window theta RMS | integrated theta RMS |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 4000 fs | 2.54e17 | 1.40e18 | 0.181 | 1.37 MeV | 1.77 MeV | 25.87 deg | 20.28 deg |
+| 4250 fs | 2.39e17 | 1.64e18 | 0.146 | 1.25 MeV | 1.70 MeV | 28.00 deg | 21.58 deg |
+| 4500 fs | 2.17e17 | 1.86e18 | 0.117 | 1.13 MeV | 1.63 MeV | 29.60 deg | 22.66 deg |
+| 4750 fs | 1.93e17 | 2.05e18 | 0.094 | 1.04 MeV | 1.57 MeV | 31.13 deg | 23.59 deg |
+| 5000 fs | 1.72e17 | 2.22e18 | 0.077 | 0.95 MeV | 1.53 MeV | 32.52 deg | 24.40 deg |
+
+Final-by-probe cross-check at 5.0 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 3.20e18 | 0.030 | 1.09 MeV | 30.34 deg |
+| rear+20 um | 2.22e18 | 0.077 | 1.53 MeV | 24.40 deg |
+| rear+30 um | 1.36e18 | 0.138 | 1.93 MeV | 19.36 deg |
+| rear+40 um | 7.08e17 | 0.219 | 2.34 MeV | 15.09 deg |
+| rear+50 um | 2.97e17 | 0.340 | 2.77 MeV | 11.81 deg |
+
+Interpretation:
+
+- The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 5.0 ps: the final 250 fs window is 7.72% of the integrated source weight, below the `<= 10%` threshold.
+- The accepted source for this scan point is the concatenated deuteron phase space crossing `rear+20 um` from the start through 5.0 ps, not the 4.0 ps output.
+- Farther downstream planes remain incomplete at 5.0 ps and are diagnostics only for this run.
