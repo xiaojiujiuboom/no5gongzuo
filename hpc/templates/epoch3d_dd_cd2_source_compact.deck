@@ -4,7 +4,7 @@
 # -> Stage B(半解析 D-D 中子源)输入锚点。
 #
 # 配置(已定):
-#   - 网格各向异性: dx=25nm(激光轴) / dy=dz=40nm(横向, 更省)。
+#   - 网格各向异性: dx≈22.5nm(激光轴, nx=2000) / dy=dz=40nm(横向, 更省)。
 #     依据: 用户已发表 3D 经验(~25-30nm 可发) + 文献常用 10-25nm;
 #     可信度主要靠 Stage B 参数化扫描承载, 3D 仅作物理锚点。
 #   - 薄靶 3um CD2(能省则省)。
@@ -40,11 +40,11 @@ end:constant
 
 
 begin:control
-  nx = 1720                      # x:[-10,33]um @ dx=25nm  (front10 + 3um靶 + rear+20源面(23) + 10um余量)
+  nx = 2000                      # x:[-10,35]um, nx=2000 -> dx=22.5nm (front10 + 3um靶 + rear+20源面(23) + 余量)
   ny = 500                       # y:[-10,10]um @ dy=40nm
   nz = 500                       # z:[-10,10]um @ dz=40nm
   x_min = -10.0 * micron
-  x_max =  33.0 * micron
+  x_max =  35.0 * micron
   y_min = -10.0 * micron
   y_max =  10.0 * micron
   z_min = -10.0 * micron

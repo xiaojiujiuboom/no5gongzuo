@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-07-02 (8) claude changed
+
+### 改动内容
+- 3D deck: x 盒子 [-10,35]um, nx=2000(-> dx=22.5nm)。其余不变(3um 靶, y,z ±10um@40nm)。
+
+### 方向调整(用户定): 先打通全链路, 暂不做扫描
+- **不在 PIC 阶段刷参数扫描**。先跑 **1 发 PIC(a0=10)-> Stage B -> Stage C**, 看端到端结果和 ⁷Li 效应是否显现。
+- 各类扫描的定位(留到看过首个结果后再决定是否做):
+  - PIC a0/预等离子体扫描 = 结论"不挑激光设置"的稳健性(后期完整性, 非首个结果必需)。
+  - Stage B 参数化 kT/theta_max 扫描 = 使结论对源稳健 + "畸变->⁷Li"映射主图(冲高区的加分项, 非首个结果必需)。
+- **首轮流水线(建议)**: PIC(a0=10) -> extract deuteron_beam.h5 -> build_source(neutron_source.h5 + 谱/角图) ->
+  OpenMC Case A vs B, Li6/Li7 分道, 天然+富集, per-source-neutron -> 看 A/B 偏差是否集中在 ⁷Li >2.82MeV。
 ## 2026-07-02 (7) claude changed
 
 ### 改动内容
