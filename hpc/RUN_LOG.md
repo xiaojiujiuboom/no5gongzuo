@@ -489,3 +489,37 @@ Interpretation:
 - The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 5.0 ps: the final 250 fs window is 7.72% of the integrated source weight, below the `<= 10%` threshold.
 - The accepted source for this scan point is the concatenated deuteron phase space crossing `rear+20 um` from the start through 5.0 ps, not the 4.0 ps output.
 - Farther downstream planes remain incomplete at 5.0 ps and are diagnostics only for this run.
+
+### pic2d_dd_cd2_scan5ps_a0_5_L_0_t_5um_20260703_r001
+
+- Job ID: `1381095`
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 1 hour 14 minutes 33 seconds by Slurm.
+- Purpose: source-completion extension for the 4 ps `a0=5, L_pre=0` formal PPC scan point, which had failed with a final-window fraction of 21.6%.
+- Result: accepted for Stage B source generation at `rear+20 um`, integrated from the start through 5.0 ps.
+
+Selected `rear+20 um` integrated metrics:
+
+| time | window weight | integrated weight | latest-window fraction | window mean E | integrated mean E | window theta RMS | integrated theta RMS |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 4000 fs | 2.57e17 | 1.19e18 | 0.216 | 1.48 MeV | 1.84 MeV | 24.12 deg | 19.11 deg |
+| 4250 fs | 2.49e17 | 1.43e18 | 0.174 | 1.35 MeV | 1.76 MeV | 26.38 deg | 20.56 deg |
+| 4500 fs | 2.33e17 | 1.67e18 | 0.140 | 1.23 MeV | 1.68 MeV | 28.26 deg | 21.80 deg |
+| 4750 fs | 2.12e17 | 1.88e18 | 0.113 | 1.12 MeV | 1.62 MeV | 30.03 deg | 22.88 deg |
+| 5000 fs | 1.92e17 | 2.07e18 | 0.092 | 1.02 MeV | 1.56 MeV | 31.47 deg | 23.80 deg |
+
+Final-by-probe cross-check at 5.0 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 3.10e18 | 0.037 | 1.10 MeV | 30.00 deg |
+| rear+20 um | 2.07e18 | 0.092 | 1.56 MeV | 23.80 deg |
+| rear+30 um | 1.19e18 | 0.161 | 2.00 MeV | 18.56 deg |
+| rear+40 um | 5.77e17 | 0.256 | 2.44 MeV | 14.18 deg |
+| rear+50 um | 2.13e17 | 0.394 | 2.91 MeV | 10.85 deg |
+
+Interpretation:
+
+- The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 5.0 ps: the final 250 fs window is 9.25% of the integrated source weight, below the `<= 10%` threshold.
+- The accepted source for this scan point is the concatenated deuteron phase space crossing `rear+20 um` from the start through 5.0 ps, not the 4.0 ps output.
+- Farther downstream planes remain incomplete at 5.0 ps and are diagnostics only for this run.

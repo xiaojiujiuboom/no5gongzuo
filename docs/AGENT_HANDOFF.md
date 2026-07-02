@@ -8,6 +8,20 @@
 ## 2026-07-03 codex changed
 
 ### 改动内容
+- `a0=5, L_pre=0` 的 5 ps 延长作业 `1381095` 已完成并解析。
+- `rear+20 um` final-window fraction 从 4 ps 的 21.6% 降到 5 ps 的 9.25%，通过 `<=10%` 源时间完整性门槛。
+- 该点可作为 Stage B 候选 D 源，源定义为 `rear+20 um` 穿面探针从起始到 5.0 ps 的累计相空间。
+
+### 给后续 agent 的注意
+- `a0=5, L_pre=0` 使用 5 ps 源，不使用 4 ps 源。
+- 目前已接受的 Stage B 候选源：`a0=5,L_pre=0,t=5ps` 与 `a0=10,L_pre=0,t=5ps`。
+- 继续监控 `a0=20,L_pre=0` 的 5 ps 延长作业，以及三个 `L_pre=1` 的 4 ps 作业。
+
+---
+
+## 2026-07-03 codex changed
+
+### 改动内容
 - `a0=10, L_pre=0` 的 5 ps 延长作业 `1377658` 已完成并解析。
 - `rear+20 um` final-window fraction 从 4 ps 的 18.1% 降到 5 ps 的 7.72%，通过 `<=10%` 源时间完整性门槛。
 - 该点可作为 Stage B 候选 D 源，源定义为 `rear+20 um` 穿面探针从起始到 5.0 ps 的累计相空间。
