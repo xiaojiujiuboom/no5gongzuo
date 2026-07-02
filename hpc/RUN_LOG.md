@@ -251,17 +251,32 @@ Interpretation:
 
 - `rear+20 um` is approaching completion but still misses the strict gate at 3.5 ps. The final 250 fs window contributes 13.3% of the cumulative source, above the target `<= 5-10%`.
 - The trend is physically consistent: late-arriving deuterons have lower mean energy and broader angle, so ending at 3.5 ps would slightly bias the Stage B source high in energy and narrow in angle.
-- A 4.0 ps source-focused diagnostic was submitted as `pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r001` (Job ID `1346456`).
+- A 4.0 ps source-focused diagnostic was resubmitted with 160 MPI ranks as `pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r002` (Job ID `1348703`) after the 64-rank job was cancelled to shorten wall time.
 
 ## pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r001
 
 - Purpose: final source-completion check after the 3.5 ps diagnostic came close but remained above the late-window gate.
 - Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r001`
 - Job ID: `1346456`
-- State at submission check: `PENDING`.
+- State: `CANCELLED` after about 6 seconds; no accepted physics data.
 - MPI ranks: 64 on one 256-CPU node.
 - Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
 - Target: 5 um CD2, transverse half-width 12 um, real-density `n_C=20 nc`, `n_D=40 nc`, `n_e=160 nc`.
 - PPC: electron/deuteron/carbon = 8/8/4.
 - Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
+- Acceptance target: `rear+20 um` final-window fraction `<= 10%`, with cumulative mean energy and theta RMS changing by no more than about `5-10%` after appending the last window.
+- Reason for cancellation: user requested a wall-time target near 30 minutes. The same physics case was resubmitted with 160 MPI ranks.
+
+## pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r002
+
+- Purpose: faster 4.0 ps source-completion check with unchanged physics and higher MPI rank count.
+- Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r002`
+- Job ID: `1348703`
+- State at submission check: `PENDING`.
+- MPI ranks: 160 on one 256-CPU node.
+- Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
+- Target: 5 um CD2, transverse half-width 12 um, real-density `n_C=20 nc`, `n_D=40 nc`, `n_e=160 nc`.
+- PPC: electron/deuteron/carbon = 8/8/4.
+- Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
+- Wall-time estimate: scaling from the 3.5 ps / 64-rank run gives an ideal estimate near 30 minutes; practical runtime may be closer to 30-45 minutes because probe and MPI overhead do not scale perfectly.
 - Acceptance target: `rear+20 um` final-window fraction `<= 10%`, with cumulative mean energy and theta RMS changing by no more than about `5-10%` after appending the last window.

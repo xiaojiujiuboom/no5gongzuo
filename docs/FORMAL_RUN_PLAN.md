@@ -65,7 +65,7 @@ Current status:
 2.5 ps: latest rear+20 window is still 46.8% of the integrated source
 3.0 ps: latest rear+20 window is still 25.0% of the integrated source
 3.5 ps: latest rear+20 window is 13.3%; close but still above the gate
-4.0 ps: submitted with 64 cores and source-focused probes
+4.0 ps: submitted with 160 cores and source-focused probes
 ```
 
 ## 3. Physics Scan
