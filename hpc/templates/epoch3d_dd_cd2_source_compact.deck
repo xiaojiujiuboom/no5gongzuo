@@ -1,43 +1,34 @@
 # =====================================================================
-# no5 DD-neutron  |  COMPACT 3D EPOCH deck  (草稿, 供评估)
-# 激光打薄 CD2 箔 -> 前向氘束(TNSA) -> 在 rear+20um 源面记录氘相空间
-# 作为 Stage B(半解析 D-D 中子源)的物理锚点。
+# no5 DD-neutron  |  3D EPOCH 源生成 deck  (锁定版)
+# 激光打 CD2 箔 -> 前向氘束(TNSA) -> 在 rear+20um 源面记录氘相空间
+# -> Stage B(半解析 D-D 中子源)输入锚点。
 #
-# 为塞进 ~3000 CNY 预算做的取舍(每一条都是可调旋钮):
-#   1) 各向异性网格: dx=10nm(压住趋肤深度~10nm) / dy=dz=24nm(横向可粗)
-#   2) 薄靶 thickness=2um   [!] 5um 会是预算的 4-16x; 若坚持 5um 见交接文档
-#   3) 短时 t_end=1.5ps + 产额加权早停(高能氘早到, 快中子/⁷Li 信号已被捕获)
-#   4) PPC 氘优先: D=32 / e=20 / C=8  (成本主旋钮; 尾巴统计靠氘 PPC)
-#   5) 只在源面放 particle probe + 轻量 dist_fn; 不转储全场/全粒子
-#   6) 开 restart, 墙钟超时可续算
-#   7) 盒子已收到最小: 前真空 6um, 下游 rear+20 再留 8um 余量; 靶横向半宽 8um
+# 分辨率/成本决定(已定, 不再纠结):
+#   - dx=dy=dz=25nm 各向同性。依据: 用户已发表 3D 经验(~25-30nm 可发) +
+#     文献常用 10-25nm(见交接文档参考)。25nm 是 ~2.5x 趋肤深度, 属公认可用区间;
+#     可信度主要靠 Stage B 参数化畸变扫描(结论对源稳健), 3D 只作物理锚点, 无需超细。
+#   - 真实 5um CD2 靶(25nm 下成本才 ~370-750 CNY/例, 预算 3000 绰绰有余, 不必再用 2um)。
+#   - 盒子按本问题物理定, 非照搬旧文章。
 #
-# [盒子 vs 成本] 3D 主成本是"靶内粒子"(=厚度 x 横向^2 x PPC), 不是真空盒子。
-#   砍真空只省场那部分(~10-20%); 要省倍数请动 厚度/横向尺寸/PPC/时间。
-# [横向物理地板] y,z 盒子必须兜住发散氘束到源面:
-#   rear+20um、快前向~10° 时 束半宽 ≈ 靶半宽(8) + 20*tan10° ≈ 11.5um -> 需 ±12um。
-#   想再缩横向, 只能把源面移近到 rear+10um(改真空隙几何, 见 PHYSICS_LOCK), 那时 ±10um 够。
-#   微基准里务必确认氘没在到源面前就打到横向边界(看边界损失 vs probe 计数)。
+# 单例成本(估): 5um, ±10um, 3.0ps, PPC60 ~ 750 CNY; PPC30 ~ 370 CNY。
 #
-# [!] 正式提交前必做: 跑一个 ~300 fs 的微基准(把 t_end 改 300fs),
-#     (a) 实测每步真实开销, 校准机时估算; (b) 查数值加热:
-#         把 dx 换 10 与 8nm 各跑一发, 看氘谱/截止能是否漂移(漂了=欠分辨)。
-# [!] restart dump 在 3D 是全量(每个 ~TB 级), 确认 scratch 配额; 已设每 3 个 snapshot 一次。
+# [!] 提交前仍建议: 300fs 微基准测真实开销 + 看氘是否在到 rear+20 前打横向边界;
+#     restart 全量转储(3D ~百GB级/次), 确认 scratch。
 # =====================================================================
 
 begin:constant
   lambda0 = 0.8 * micron
   omega0  = 2.0 * pi * c / lambda0
 
-  a0  = 10.0                      # 扫描 {5,10,20}; 强度由 a0 定
+  a0  = 10.0                     # 扫描 {5,10,20}
   w0  = 3.0 * micron             # 焦斑 1/e 半宽
   tau = 30.0 * femto             # 脉宽(高斯)
-  t0  = 3.0 * tau                # 峰值到达时间(留前沿爬升)
+  t0  = 3.0 * tau                # 峰值到达时间
 
-  thickness   = 2.0 * micron     # [!] 靶厚, 预算敏感
+  thickness   = 5.0 * micron     # 真实靶厚(25nm 下负担得起)
   x_front     = 0.0 * micron
   x_rear      = x_front + thickness
-  target_half = 8.0 * micron     # 靶横向半宽(缩到 8um 省粒子; 仍 >2x 焦斑 3um)
+  target_half = 6.0 * micron     # 靶横向半宽(< 盒子 ±10um)
   src_plane   = x_rear + 20.0 * micron   # rear+20um 源面
 
   # CD2 全电离(rho≈1.06 g/cc): 每单元 1C + 2D, 电子 = 6 + 2 = 8
@@ -49,18 +40,18 @@ end:constant
 
 
 begin:control
-  nx = 3600                      # x:[-6,30]um   @ dx=10nm  (前真空6um + 下游到rear+20再留8um)
-  ny = 1000                      # y:[-12,12]um  @ dy=24nm  (横向物理地板, 见顶部注释)
-  nz = 1000                      # z:[-12,12]um  @ dz=24nm
-  x_min = -6.0 * micron
-  x_max =  30.0 * micron         # = src_plane(22um) + 8um 余量 (薄靶2um时)
-  y_min = -12.0 * micron
-  y_max =  12.0 * micron
-  z_min = -12.0 * micron
-  z_max =  12.0 * micron
-  t_end = 1500.0 * femto
+  nx = 1800                      # x:[-10,35]um @ 25nm  (front10 + 5um靶 + rear+20源面 + 10um余量)
+  ny = 800                       # y:[-10,10]um @ 25nm
+  nz = 800                       # z:[-10,10]um @ 25nm
+  x_min = -10.0 * micron
+  x_max =  35.0 * micron
+  y_min = -10.0 * micron
+  y_max =  10.0 * micron
+  z_min = -10.0 * micron
+  z_max =  10.0 * micron
+  t_end = 3000.0 * femto         # 源基本完整(产额加权 ~96%); 想更省可 1.5ps
   dt_multiplier = 0.95
-  dlb_threshold = 0.5            # 动态负载均衡(靶/真空分布不均, 建议开)
+  dlb_threshold = 0.5
   stdout_frequency = 500
   # physics_table_location = /path/to/epoch3d/src/physics_packages/TABLES
 end:control
@@ -120,14 +111,14 @@ begin:probe
   name = D_source_rear20
   point = (src_plane, 0.0, 0.0)
   normal = (1.0, 0.0, 0.0)
-  ek_min = 100.0 * kev           # 与 2D 一致: 只收 >100keV 的前向氘
+  ek_min = 100.0 * kev
   ek_max = -1.0
   include_species:deuteron
   dumpmask = always
 end:probe
 
 
-# --- 轻量氘能谱诊断(快速看谱形, 很便宜) ---
+# --- 轻量氘能谱诊断 ---
 begin:dist_fn
   name = deuteron_en
   ndims = 1
@@ -144,7 +135,6 @@ begin:output
   dump_first = F
   dump_last  = T
 
-  # 省 I/O/存储: 场/密度/全粒子一律不转储, 物理靠 probe + dist_fn
   grid = never
   ex = never
   ey = never
@@ -155,7 +145,6 @@ begin:output
   particle_probes = always
   distribution_functions = always
 
-  # 续算: 每 3 个 snapshot(=750fs) 写一次全量 restart; 墙钟超时最多丢 ~750fs
-  restart_dump_every = 3
+  restart_dump_every = 4         # ~1ps 一次全量 restart(墙钟超时可续)
   force_final_to_be_restartable = T
 end:output

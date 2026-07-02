@@ -5,6 +5,22 @@
 
 ---
 
+## 2026-07-02 (6) claude changed
+
+### 改动内容
+- 更新 `hpc/templates/epoch3d_dd_cd2_source_compact.deck` -> **3D 源生成锁定版**。
+
+### PIC 阶段最终锁定(停止再纠结)
+- **分辨率 dx=dy=dz=25nm 各向同性**。依据: 用户已发表 3D 经验(~25-30nm 可发)+ 文献常用 10-25nm。
+  25nm ≈ 2.5x 趋肤深度, 公认可用区间; 可信度主要由 Stage B 参数化扫描承载, 3D 只作物理锚点。
+- **真实 5um CD2 靶**(25nm 下单例仅 ~370-750 CNY, 预算 3000 绰绰有余, 放弃 2um 妥协)。
+- 盒子按本问题物理定: x[-10,35]um, y,z ±10um; 源面 rear+20um; PPC 氘优先 D32/e20/C8; restart 每 ~1ps。
+- 成本: 5um/±10um/3.0ps/PPC60 ~ 750 CNY; PPC30 ~ 370 CNY。可跑多个点(a0 扫描)。
+- 提交前: 300fs 微基准(测开销 + 查横向边界损失); 确认 scratch(restart 全量)。
+
+### 状态
+- **PIC 配置到此为止, 不再优化。** 结论可信度不押在 PIC 精度上(见 PROJECT_POSITIONING 腿一/腿二)。
+- 下一步重心移出 PIC -> Stage B 参数化畸变扫描(论文主干)+ Stage C(A/B TPR)。
 ## 2026-07-02 (5) claude changed
 
 ### 改动内容
