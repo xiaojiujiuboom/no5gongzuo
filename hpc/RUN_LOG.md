@@ -367,3 +367,30 @@ Post-run acceptance checks:
 - Parse every case with `tools/analyze_probe_sdf.py Data/*.sdf` and `tools/integrate_probe_sdf.py Data/*.sdf`.
 - Check `rear+20 um` latest-window fraction, cumulative mean energy, and cumulative theta RMS.
 - Cases failing the `<= 10%` final-window gate should be extended in time before they are used in Stage B.
+
+### pic2d_dd_cd2_scan4ps_a0_10_L_0_t_5um_20260702_r001
+
+- Job ID: `1367957`
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 57 minutes 47 seconds by Slurm.
+- Result: failed the accepted-source time-completeness gate at `rear+20 um`.
+
+Selected `rear+20 um` integrated metrics:
+
+| time | window weight | integrated weight | latest-window fraction | window mean E | integrated mean E | window theta RMS | integrated theta RMS |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1750 fs | 5.63e14 | 5.63e14 | 1.000 | 4.05 MeV | 4.05 MeV | 8.81 deg | 8.81 deg |
+| 2000 fs | 4.55e15 | 5.11e15 | 0.890 | 3.40 MeV | 3.47 MeV | 10.65 deg | 10.47 deg |
+| 2250 fs | 2.27e16 | 2.78e16 | 0.816 | 2.81 MeV | 2.93 MeV | 9.94 deg | 10.04 deg |
+| 2500 fs | 6.99e16 | 9.77e16 | 0.715 | 2.48 MeV | 2.61 MeV | 10.85 deg | 10.62 deg |
+| 2750 fs | 1.26e17 | 2.24e17 | 0.563 | 2.22 MeV | 2.39 MeV | 12.91 deg | 11.97 deg |
+| 3000 fs | 1.86e17 | 4.09e17 | 0.453 | 2.02 MeV | 2.22 MeV | 15.47 deg | 13.67 deg |
+| 3250 fs | 2.28e17 | 6.37e17 | 0.358 | 1.83 MeV | 2.08 MeV | 18.18 deg | 15.43 deg |
+| 3500 fs | 2.51e17 | 8.88e17 | 0.283 | 1.66 MeV | 1.96 MeV | 20.96 deg | 17.18 deg |
+| 3750 fs | 2.60e17 | 1.15e18 | 0.226 | 1.51 MeV | 1.86 MeV | 23.58 deg | 18.82 deg |
+| 4000 fs | 2.54e17 | 1.40e18 | 0.181 | 1.37 MeV | 1.77 MeV | 25.87 deg | 20.28 deg |
+
+Interpretation:
+
+- The final 250 fs window contributes 18.1% of the integrated `rear+20 um` source weight, above the `<= 10%` gate.
+- This case is not accepted for Stage B at 4 ps. A 5 ps extension was submitted as `pic2d_dd_cd2_scan5ps_a0_10_L_0_t_5um_20260703_r001` (Job ID `1377658`).

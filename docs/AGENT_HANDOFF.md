@@ -5,6 +5,21 @@
 
 ---
 
+## 2026-07-03 codex changed
+
+### 改动内容
+- 合并了 Claude 的只读审查文档到 `main`。
+- 监控第一轮 6 点 PIC 扫描；`a0=10, L_pre=0` 的 4 ps 作业已完成并解析。
+- 该点 `rear+20 um` final-window fraction = 18.1%，未通过 `<=10%` 源时间完整性门槛。
+- 已提交 5 ps 延长作业 `pic2d_dd_cd2_scan5ps_a0_10_L_0_t_5um_20260703_r001`，Job ID `1377658`。
+
+### 给后续 agent 的注意
+- `a0=10, L_pre=0` 的 4 ps 源不得进入 Stage B；必须等 5 ps 延长版解析通过或继续延长。
+- 继续监控其余 5 个 4 ps 扫描点。每个点完成后都要检查 `rear+20 um` final-window fraction、累计均能和角 RMS。
+- Claude 提醒的高能截断检查仍等待 `a0=20` 扫描结果：统计 `E_D > 9.8 MeV` 的权重占比。
+
+---
+
 ## 2026-07-02 claude changed
 
 ### 改动内容

@@ -1,0 +1,2 @@
+run_id,job_id,state,a0,L_pre_um,target_thickness_um,ppc,ranks,source_plane,t_end_ps,reason
+pic2d_dd_cd2_scan5ps_a0_10_L_0_t_5um_20260703_r001,1377658,SUBMITTED,10,0,5,16/16/8,160,rear+20um,5.0,4ps_final_window_fraction_18p1pct_failed_10pct_gate
