@@ -76,6 +76,19 @@
    可加一个**近纯 Li-7 诊断案例**把畸变信号最大化(不现实但干净,做展示图)。
 4. **纳入 CM 各向异性**(详见 AGENT_HANDOFF 建议 2)。
 
+## 4.5 2D→3D 偏差与验证策略(不做低精度 3D 扫描)
+
+维度(2D/3D)与分辨率(粗/细)是两根独立的轴,不能互换。靶为固体密度 n_e≈160 n_c,趋肤深度 ~10nm;
+**粗化到 50nm 做 3D 会数值加热、把离子谱做假,比"收敛好的 2D + 维度修正"更难辩护**;且 3D 只加防御力、不加新意。
+
+策略: 主扫描保持收敛好的 2D; **补 1 发最小化但分辨率达标(≤10-15nm)的 3D 校验**(单 a0,盒子/时长砍到刚够拿截止能与发散度),
+实测 2D 对 3D 的高估比值; 再叠加文献 2D↔3D 标度律折算成偏差带。论文里据此把 2D 写成"已声明、已用 3D 校验 + 文献定界"的常规限制。
+
+**2D↔3D 定界参考**(文献为质子 TNSA; 几何高估对氘同样适用,绝对比值以本项目 3D 校验为准):
+- S. Sinigardi et al., *TNSA proton maximum energy laws for 2D and 3D PIC simulations*, NIM-B (2018), arXiv:1801.04737.
+- J. Babaei, L. A. Gizzi et al., *Rise time of proton cut-off energy in 2D and 3D PIC simulations*, Phys. Plasmas 24, 043106 (2017), doi:10.1063/1.4979901.
+- *A particle-in-cell code comparison for ion acceleration: EPOCH, LSP, and WarpX* (2021) — 数值鲁棒性/代码对照。
+
 ## 5. 博士弧线
 
 - **论文 1**(本月): 保真度/敏感性研究(上述)。
