@@ -1,19 +1,19 @@
 # =====================================================================
-# no5 DD-neutron  |  3D EPOCH 源生成 deck  (锁定版)
+# no5 DD-neutron  |  3D EPOCH 源生成 deck  (锁定版, 省算力配置)
 # 激光打 CD2 箔 -> 前向氘束(TNSA) -> 在 rear+20um 源面记录氘相空间
 # -> Stage B(半解析 D-D 中子源)输入锚点。
 #
-# 分辨率/成本决定(已定, 不再纠结):
-#   - dx=dy=dz=25nm 各向同性。依据: 用户已发表 3D 经验(~25-30nm 可发) +
-#     文献常用 10-25nm(见交接文档参考)。25nm 是 ~2.5x 趋肤深度, 属公认可用区间;
-#     可信度主要靠 Stage B 参数化畸变扫描(结论对源稳健), 3D 只作物理锚点, 无需超细。
-#   - 真实 5um CD2 靶(25nm 下成本才 ~370-750 CNY/例, 预算 3000 绰绰有余, 不必再用 2um)。
+# 配置(已定):
+#   - 网格各向异性: dx=25nm(激光轴) / dy=dz=40nm(横向, 更省)。
+#     依据: 用户已发表 3D 经验(~25-30nm 可发) + 文献常用 10-25nm;
+#     可信度主要靠 Stage B 参数化扫描承载, 3D 仅作物理锚点。
+#   - 薄靶 3um CD2(能省则省)。
 #   - 盒子按本问题物理定, 非照搬旧文章。
 #
-# 单例成本(估): 5um, ±10um, 3.0ps, PPC60 ~ 750 CNY; PPC30 ~ 370 CNY。
+# 单例成本(估): ~100-160 CNY(t=2.5ps, PPC D32/e16/C8)。预算 3000 -> 可跑整个 a0 扫描。
 #
-# [!] 提交前仍建议: 300fs 微基准测真实开销 + 看氘是否在到 rear+20 前打横向边界;
-#     restart 全量转储(3D ~百GB级/次), 确认 scratch。
+# [!] 提交前: 300fs 微基准(测开销 + 看氘是否在到 rear+20 前打横向边界, 确认 ±10um 够);
+#     restart 全量转储, 确认 scratch。
 # =====================================================================
 
 begin:constant
@@ -25,11 +25,11 @@ begin:constant
   tau = 30.0 * femto             # 脉宽(高斯)
   t0  = 3.0 * tau                # 峰值到达时间
 
-  thickness   = 5.0 * micron     # 真实靶厚(25nm 下负担得起)
+  thickness   = 3.0 * micron     # CD2 靶厚(省)
   x_front     = 0.0 * micron
   x_rear      = x_front + thickness
   target_half = 6.0 * micron     # 靶横向半宽(< 盒子 ±10um)
-  src_plane   = x_rear + 20.0 * micron   # rear+20um 源面
+  src_plane   = x_rear + 20.0 * micron   # rear+20um 源面 = 23um
 
   # CD2 全电离(rho≈1.06 g/cc): 每单元 1C + 2D, 电子 = 6 + 2 = 8
   n_unit = 3.98e28               # /m^3
@@ -40,16 +40,16 @@ end:constant
 
 
 begin:control
-  nx = 1800                      # x:[-10,35]um @ 25nm  (front10 + 5um靶 + rear+20源面 + 10um余量)
-  ny = 800                       # y:[-10,10]um @ 25nm
-  nz = 800                       # z:[-10,10]um @ 25nm
+  nx = 1720                      # x:[-10,33]um @ dx=25nm  (front10 + 3um靶 + rear+20源面(23) + 10um余量)
+  ny = 500                       # y:[-10,10]um @ dy=40nm
+  nz = 500                       # z:[-10,10]um @ dz=40nm
   x_min = -10.0 * micron
-  x_max =  35.0 * micron
+  x_max =  33.0 * micron
   y_min = -10.0 * micron
   y_max =  10.0 * micron
   z_min = -10.0 * micron
   z_max =  10.0 * micron
-  t_end = 3000.0 * femto         # 源基本完整(产额加权 ~96%); 想更省可 1.5ps
+  t_end = 2500.0 * femto         # 省; 产额加权门确认完整度, 不够再延
   dt_multiplier = 0.95
   dlb_threshold = 0.5
   stdout_frequency = 500
@@ -82,7 +82,7 @@ begin:species
   name = electron
   charge = -1.0
   mass = 1.0
-  nparticles_per_cell = 20
+  nparticles_per_cell = 16
   temp = 0.0
   number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_e, 0.0)
 end:species
