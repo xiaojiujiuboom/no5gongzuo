@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-07-02 (7) claude changed
+
+### 改动内容
+- 更新 `hpc/templates/epoch3d_dd_cd2_source_compact.deck`: 靶厚 5um->**3um**, 网格改**各向异性 dx=25nm / dy=dz=40nm**。
+
+### 最终 3D 配置
+- 3um CD2 靶; 网格 1720x500x500 (x[-10,33]um@25nm, y,z ±10um@40nm); 源面 rear+20um(=23um);
+  PPC D32/e16/C8; t_end=2.5ps; restart 每 ~1ps。
+- 单例 ~136 CNY -> 预算 3000 可跑整个 a0 扫描(6 例仍 <1000 CNY)。
+- 提交前: 300fs 微基准(测开销 + 查氘是否在到 rear+20 前打横向边界, 确认 ±10um 够)。
 ## 2026-07-02 (6) claude changed
 
 ### 改动内容
