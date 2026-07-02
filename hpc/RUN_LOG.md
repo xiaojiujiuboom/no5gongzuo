@@ -214,10 +214,54 @@ Interpretation:
 - Purpose: source-completion diagnostic after the 3 ps run still failed the late-window gate at `rear+20 um`.
 - Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe3p5ps_source_a0_5_L_0_t_5um_20260702_r001`
 - Job ID: `1324731`
-- State at submission check: `RUNNING` on `wqd10nbc08c15`.
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 1 hour 12 minutes 21 seconds by Slurm.
 - MPI ranks: 64 on one 256-CPU node.
 - Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=3.5 ps`.
 - Target: 5 um CD2, transverse half-width 12 um, real-density `n_C=20 nc`, `n_D=40 nc`, `n_e=160 nc`.
 - PPC: electron/deuteron/carbon = 8/8/4.
 - Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
 - Rationale: the 3 ps run used 32 ranks and many far downstream probes. This follow-up increases ranks and removes far probes to reduce wall time and probe-output overhead while preserving the accepted-source question.
+
+Selected `rear+20 um` integrated metrics:
+
+| time | window weight | integrated weight | latest-window fraction | window mean E | integrated mean E | window theta RMS | integrated theta RMS |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1500 fs | 2.09e15 | 2.09e15 | 1.000 | 6.54 MeV | 6.54 MeV | 8.52 deg | 8.52 deg |
+| 1750 fs | 2.40e16 | 2.60e16 | 0.920 | 5.21 MeV | 5.32 MeV | 9.35 deg | 9.28 deg |
+| 2000 fs | 1.28e17 | 1.54e17 | 0.830 | 4.57 MeV | 4.70 MeV | 10.89 deg | 10.63 deg |
+| 2250 fs | 2.62e17 | 4.16e17 | 0.631 | 4.03 MeV | 4.28 MeV | 14.00 deg | 12.86 deg |
+| 2500 fs | 3.59e17 | 7.75e17 | 0.464 | 3.56 MeV | 3.95 MeV | 17.73 deg | 15.31 deg |
+| 2750 fs | 4.06e17 | 1.18e18 | 0.344 | 3.14 MeV | 3.67 MeV | 21.75 deg | 17.79 deg |
+| 3000 fs | 3.94e17 | 1.58e18 | 0.250 | 2.77 MeV | 3.44 MeV | 25.61 deg | 20.03 deg |
+| 3250 fs | 3.49e17 | 1.92e18 | 0.181 | 2.46 MeV | 3.27 MeV | 29.04 deg | 21.94 deg |
+| 3500 fs | 2.96e17 | 2.22e18 | 0.133 | 2.18 MeV | 3.12 MeV | 31.71 deg | 23.48 deg |
+
+Final-by-probe cross-check at 3.5 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 3.24e18 | 0.050 | 2.23 MeV | 29.54 deg |
+| rear+20 um | 2.22e18 | 0.133 | 3.12 MeV | 23.48 deg |
+| rear+30 um | 1.28e18 | 0.244 | 3.97 MeV | 18.13 deg |
+| rear+40 um | 5.98e17 | 0.391 | 4.82 MeV | 13.79 deg |
+| rear+50 um | 1.94e17 | 0.609 | 5.64 MeV | 10.65 deg |
+
+Interpretation:
+
+- `rear+20 um` is approaching completion but still misses the strict gate at 3.5 ps. The final 250 fs window contributes 13.3% of the cumulative source, above the target `<= 5-10%`.
+- The trend is physically consistent: late-arriving deuterons have lower mean energy and broader angle, so ending at 3.5 ps would slightly bias the Stage B source high in energy and narrow in angle.
+- A 4.0 ps source-focused diagnostic was submitted as `pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r001` (Job ID `1346456`).
+
+## pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r001
+
+- Purpose: final source-completion check after the 3.5 ps diagnostic came close but remained above the late-window gate.
+- Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r001`
+- Job ID: `1346456`
+- State at submission check: `PENDING`.
+- MPI ranks: 64 on one 256-CPU node.
+- Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
+- Target: 5 um CD2, transverse half-width 12 um, real-density `n_C=20 nc`, `n_D=40 nc`, `n_e=160 nc`.
+- PPC: electron/deuteron/carbon = 8/8/4.
+- Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
+- Acceptance target: `rear+20 um` final-window fraction `<= 10%`, with cumulative mean energy and theta RMS changing by no more than about `5-10%` after appending the last window.
