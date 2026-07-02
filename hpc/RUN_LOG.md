@@ -523,3 +523,44 @@ Interpretation:
 - The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 5.0 ps: the final 250 fs window is 9.25% of the integrated source weight, below the `<= 10%` threshold.
 - The accepted source for this scan point is the concatenated deuteron phase space crossing `rear+20 um` from the start through 5.0 ps, not the 4.0 ps output.
 - Farther downstream planes remain incomplete at 5.0 ps and are diagnostics only for this run.
+
+### pic2d_dd_cd2_scan5ps_a0_20_L_0_t_5um_20260703_r001
+
+- Job ID: `1380981`
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 1 hour 26 minutes 15 seconds by Slurm.
+- Purpose: source-completion extension for the 4 ps `a0=20, L_pre=0` scan point, which had failed with a final-window fraction of 14.2%.
+- Result: accepted for Stage B source generation at `rear+20 um`, integrated from the start through 5.0 ps.
+
+Selected `rear+20 um` integrated metrics:
+
+| time | window weight | integrated weight | latest-window fraction | window mean E | integrated mean E | window theta RMS | integrated theta RMS |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 4000 fs | 2.39e17 | 1.68e18 | 0.142 | 1.26 MeV | 1.73 MeV | 27.98 deg | 21.47 deg |
+| 4250 fs | 2.17e17 | 1.89e18 | 0.115 | 1.14 MeV | 1.66 MeV | 29.62 deg | 22.55 deg |
+| 4500 fs | 1.94e17 | 2.09e18 | 0.093 | 1.04 MeV | 1.60 MeV | 31.05 deg | 23.47 deg |
+| 4750 fs | 1.71e17 | 2.26e18 | 0.076 | 0.95 MeV | 1.55 MeV | 32.26 deg | 24.25 deg |
+| 5000 fs | 1.50e17 | 2.41e18 | 0.062 | 0.87 MeV | 1.51 MeV | 33.35 deg | 24.91 deg |
+
+Final-by-probe cross-check at 5.0 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 3.31e18 | 0.024 | 1.11 MeV | 30.59 deg |
+| rear+20 um | 2.41e18 | 0.062 | 1.51 MeV | 24.91 deg |
+| rear+30 um | 1.56e18 | 0.111 | 1.88 MeV | 20.04 deg |
+| rear+40 um | 9.03e17 | 0.173 | 2.26 MeV | 16.03 deg |
+| rear+50 um | 4.46e17 | 0.261 | 2.65 MeV | 12.82 deg |
+
+High-energy-tail check for the Bosch-Hale upper range:
+
+- Cumulative `rear+20 um` deuteron weight with `E_D > 9.8 MeV`: 1.25e14.
+- Cumulative fraction with `E_D > 9.8 MeV`: 5.20e-5.
+- High-energy macro-particles above the threshold: 46.
+- Interpretation: the accepted 5 ps source remains far below the 1% action threshold for the Bosch-Hale upper-range cutoff. The current cutoff is not a blocker for this accepted source.
+
+Interpretation:
+
+- The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 5.0 ps: the final 250 fs window is 6.22% of the integrated source weight, below the `<= 10%` threshold.
+- The accepted source for this scan point is the concatenated deuteron phase space crossing `rear+20 um` from the start through 5.0 ps, not the 4.0 ps output.
+- Farther downstream planes remain incomplete at 5.0 ps and are diagnostics only for this run.
