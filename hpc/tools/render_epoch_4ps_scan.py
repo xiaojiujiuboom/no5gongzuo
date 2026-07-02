@@ -246,7 +246,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--thickness-um", type=float, default=5.0)
     parser.add_argument("--ppc", default="16,16,8", help="electron,deuteron,carbon PPC")
     parser.add_argument("--ranks", type=int, default=160)
-    parser.add_argument("--hours", type=int, default=4)
+    parser.add_argument(
+        "--hours",
+        type=int,
+        default=8,
+        help="Slurm walltime in hours. Use ETA plus margin for production runs.",
+    )
     return parser
 
 

@@ -564,3 +564,24 @@ Interpretation:
 - The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 5.0 ps: the final 250 fs window is 6.22% of the integrated source weight, below the `<= 10%` threshold.
 - The accepted source for this scan point is the concatenated deuteron phase space crossing `rear+20 um` from the start through 5.0 ps, not the 4.0 ps output.
 - Farther downstream planes remain incomplete at 5.0 ps and are diagnostics only for this run.
+
+## L_pre=1 4 ps Scan Timeout Incident
+
+The three first-scan `L_pre=1 um` jobs were submitted with a 4 hour Slurm walltime and all reached that walltime before finishing. These partial outputs are not accepted as Stage B sources.
+
+| run_id | job_id | state | elapsed | last reported simulation time | last ETA before timeout | estimated cost at 0.1 CNY/core-hour |
+|---|---:|---|---:|---:|---:|---:|
+| `pic2d_dd_cd2_scan4ps_a0_5_L_1_t_5um_20260702_r001` | 1367962 | TIMEOUT | 4:00:09 | 3.41 ps | 0:41:10 | 64.04 CNY |
+| `pic2d_dd_cd2_scan4ps_a0_10_L_1_t_5um_20260702_r001` | 1367958 | TIMEOUT | 4:00:09 | 2.96 ps | 1:23:48 | 64.04 CNY |
+| `pic2d_dd_cd2_scan4ps_a0_20_L_1_t_5um_20260702_r001` | 1367960 | TIMEOUT | 4:00:10 | 2.73 ps | 1:49:10 | 64.04 CNY |
+
+Cost note:
+
+- These three timed-out runs consumed about 1,921 core-hours, or about 192 CNY at 0.1 CNY/core-hour, without producing accepted source outputs.
+- The partial SDF/probe files may be used only for rough trend inspection and runtime estimation. They must not be used as accepted physics sources.
+
+Process correction:
+
+- Do not submit production PIC scans with an optimistic hard walltime. Set walltime from observed EPOCH ETA plus safety margin, or run a short benchmark first.
+- The first-scan config and renderer default walltime were changed from 4 h to 8 h to avoid repeating this failure mode.
+- Future `L_pre=1` reruns should either use at least 8 h walltime or first benchmark a higher-rank run to prove the higher rank count reduces wall-clock time enough to justify its cost.

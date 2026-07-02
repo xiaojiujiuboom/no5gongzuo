@@ -1,7 +1,7 @@
 run_id,job_id,state,a0,L_pre_um,target_thickness_um,ppc,ranks,source_plane,t_end_ps
 pic2d_dd_cd2_scan4ps_a0_10_L_0_t_5um_20260702_r001,1367957,COMPLETED_4PS_FAILED_GATE,10,0,5,16/16/8,160,rear+20um,4.0
-pic2d_dd_cd2_scan4ps_a0_10_L_1_t_5um_20260702_r001,1367958,SUBMITTED,10,1,5,16/16/8,160,rear+20um,4.0
+pic2d_dd_cd2_scan4ps_a0_10_L_1_t_5um_20260702_r001,1367958,TIMEOUT_PARTIAL_NOT_ACCEPTED,10,1,5,16/16/8,160,rear+20um,4.0
 pic2d_dd_cd2_scan4ps_a0_20_L_0_t_5um_20260702_r001,1367959,COMPLETED_4PS_FAILED_GATE,20,0,5,16/16/8,160,rear+20um,4.0
-pic2d_dd_cd2_scan4ps_a0_20_L_1_t_5um_20260702_r001,1367960,SUBMITTED,20,1,5,16/16/8,160,rear+20um,4.0
+pic2d_dd_cd2_scan4ps_a0_20_L_1_t_5um_20260702_r001,1367960,TIMEOUT_PARTIAL_NOT_ACCEPTED,20,1,5,16/16/8,160,rear+20um,4.0
 pic2d_dd_cd2_scan4ps_a0_5_L_0_t_5um_20260702_r001,1367961,COMPLETED_4PS_FAILED_GATE,5,0,5,16/16/8,160,rear+20um,4.0
-pic2d_dd_cd2_scan4ps_a0_5_L_1_t_5um_20260702_r001,1367962,SUBMITTED,5,1,5,16/16/8,160,rear+20um,4.0
+pic2d_dd_cd2_scan4ps_a0_5_L_1_t_5um_20260702_r001,1367962,TIMEOUT_PARTIAL_NOT_ACCEPTED,5,1,5,16/16/8,160,rear+20um,4.0
