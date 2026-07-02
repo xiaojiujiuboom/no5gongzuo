@@ -297,7 +297,8 @@ Interpretation:
 - Purpose: 4.0 ps source-completion check with unchanged physics, 160 MPI ranks, and explicit Slurm partition selection.
 - Remote run directory: `~/pic/no5_dd_li_tpr/runs/pic2d_dd_cd2_probe4ps_source_a0_5_L_0_t_5um_20260702_r004`
 - Job ID: `1355962`
-- State at submission check: `PENDING`.
+- State: `COMPLETED`, exit code `0:0`.
+- Runtime: 38 minutes 32 seconds by Slurm; EPOCH core runtime 38 minutes 18.11 seconds.
 - Slurm partition: `amd_m9_768` explicitly set with `#SBATCH -p amd_m9_768`.
 - MPI ranks: 160 on one 256-CPU node.
 - Box: `x=[-10,90] um`, `y=[-40,40] um`, `dx=dy=25 nm`, `t_end=4.0 ps`.
@@ -306,3 +307,35 @@ Interpretation:
 - Probe planes: source-focused `rear+10,20,30,40,50 um`, deuteron, `E_D > 0.1 MeV`.
 - Wall-time estimate: about 30-45 minutes once scheduled.
 - Acceptance target: `rear+20 um` final-window fraction `<= 10%`, with cumulative mean energy and theta RMS changing by no more than about `5-10%` after appending the last window.
+
+Selected `rear+20 um` integrated metrics:
+
+| time | window weight | integrated weight | latest-window fraction | window mean E | integrated mean E | window theta RMS | integrated theta RMS |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1500 fs | 2.24e15 | 2.24e15 | 1.000 | 6.44 MeV | 6.44 MeV | 8.51 deg | 8.51 deg |
+| 1750 fs | 2.37e16 | 2.60e16 | 0.914 | 5.21 MeV | 5.31 MeV | 9.39 deg | 9.31 deg |
+| 2000 fs | 1.27e17 | 1.53e17 | 0.830 | 4.58 MeV | 4.70 MeV | 10.90 deg | 10.64 deg |
+| 2250 fs | 2.64e17 | 4.17e17 | 0.634 | 4.04 MeV | 4.28 MeV | 14.03 deg | 12.89 deg |
+| 2500 fs | 3.63e17 | 7.80e17 | 0.465 | 3.56 MeV | 3.95 MeV | 17.79 deg | 15.37 deg |
+| 2750 fs | 4.02e17 | 1.18e18 | 0.340 | 3.14 MeV | 3.67 MeV | 21.81 deg | 17.83 deg |
+| 3000 fs | 3.96e17 | 1.58e18 | 0.251 | 2.77 MeV | 3.44 MeV | 25.59 deg | 20.06 deg |
+| 3250 fs | 3.51e17 | 1.93e18 | 0.182 | 2.46 MeV | 3.26 MeV | 29.12 deg | 21.99 deg |
+| 3500 fs | 2.95e17 | 2.22e18 | 0.133 | 2.18 MeV | 3.12 MeV | 31.71 deg | 23.51 deg |
+| 3750 fs | 2.40e17 | 2.46e18 | 0.097 | 1.94 MeV | 3.01 MeV | 33.90 deg | 24.71 deg |
+| 4000 fs | 1.91e17 | 2.66e18 | 0.072 | 1.73 MeV | 2.91 MeV | 35.46 deg | 25.64 deg |
+
+Final-by-probe cross-check at 4.0 ps:
+
+| probe | integrated weight | latest-window fraction | integrated mean E | integrated theta RMS |
+|---|---:|---:|---:|---:|
+| rear+10 um | 3.45e18 | 0.025 | 2.17 MeV | 30.74 deg |
+| rear+20 um | 2.66e18 | 0.072 | 2.91 MeV | 25.64 deg |
+| rear+30 um | 1.83e18 | 0.137 | 3.58 MeV | 20.78 deg |
+| rear+40 um | 1.10e18 | 0.226 | 4.25 MeV | 16.63 deg |
+| rear+50 um | 5.63e17 | 0.353 | 4.94 MeV | 13.21 deg |
+
+Interpretation:
+
+- The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 4.0 ps: the final 250 fs probe window is 7.19% of the integrated source weight, below the `<= 10%` threshold.
+- The accepted baseline source definition for the first physics scan is therefore the concatenated deuteron phase space crossing `rear+20 um` from the start of the run through 4.0 ps, not a final-frame snapshot.
+- Farther planes remain useful diagnostics but are not complete at 4.0 ps; `rear+30 um` still has a 13.7% latest-window fraction.

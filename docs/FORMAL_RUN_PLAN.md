@@ -65,7 +65,7 @@ Current status:
 2.5 ps: latest rear+20 window is still 46.8% of the integrated source
 3.0 ps: latest rear+20 window is still 25.0% of the integrated source
 3.5 ps: latest rear+20 window is 13.3%; close but still above the gate
-4.0 ps: submitted with 160 cores and source-focused probes
+4.0 ps: latest rear+20 window is 7.19%; accepted for first physics scan
 ```
 
 ## 3. Physics Scan
@@ -76,6 +76,8 @@ After the diagnostic gate passes, run the first controlled scan:
 a0 = {5, 10, 20}
 L_pre = {0, 1 um}
 foil thickness = 5 um
+source plane = rear+20 um
+source integration time = 0-4.0 ps
 ```
 
 Add `3 um` thickness only if the 5 um result is clearly thickness-sensitive or

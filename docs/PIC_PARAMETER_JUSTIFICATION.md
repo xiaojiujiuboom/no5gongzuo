@@ -98,7 +98,7 @@ dx = dy = 25 nm
 PPC: electron/deuteron/carbon = 8/8/4
 x = [-10, 60-90] um depending on probe distance
 y = [-25, 30] um depending on probe distance
-t_end = diagnostic-driven, currently testing 2.0-2.5 ps for a0=5
+t_end = 4.0 ps for the accepted rear+20 um source extraction
 ```
 
 This is enough to locate the source plane and time, but it is not the final

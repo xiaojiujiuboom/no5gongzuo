@@ -12,6 +12,14 @@ thin CD2 rear surface: x_rear = +2.5 um for a 5 um foil centered at x=0
 converter entrance:   x_sample = x_rear + 20 um = 22.5 um
 ```
 
+Accepted first-scan source timing:
+
+```text
+integrate deuteron probe windows from start through 4.0 ps
+accepted diagnostic case: a0=5, L_pre=0, thickness=5 um
+rear+20 final-window fraction at 4.0 ps: 7.19%
+```
+
 ## Objective Acceptance Criteria
 
 Before using a PIC case for paper figures, verify all of the following:
