@@ -1,0 +1,150 @@
+# =====================================================================
+# no5 DD-neutron  |  3D EPOCH 源生成 deck  (候选版, 省算力配置)
+# 激光打 CD2 箔 -> 前向氘束(TNSA) -> 在 rear+20um 源面记录氘相空间
+# -> Stage B(半解析 D-D 中子源)输入锚点。
+#
+# 配置(当前候选):
+#   - 网格各向异性: dx≈22.5nm(激光轴, nx=2000) / dy=dz=40nm(横向, 更省)。
+#     依据: 用户已发表 3D 经验(~25-30nm 可发) + 文献常用 10-25nm;
+#     可信度主要靠 Stage B 参数化扫描承载, 3D 仅作物理锚点。
+#   - 薄靶 3um CD2(能省则省)。
+#   - 盒子按本问题物理定, 非照搬旧文章。
+#
+# 单例成本只是提交前估算,不得当作报价。正式价格以 300fs 微基准外推为准。
+#
+# [!] 提交前: 300fs 微基准(测开销 + 看氘是否在到 rear+20 前打横向边界, 确认 ±10um 够);
+#     restart 全量转储, 确认 scratch。
+# =====================================================================
+
+begin:constant
+  lambda0 = 0.8 * micron
+  omega0  = 2.0 * pi * c / lambda0
+
+  a0  = 10.0                     # 扫描 {5,10,20}
+  w0  = 3.0 * micron             # 焦斑 1/e 半宽
+  tau = 30.0 * femto             # 脉宽(高斯)
+  t0  = 3.0 * tau                # 峰值到达时间
+
+  thickness   = 3.0 * micron     # CD2 靶厚(省)
+  x_front     = 0.0 * micron
+  x_rear      = x_front + thickness
+  target_half = 6.0 * micron     # 靶横向半宽(< 盒子 ±10um)
+  src_plane   = x_rear + 20.0 * micron   # rear+20um 源面 = 23um
+
+  # CD2 全电离(rho≈1.06 g/cc): 每单元 1C + 2D, 电子 = 6 + 2 = 8
+  n_unit = 3.98e28               # /m^3
+  n_D = 2.0 * n_unit             # 7.96e28
+  n_C = 1.0 * n_unit             # 3.98e28
+  n_e = 8.0 * n_unit             # 3.18e29  (~183 nc)
+end:constant
+
+
+begin:control
+  nx = 2000                      # x:[-10,35]um, nx=2000 -> dx=22.5nm (front10 + 3um靶 + rear+20源面(23) + 余量)
+  ny = 500                       # y:[-10,10]um @ dy=40nm
+  nz = 500                       # z:[-10,10]um @ dz=40nm
+  x_min = -10.0 * micron
+  x_max =  35.0 * micron
+  y_min = -10.0 * micron
+  y_max =  10.0 * micron
+  z_min = -10.0 * micron
+  z_max =  10.0 * micron
+  t_end = 2500.0 * femto         # 省; 产额加权门确认完整度, 不够再延
+  dt_multiplier = 0.95
+  dlb_threshold = 0.5
+  stdout_frequency = 500
+  # physics_table_location = /path/to/epoch3d/src/physics_packages/TABLES
+end:control
+
+
+begin:boundaries
+  bc_x_min = simple_laser
+  bc_x_max = simple_outflow
+  bc_y_min = simple_outflow
+  bc_y_max = simple_outflow
+  bc_z_min = simple_outflow
+  bc_z_max = simple_outflow
+end:boundaries
+
+
+begin:laser
+  boundary = x_min
+  intensity_w_cm2 = 1.37e18 * a0^2 / (lambda0 / micron)^2
+  lambda = lambda0
+  pol_angle = 0.0
+  phase = 0.0
+  t_profile = gauss(time, t0, tau)
+  profile = gauss(y, 0.0, w0) * gauss(z, 0.0, w0)
+end:laser
+
+
+begin:species
+  name = electron
+  charge = -1.0
+  mass = 1.0
+  nparticles_per_cell = 16
+  temp = 0.0
+  number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_e, 0.0)
+end:species
+
+begin:species
+  name = deuteron
+  charge = 1.0
+  mass = 3670.5                  # m_D / m_e
+  nparticles_per_cell = 32       # 氘优先: 高能尾统计(观测量)
+  temp = 0.0
+  number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_D, 0.0)
+end:species
+
+begin:species
+  name = carbon
+  charge = 6.0
+  mass = 22032.0                 # m_C12 / m_e
+  nparticles_per_cell = 8
+  temp = 0.0
+  number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_C, 0.0)
+end:species
+
+
+# --- 源面探针: 记录穿过 rear+20um 的氘(相空间) -> Stage B 输入 ---
+begin:probe
+  name = D_source_rear20
+  point = (src_plane, 0.0, 0.0)
+  normal = (1.0, 0.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+
+# --- 轻量氘能谱诊断 ---
+begin:dist_fn
+  name = deuteron_en
+  ndims = 1
+  dumpmask = always
+  direction1 = dir_en
+  range1 = (0.0, 8.0e-12)        # 0 ~ 50 MeV (焦耳); 视 a0 调
+  resolution1 = 1000
+  include_species:deuteron
+end:dist_fn
+
+
+begin:output
+  dt_snapshot = 250.0 * femto
+  dump_first = F
+  dump_last  = T
+
+  grid = never
+  ex = never
+  ey = never
+  number_density = never
+  particles = never
+  px = never
+  py = never
+  particle_probes = always
+  distribution_functions = always
+
+  restart_dump_every = 4         # ~1ps 一次全量 restart(墙钟超时可续)
+  force_final_to_be_restartable = T
+end:output

@@ -2,6 +2,28 @@
 
 本文档只记录策略和命令模板，不保存任何账号、密码、token 或私有路径。
 
+## 2026-07-03 Strategy Reset
+
+当前策略大改：**3D PIC 是真实性锚点，2D PIC 不再承担最终可信度核心**。
+
+立即执行顺序：
+
+```text
+1. 3D compact source deck 300 fs 微基准
+   -> 校准真实 wall-clock、内存、横向边界、restart 输出
+2. 3D 单点源生成，优先 a0=10
+   -> rear+20 um D source, t_end 先用 2.5 ps，再用产额加权判据判断是否够
+3. Stage B: 3D D source -> thick CD2 D-D neutron_source.h5
+4. Stage C: OpenMC Case A/B, Li6/Li7 分道, per-source-neutron
+5. 2D accepted L_pre=0 源只作为开发/对照/参数化区间锚点
+```
+
+暂停事项：
+
+- 不再重跑高精度 `L_pre=1` 2D 矩阵，除非 Stage B/C 结果证明预等离子体是必须变量。
+- 不再盲目做 2D 大矩阵；任何 PIC 生产 run 必须先有 ETA 或微基准，并显式指定 walltime。
+- 3D 不做全扫描。先做一个可信单点，再决定是否加 `a0=5/20`。
+
 ## 总原则
 
 本地 M4 Pro 负责开发、半解析源项、OpenMC 调试和后处理；超算负责 EPOCH PIC 生产运行。
@@ -11,8 +33,8 @@
 | HDF5 schema、参数化氘束、D-D 半解析源项 | 本地 | Python 任务，M4 Pro 足够 |
 | OpenMC 小/中统计调试 | 本地 | 固定源、简单锂靶几何先在本地跑通 |
 | OpenMC 高统计或细 mesh | 本地优先，必要时超算 | 先用 `1e5-1e6` 粒子，慢了再上超算 |
-| EPOCH 2D3V 生产扫描 | 超算 | PIC 最吃核数、内存和并行通信 |
-| EPOCH 3D | 超算，只做少量验证点 | 不做 3D 大扫描 |
+| EPOCH 2D3V accepted L0 源 | 超算，已完成 | 开发/对照/参数化区间锚点 |
+| EPOCH 3D compact source | 超算 | 当前真实性主线；先微基准再正式源 |
 
 ## 第一阶段：本地先把链路通电
 
@@ -48,19 +70,30 @@ particles = 1e6-1e7
 batches = 50-100
 ```
 
-## 第三阶段：超算 EPOCH 2D3V
+## 第三阶段：超算 EPOCH 3D Anchor
 
-最小扫描矩阵：
+当前 3D anchor 模板：
 
 ```text
-a0 = 5, 10, 20
-preplasma L = 0, 1 um
-target = CD2, thickness = 5 um
+template = hpc/templates/epoch3d_dd_cd2_source_compact.deck
+a0 = 10 first
+target = 3 um CD2
+source plane = rear+20 um
+t_end = 2.5 ps first pass
+dx ~ 22.5 nm, dy = dz = 40 nm
 ```
 
-这是第一轮 6 点扫描。若结果对靶厚敏感或审稿/组会需要，再补 `3 um` 厚度形成 12 点扫描。
+提交前必须先跑 300 fs 微基准，检查：
 
-扫描 manifest 由配置自动生成：
+```text
+wall-clock / step
+内存和 scratch
+restart 文件是否可续算
+氘束到 rear+20 前是否打横向边界
+probe/dist_fn 输出是否正常
+```
+
+旧的 2D 扫描矩阵保留为历史和对照：
 
 ```bash
 python3 scripts/make_pic_scan_manifest.py
@@ -68,7 +101,7 @@ python3 scripts/make_pic_scan_manifest.py
 
 输出见 `hpc/pic_first_2d_scan.csv`。
 
-先只追求每个 case 导出穿过靶后采样面的氘束相空间：
+PIC 只追求导出穿过源面的氘束相空间：
 
 ```text
 E, dir, weight, t -> deuteron_beam.h5

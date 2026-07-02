@@ -3,6 +3,28 @@
 This is the reviewer-facing decision path for the no5 DD-neutron / Li TPR
 project. It intentionally separates diagnostic runs from publication runs.
 
+## 0. Current Strategy Override
+
+As of 2026-07-03, the project strategy is changed:
+
+```text
+3D PIC anchor first -> Stage B source generation -> Stage C OpenMC response
+```
+
+The previous 2D six-point PIC matrix is no longer the publication backbone.
+Existing accepted `L_pre=0` 2D sources remain useful for software bring-up,
+comparison, and parametric source bracketing. The timed-out `L_pre=1` 2D
+outputs are not accepted sources.
+
+Before any full 3D source run:
+
+```text
+run a 300 fs 3D microbenchmark
+measure wall-clock per fs, memory, scratch, and restart behavior
+verify rear+20 probe output and transverse boundary adequacy
+choose walltime explicitly from the benchmark plus margin
+```
+
 ## 1. Lock the Physical Geometry
 
 Baseline geometry:
@@ -68,9 +90,9 @@ Current status:
 4.0 ps: latest rear+20 window is 7.19%; accepted for first physics scan
 ```
 
-## 3. Physics Scan
+## 3. 2D Physics Scan Status
 
-After the diagnostic gate passes, run the first controlled scan:
+The original first controlled 2D scan was:
 
 ```text
 a0 = {5, 10, 20}
@@ -80,31 +102,37 @@ source plane = rear+20 um
 source integration time = 0-4.0 ps
 ```
 
-Add `3 um` thickness only if the 5 um result is clearly thickness-sensitive or
-suboptimal. This keeps the first scan interpretable.
-
-## 4. Publication PIC Runs
-
-The diagnostic deck is not the final publication deck. For paper-quality source
-normalization, rerun accepted cases with stricter numerical settings:
+Status:
 
 ```text
-target grid: dx = dy = 20 nm
-target PPC: electron/deuteron/carbon = 32/32/16, if memory allows
-fallback PPC: 24/24/12 with an explicit convergence note
-source: particle probe crossing at the accepted converter entrance
+L_pre=0, a0={5,10,20}: accepted 5 ps rear+20 sources exist.
+L_pre=1, a0={5,10,20}: 4 ps jobs timed out and are not accepted.
 ```
 
-Convergence checks:
+Do not automatically rerun the high-resolution `L_pre=1` matrix. If preplasma
+is needed later, rerun only after the Stage B/C result shows why it matters,
+and after a cheaper benchmark sets walltime and resolution.
+
+## 4. 3D PIC Anchor Runs
+
+Use `hpc/templates/epoch3d_dd_cd2_source_compact.deck` as the current starting
+point. The first run is not a production source; it is a 300 fs benchmark.
 
 ```text
-PPC: compare 16/16/8 vs 32/32/16 on representative cases
-grid: compare 25 nm vs 20 nm on representative cases
-stress test: include at least one high-a0 / high-yield case
+first 3D case: a0=10
+purpose: source realism anchor, not a full parameter scan
+source: rear+20 um deuteron probe
+gate: yield-weighted source completeness, not raw deuteron weight alone
+restart: required before long production submission
 ```
 
-Accept the publication setting only if source metrics and downstream DD neutron
-yield change by about 10% or less.
+The reviewer-facing credibility argument is:
+
+```text
+3D gives a realistic source anchor.
+Parametric source scans bracket source distortion and carry the robustness argument.
+2D results are supporting comparisons, not final realism claims.
+```
 
 ## 5. Stage B and Stage C
 

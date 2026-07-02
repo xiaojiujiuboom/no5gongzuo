@@ -5,6 +5,22 @@
 
 ---
 
+## 2026-07-03 codex changed - 3D strategy reset
+
+### 改动内容
+- 按用户指示采用 Claude 最新策略：3D PIC 作为真实性锚点，不再把高精度 2D 参数矩阵当最终可信度核心。
+- 从 `origin/claude/supervisor-review` 引入 `docs/PROJECT_POSITIONING.md` 和 `hpc/templates/epoch3d_dd_cd2_source_compact.deck`。
+- 更新 `README.md`、`docs/COMPUTE_STRATEGY.md`、`docs/FORMAL_RUN_PLAN.md`、`hpc/README.md`：当前主线改为 `3D anchor -> Stage B -> Stage C`。
+- 明确 3D 不直接大规模投产：先做 300 fs 微基准，测 wall-clock/内存/restart/横向边界，再决定正式 3D source run。
+- 2D `L_pre=0` 三个 accepted 5 ps 源保留为 Stage B/C 开发和参数化区间锚点；2D `L_pre=1` timeout partial 不作为正式源。
+
+### 给后续 agent 的注意
+- 不要直接提交长 3D production run。第一步必须是 300 fs microbenchmark。
+- 3D 模板是起点，不是已验证最终 production deck；提交前还要生成显式 Slurm walltime、确认 EPOCH3D binary、节点/内存/scratch/restart。
+- Claude 分支中 3D 成本估计多次修订且存在取舍变化；主线采用保守执行原则：以实测微基准为准。
+
+---
+
 ## 2026-07-03 codex changed
 
 ### 改动内容

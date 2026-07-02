@@ -1,12 +1,17 @@
-# HPC PIC Scan Plan
+# HPC PIC Plan
 
-First production PIC pass: 6 EPOCH 2D3V sources.
+## Current Priority
 
-```text
-a0 = {5, 10, 20}
-preplasma L = {0, 1 um}
-CD2 foil thickness = 5 um
-```
+The active PIC strategy is now 3D-first for realism:
+
+1. Run a 300 fs 3D microbenchmark from `hpc/templates/epoch3d_dd_cd2_source_compact.deck`.
+2. Use the benchmark to choose explicit walltime, nodes/ranks, memory, and restart policy.
+3. Run one 3D source anchor, initially `a0=10`.
+4. Feed the extracted rear+20 deuteron source to Stage B and Stage C.
+
+Do not resume high-resolution 2D parameter scanning unless Stage B/C shows it is necessary.
+
+## Legacy 2D Scan
 
 Generate the manifest:
 
