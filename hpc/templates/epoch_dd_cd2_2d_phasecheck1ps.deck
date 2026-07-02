@@ -1,0 +1,88 @@
+# no5 PIC diagnostic: 1 ps deuteron phase-space snapshot cross-check.
+# Same physics as probe1ps, but dumps particle phase space so probe output can
+# be validated against direct x-plane filtering. This is not production.
+
+begin:constant
+  lambda0 = 0.8 * micron
+  omega0 = 2.0 * pi * c / lambda0
+  a0 = 5.0
+  w0 = 3.0 * micron
+  tau = 30.0 * femto
+  target_thickness = 5.0 * micron
+  target_x0 = 0.0 * micron
+  target_rear = target_x0 + target_thickness / 2.0
+  target_y_half = 12.0 * micron
+  n_unit = 20.0 * critical(omega0)
+  n_D = 2.0 * n_unit
+  n_C = 1.0 * n_unit
+  n_e = 8.0 * n_unit
+end:constant
+
+begin:control
+  nx = 2800
+  ny = 2000
+  t_end = 1000.0 * femto
+  x_min = -10.0 * micron
+  x_max =  60.0 * micron
+  y_min = -25.0 * micron
+  y_max =  25.0 * micron
+  stdout_frequency = 200
+  physics_table_location = /publicfs10/fs10-m9/home/m9s003861/pic/software/epoch_release-4.20.1/epoch2d/src/physics_packages/TABLES
+end:control
+
+begin:boundaries
+  bc_x_min = simple_laser
+  bc_x_max = open
+  bc_y_min = open
+  bc_y_max = open
+end:boundaries
+
+begin:laser
+  boundary = x_min
+  intensity_w_cm2 = 1.37e18 * a0^2 / (lambda0 / micron)^2
+  lambda = lambda0
+  profile = gauss(y, 0.0, w0)
+  t_profile = gauss(time, 2.0 * tau, tau)
+  pol_angle = 0.0
+end:laser
+
+begin:species
+  name = electron
+  charge = -1.0
+  mass = 1.0
+  nparticles_per_cell = 8
+  number_density = if((abs(x - target_x0) lt target_thickness/2.0) and (abs(y) lt target_y_half), n_e, 0.0)
+end:species
+
+begin:species
+  name = deuteron
+  charge = 1.0
+  mass = 3670.5
+  nparticles_per_cell = 8
+  number_density = if((abs(x - target_x0) lt target_thickness/2.0) and (abs(y) lt target_y_half), n_D, 0.0)
+end:species
+
+begin:species
+  name = carbon
+  charge = 6.0
+  mass = 22032.0
+  nparticles_per_cell = 4
+  number_density = if((abs(x - target_x0) lt target_thickness/2.0) and (abs(y) lt target_y_half), n_C, 0.0)
+end:species
+
+begin:output
+  name = phasecheck1ps
+  dt_snapshot = 200.0 * femto
+  dump_first = T
+  dump_last = T
+
+  grid = always
+  number_density = never
+  average_particle_energy = never
+
+  particles = always
+  px = always
+  py = always
+  pz = never
+  particle_weight = always
+end:output

@@ -1,0 +1,160 @@
+# no5 PIC diagnostic: 2.5 ps deuteron probe run for source-plane timing.
+# Probe-only output keeps the data volume small while the box is long enough
+# to test whether rear+20 um has reached a stable cumulative source.
+
+begin:constant
+  lambda0 = 0.8 * micron
+  omega0 = 2.0 * pi * c / lambda0
+  a0 = 5.0
+  w0 = 3.0 * micron
+  tau = 30.0 * femto
+  target_thickness = 5.0 * micron
+  target_x0 = 0.0 * micron
+  target_rear = target_x0 + target_thickness / 2.0
+  target_y_half = 12.0 * micron
+  n_unit = 20.0 * critical(omega0)
+  n_D = 2.0 * n_unit
+  n_C = 1.0 * n_unit
+  n_e = 8.0 * n_unit
+end:constant
+
+begin:control
+  nx = 4000
+  ny = 2400
+  t_end = 2500.0 * femto
+  x_min = -10.0 * micron
+  x_max =  90.0 * micron
+  y_min = -30.0 * micron
+  y_max =  30.0 * micron
+  stdout_frequency = 400
+  physics_table_location = /publicfs10/fs10-m9/home/m9s003861/pic/software/epoch_release-4.20.1/epoch2d/src/physics_packages/TABLES
+end:control
+
+begin:boundaries
+  bc_x_min = simple_laser
+  bc_x_max = open
+  bc_y_min = open
+  bc_y_max = open
+end:boundaries
+
+begin:laser
+  boundary = x_min
+  intensity_w_cm2 = 1.37e18 * a0^2 / (lambda0 / micron)^2
+  lambda = lambda0
+  profile = gauss(y, 0.0, w0)
+  t_profile = gauss(time, 2.0 * tau, tau)
+  pol_angle = 0.0
+end:laser
+
+begin:species
+  name = electron
+  charge = -1.0
+  mass = 1.0
+  nparticles_per_cell = 8
+  number_density = if((abs(x - target_x0) lt target_thickness/2.0) and (abs(y) lt target_y_half), n_e, 0.0)
+end:species
+
+begin:species
+  name = deuteron
+  charge = 1.0
+  mass = 3670.5
+  nparticles_per_cell = 8
+  number_density = if((abs(x - target_x0) lt target_thickness/2.0) and (abs(y) lt target_y_half), n_D, 0.0)
+end:species
+
+begin:species
+  name = carbon
+  charge = 6.0
+  mass = 22032.0
+  nparticles_per_cell = 4
+  number_density = if((abs(x - target_x0) lt target_thickness/2.0) and (abs(y) lt target_y_half), n_C, 0.0)
+end:species
+
+begin:output
+  name = probe2p5ps
+  dt_snapshot = 250.0 * femto
+  dump_first = T
+  dump_last = T
+
+  grid = never
+  number_density = never
+  average_particle_energy = never
+
+  particles = never
+  px = never
+  py = never
+  pz = never
+  particle_weight = never
+
+  particle_probes = always
+end:output
+
+begin:probe
+  name = D_probe_rear10
+  point = (target_rear + 10.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+begin:probe
+  name = D_probe_rear20
+  point = (target_rear + 20.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+begin:probe
+  name = D_probe_rear30
+  point = (target_rear + 30.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+begin:probe
+  name = D_probe_rear40
+  point = (target_rear + 40.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+begin:probe
+  name = D_probe_rear50
+  point = (target_rear + 50.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+begin:probe
+  name = D_probe_rear60
+  point = (target_rear + 60.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
+
+begin:probe
+  name = D_probe_rear70
+  point = (target_rear + 70.0 * micron, 0.0)
+  normal = (1.0, 0.0)
+  ek_min = 100.0 * kev
+  ek_max = -1.0
+  include_species:deuteron
+  dumpmask = always
+end:probe
