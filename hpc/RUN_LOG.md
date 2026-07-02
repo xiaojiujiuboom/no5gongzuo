@@ -339,3 +339,31 @@ Interpretation:
 - The nominal converter-entrance source plane `rear+20 um` passes the time-completeness gate at 4.0 ps: the final 250 fs probe window is 7.19% of the integrated source weight, below the `<= 10%` threshold.
 - The accepted baseline source definition for the first physics scan is therefore the concatenated deuteron phase space crossing `rear+20 um` from the start of the run through 4.0 ps, not a final-frame snapshot.
 - Farther planes remain useful diagnostics but are not complete at 4.0 ps; `rear+30 um` still has a 13.7% latest-window fraction.
+
+## First 4 ps PIC Physics Scan Submission
+
+- Purpose: first controlled scan after accepting the `rear+20 um`, `0-4.0 ps` deuteron source definition.
+- Submitted manifest: `hpc/pic_scan4ps_first_20260702_jobs.csv`
+- Remote root: `~/pic/no5_dd_li_tpr/runs/`
+- Slurm partition: `amd_m9_768`
+- MPI ranks per case: 160
+- PPC: electron/deuteron/carbon = 16/16/8.
+- Box and probes: same accepted 4 ps source deck geometry, with source-focused probes at `rear+10,20,30,40,50 um`.
+- Preplasma model: for `L_pre > 0`, a front-side exponential CD2 preplasma ramp extends from `target_front - 5 L_pre` to `target_front`; the solid foil remains from `target_front` to `target_rear`.
+
+Submitted cases:
+
+| run_id | job_id | a0 | L_pre | thickness |
+|---|---:|---:|---:|---:|
+| `pic2d_dd_cd2_scan4ps_a0_5_L_0_t_5um_20260702_r001` | 1367961 | 5 | 0 um | 5 um |
+| `pic2d_dd_cd2_scan4ps_a0_5_L_1_t_5um_20260702_r001` | 1367962 | 5 | 1 um | 5 um |
+| `pic2d_dd_cd2_scan4ps_a0_10_L_0_t_5um_20260702_r001` | 1367957 | 10 | 0 um | 5 um |
+| `pic2d_dd_cd2_scan4ps_a0_10_L_1_t_5um_20260702_r001` | 1367958 | 10 | 1 um | 5 um |
+| `pic2d_dd_cd2_scan4ps_a0_20_L_0_t_5um_20260702_r001` | 1367959 | 20 | 0 um | 5 um |
+| `pic2d_dd_cd2_scan4ps_a0_20_L_1_t_5um_20260702_r001` | 1367960 | 20 | 1 um | 5 um |
+
+Post-run acceptance checks:
+
+- Parse every case with `tools/analyze_probe_sdf.py Data/*.sdf` and `tools/integrate_probe_sdf.py Data/*.sdf`.
+- Check `rear+20 um` latest-window fraction, cumulative mean energy, and cumulative theta RMS.
+- Cases failing the `<= 10%` final-window gate should be extended in time before they are used in Stage B.

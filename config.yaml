@@ -36,10 +36,23 @@ openmc:
   preferred_library: FENDL-3.2
 
 hpc_pic:
+  accepted_source:
+    plane: rear+20um
+    t_end_ps: 4.0
+    dt_snapshot_fs: 250
+    acceptance_latest_window_fraction: 0.10
   first_2d_scan:
     a0: [5, 10, 20]
     preplasma_L_um: [0, 1]
     target_thickness_um: [5]
+    ppc:
+      electron: 16
+      deuteron: 16
+      carbon: 8
+    slurm:
+      partition: amd_m9_768
+      ranks: 160
+      walltime_h: 4
   optional_followup_2d_scan:
     target_thickness_um: [3]
   production_dimension: 2d3v
