@@ -19,7 +19,7 @@ Postprocessing note:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r004`
 - Job ID: `1473749`
-- Submitted state: `PENDING` at submission.
+- Final state: `CANCELLED` before start; cost zero.
 - Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime `1:30:00`.
 - Cost cap at full walltime: `768` core-hours, about `76.8 CNY` at
   `0.1 CNY/core-hour`.
@@ -28,6 +28,49 @@ Postprocessing note:
 - Same physics and output policy as `r003`: full 3D grid/PPC unchanged,
   `t_end = 100 fs`, `dt_snapshot = 50 fs`, periodic restart disabled, final
   output restartable.
+- Cancellation reason:
+  - Re-examining `r002` showed that EPOCH's automatic processor topology was
+    `1 x 2 x 128` for 256 ranks. That leaves the full `x` extent on every rank
+    and cuts `z` into very thin slabs, increasing ghost/halo and communication
+    buffer overhead.
+  - A cleaner two-node benchmark should force a more isotropic topology instead
+    of repeating the same automatic layout behavior.
+
+## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005
+
+- Purpose: comment-free two-node benchmark with forced processor topology after
+  `r004` was cancelled before start.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005`
+- Job ID: `1475280`
+- Submitted state: `PENDING` at submission.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime `1:30:00`.
+- Cost cap at full walltime: `768` core-hours, about `76.8 CNY` at
+  `0.1 CNY/core-hour`.
+- Run-specific deck settings:
+  - comment-free uploaded `input.deck`
+  - `t_end = 100 fs`
+  - `dt_snapshot = 50 fs`
+  - `nprocx = 8`
+  - `nprocy = 8`
+  - `nprocz = 8`
+  - `full_dump_every = -1`
+  - `restart_dump_every = -1`
+  - `force_final_to_be_restartable = T`
+- Rationale:
+  - The full problem has `2000 x 500 x 500 = 5e8` cells and about `6.75e8`
+    macro-particles at the current PPC.
+  - In `r002`, one scalar grid array at this size is about `3.73 GiB`; tens of
+    field/current/work arrays plus particle arrays and output buffers make
+    hundreds of GiB plausible.
+  - Slurm reported `MaxRSS = 707,781,536K` for the batch cgroup, not for a
+    single MPI rank. This corresponds to about `675 GiB`, exactly at the
+    one-node memory cgroup limit.
+  - The `/usr/bin/time` `Maximum resident set size = 3,589,748K` line belongs to
+    the `mpirun` launcher process and should not be used as total MPI memory.
+  - Forcing `8 x 8 x 8` gives each rank a much more compact local block than
+    `1 x 2 x 128`, reducing halo/buffer overhead and giving the two-node test a
+    fair chance.
 
 ## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r003
 

@@ -10,8 +10,10 @@
 ### 后续执行更新
 - 第一发 3D compact-deck 微基准 `r001`，Job ID `1417042`，在 35 秒内 `FAILED`，原因是 EPOCH3D parser 拒绝带中文/特殊字符注释的 deck；未进入物理计算，成本约 `2.5` core-hours。
 - 第二发 `r002`，Job ID `1417631`，ASCII/comment-stripped 后成功进入物理推进，但在约 `94.9 fs`、首次 restart-like 输出附近 `OUT_OF_MEMORY`；1 节点 256 ranks 无内存余量，不能直接 production。
-- 已提交修正版 `r003`，Job ID `1449565`：2 节点、512 ranks、`t_end=100 fs`、`dt_snapshot=50 fs`，禁用周期性 restart，只保留 final restart。该 run 仍是 microbenchmark，不是 production source。
-- 后续 production 必须等 `r003` 证明两节点内存和输出/restart 正常后再提交。
+- `r003`，Job ID `1449565`，失败原因仍是 EPOCH3D parser 对注释敏感；实际提交的 `input.deck` 必须 comment-free。
+- `r004`，Job ID `1473749`，comment-free 但在开始前取消，原因是复核发现 r002 自动拓扑为 `1 x 2 x 128`，会放大 halo/buffer；不应重复这个布局。
+- 已提交 `r005`，Job ID `1475280`：2 节点、512 ranks、`t_end=100 fs`、comment-free，并强制 `nprocx/nprocy/nprocz = 8/8/8`。该 run 仍是 microbenchmark，不是 production source。
+- 后续 production 必须等 `r005` 证明两节点内存和输出/restart 正常后再提交。
 
 ### 改动内容
 - 按用户指示采用 Claude 最新策略：3D PIC 作为真实性锚点，不再把高精度 2D 参数矩阵当最终可信度核心。
