@@ -50,7 +50,10 @@ Postprocessing note:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_smoke50fs_2000x250x250_a0_10_t_3um_20260703_r001`
 - Job ID: `1523494`
-- Initial state after submission: `PENDING`, reason `Priority`.
+- Final state: `COMPLETED`, exit code `0:0`.
+- Runtime: `00:05:13`; EPOCH core runtime `4 minutes, 46.48 seconds`.
+- Approximate cost: `44.5` core-hours, about `4.5 CNY` at
+  `0.1 CNY/core-hour`.
 - Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
   `1:00:00`.
 - Full-walltime cost cap: `512` core-hours, about `51.2 CNY` at
@@ -68,6 +71,27 @@ Postprocessing note:
     `force_final_to_be_restartable = F`
   - uploaded deck is ASCII-only and comment-free.
   - no old no5 jobs were running or pending before submission.
+- Completion checks:
+  - EPOCH3D v4.20.1 parsed the deck and entered the time loop normally.
+  - Processor subdivision was exactly `32 x 4 x 4`.
+  - Loaded macro-particles: electron `47,000,000`, deuteron `94,000,000`,
+    carbon `11,750,000`; total `152,750,000`, matching the reduced-grid
+    estimate.
+  - The run reached `50 fs` and wrote `Data/0000.sdf`, `deck.status`,
+    `epoch3d.dat`, and `normal.visit`.
+  - Output size stayed tiny (`Data/0000.sdf` about `18 KB`) because field grids,
+    full particle dumps, and restart dumps are disabled.
+  - `sacct` reported `COMPLETED` for the batch, extern, and MPI steps. Batch
+    MaxRSS was about `52,661,352K`; the MPI step MaxRSS was about
+    `52,708,996K`.
+  - `slurm.err` contains repeated `ieee_inexact` warnings at normal Fortran
+    stop. No NaN, OOM, kill, or nonzero exit was observed.
+- Linear extrapolation from the smoke:
+  - about `6.26 s/fs`
+  - `1500 fs` benchmark estimate about `2.6 h`
+  - estimated cost about `134 CNY` before safety margin
+- Decision: smoke passed as a run-layer validation. The next physics step is
+  the `1500 fs` four-probe benchmark, not production scanning.
 
 ## Previous paused state after user input review request
 
