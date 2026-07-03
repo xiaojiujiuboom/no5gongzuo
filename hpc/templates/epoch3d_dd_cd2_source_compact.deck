@@ -52,7 +52,7 @@ begin:control
   dt_multiplier = 0.95
   dlb_threshold = 0.5
   stdout_frequency = 500
-  # physics_table_location = /path/to/epoch3d/src/physics_packages/TABLES
+  physics_table_location = /publicfs10/fs10-m9/home/m9s003861/pic/software/epoch_release-4.20.1/epoch3d/src/physics_packages/TABLES
 end:control
 
 
@@ -144,6 +144,10 @@ begin:output
   particle_probes = always
   distribution_functions = always
 
-  restart_dump_every = 4         # full restart about every 1 ps
+  # Periodic restart dumps are disabled because file number 0 is restartable
+  # when restart_dump_every > 0, which caused a one-node OOM in r002.
+  # Keep the final output restartable for recovery/inspection.
+  full_dump_every = -1
+  restart_dump_every = -1
   force_final_to_be_restartable = T
 end:output

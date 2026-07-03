@@ -11,6 +11,33 @@ Postprocessing note:
 - For long runs, use `Data/*.sdf` in postprocessing so files beyond `0009.sdf`
   are included.
 
+## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r003
+
+- Purpose: repair microbenchmark after `r002` showed that one node has no memory
+  headroom and is OOM-killed at the first restart-like output.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r003`
+- Job ID: `1449565`
+- Submitted state: `PENDING` at submission.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime `1:30:00`.
+- Cost cap at full walltime: `768` core-hours, about `76.8 CNY` at
+  `0.1 CNY/core-hour`.
+- Deck changes relative to the production candidate:
+  - `t_end = 100 fs`
+  - `dt_snapshot = 50 fs`
+  - `full_dump_every = -1`
+  - `restart_dump_every = -1`
+  - `force_final_to_be_restartable = T`
+  - `physics_table_location` set to the BSCC EPOCH3D table path.
+- Rationale:
+  - Keep full 3D physical grid/PPC unchanged.
+  - Use two nodes to reduce per-node memory.
+  - Avoid making file `0000.sdf` restartable; `r002` showed that the first
+    restart-like dump on one node can push memory over the node limit.
+  - Still test one normal output at `50 fs` and a final restartable output at
+    `100 fs`.
+- Production is **not** submitted until this two-node memory/output test passes.
+
 ## pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002
 
 - Purpose: ASCII/comment-stripped rerun of the first full-size EPOCH3D
@@ -18,8 +45,11 @@ Postprocessing note:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002`
 - Job ID: `1417631`
-- Current state after first queue check: `RUNNING`.
+- Final state: `OUT_OF_MEMORY`, exit code `0:125`.
 - Start time: `2026-07-03T07:08:25` on node `wqd10nbf04c01`.
+- End time: `2026-07-03T09:02:55`.
+- Runtime: `01:54:30`; allocated `256` CPUs; cost about `488.5` core-hours,
+  or `48.9 CNY` at `0.1 CNY/core-hour`.
 - Slurm: partition `amd_m9_768`, `1` node, `256` MPI ranks, walltime `2:00:00`.
 - Cost cap at full walltime: `512` core-hours, about `51.2 CNY` at
   `0.1 CNY/core-hour`.
@@ -33,8 +63,21 @@ Postprocessing note:
   - Initial conditions were valid.
   - Loaded macro-particles: electron `192,960,000`, deuteron `385,920,000`,
     carbon `96,480,000`.
-  - The job entered the time loop, so the remaining question is wall-clock,
-    memory/scratch, and restart/output behavior.
+  - The job entered the time loop and reached about `94.9 fs` by iteration
+    `1700`.
+- Failure diagnosis:
+  - Slurm reported `MaxRSS = 707,781,536K` for the batch step, leaving no safe
+    memory headroom on a 768 GB node.
+  - The job was killed by an OOM event while producing the first large output:
+    `Data/0000.sdf` was about `36 GB` and contained restart-like field data.
+  - The partial `Data/0000.sdf` was deleted after diagnosis because it is not a
+    usable physics output.
+  - `restart_dump_every > 0` makes file number `0` restartable because the file
+    index starts at zero, so periodic restart dumps are unsafe for this setup.
+- Decision:
+  - Do not submit a one-node 2.5 ps production run.
+  - Use two nodes and disable periodic restarts; keep only final restartability.
+  - Validate the revised output/restart policy with `r003` before production.
 
 ## pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r001
 
