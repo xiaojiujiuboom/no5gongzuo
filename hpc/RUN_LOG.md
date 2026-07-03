@@ -93,6 +93,43 @@ Postprocessing note:
 - Decision: smoke passed as a run-layer validation. The next physics step is
   the `1500 fs` four-probe benchmark, not production scanning.
 
+## pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001
+
+- Purpose: first physics-decision EPOCH3D benchmark after the successful
+  `50 fs` smoke. This run is intended to choose the deuteron collection plane,
+  check whether `1500 fs` is long enough, and verify transverse box adequacy
+  from the four rear probes.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001`
+- Job ID: `1559752`
+- Initial state after submission: `PENDING`, reason `Priority`.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
+  `4:00:00`.
+- Full-walltime cost cap: `2048` core-hours, about `204.8 CNY` at
+  `0.1 CNY/core-hour`.
+- Smoke-based linear estimate: about `2.6 h`, about `134 CNY`, before queue and
+  runtime variability.
+- Submitted input:
+  `hpc/templates/epoch3d_stage1_benchmark_3um_512_full.deck`
+- Key settings:
+  - `nx,ny,nz = 2000,250,250`
+  - `nprocx,nprocy,nprocz = 32,4,4`
+  - `t_end = 1500 fs`, `dt_snapshot = 250 fs`
+  - PPC `electron/deuteron/carbon = 16/32/4`
+  - four deuteron probes at `rear+5/10/15/20 um`
+  - particle probes and deuteron distribution function only
+  - `full_dump_every = -1`, `restart_dump_every = -1`,
+    `force_final_to_be_restartable = F`
+- Acceptance checks after completion:
+  - EPOCH completes with exit code `0:0` and no NaN/OOM/kill.
+  - Probe/dist_fn output exists in `Data/*.sdf`.
+  - Compare `D_rear05/10/15/20` energy mean, high-energy tail, and angular
+    spread to choose the innermost stable plane.
+  - Use time-resolved `deuteron_en` spectra and probe-window rates to decide
+    whether `1500 fs` is sufficient.
+  - Inspect the `rear+20` transverse distribution for clipping near
+    `y,z = +/-10 um`.
+
 ## Previous paused state after user input review request
 
 - User asked to stop submitting jobs and review the input deck first.
