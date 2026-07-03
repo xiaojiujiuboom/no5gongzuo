@@ -3,4 +3,5 @@ pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r001,1417042,FAILED_PARSE,amd_
 pic3d_dd_cd2_microbench300fs_a0_10_t_3um_20260703_r002,1417631,OUT_OF_MEMORY,amd_m9_768,1,256,2,10,3,300,reached about 95 fs then OOM-killed during first restart-like output; one node has no memory headroom
 pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r003,1449565,FAILED_PARSE,amd_m9_768,2,512,1.5,10,3,100,two-node microbenchmark failed before physics because comments before begin blocks still triggered EPOCH3D parser issue
 pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r004,1473749,CANCELLED,amd_m9_768,2,512,1.5,10,3,100,cancelled before start after r002 showed bad auto processor topology; cost zero
-pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005,1475280,PENDING,amd_m9_768,2,512,1.5,10,3,100,comment-free two-node benchmark with forced nprocx/nprocy/nprocz=8/8/8
+pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005,1475280,CANCELLED,amd_m9_768,2,512,1.5,10,3,100,cancelled before start after user requested to review input and after reduced-grid strategy replaced this heavy run; cost zero
+pic3d_dd_cd2_microbench100fs_reduced_a0_10_t_3um_20260703_r006,1476316,CANCELLED,amd_m9_768,1,256,2,10,3,100,reduced-grid/PPC preview run was submitted before user interruption then cancelled before start for input review; cost zero

@@ -4,7 +4,7 @@
 # -> record deuteron phase space at rear+20um for Stage B.
 #
 # Current candidate:
-#   - Anisotropic grid: dx ~= 22.5 nm, dy = dz = 40 nm.
+#   - Anisotropic grid: dx ~= 22.5 nm, dy = dz = 50 nm.
 #   - 3 um CD2 target.
 #   - Box chosen for this source problem, not copied from older decks.
 #
@@ -27,7 +27,7 @@ begin:constant
   thickness   = 3.0 * micron     # CD2 target thickness
   x_front     = 0.0 * micron
   x_rear      = x_front + thickness
-  target_half = 6.0 * micron     # target transverse half-width
+  target_half = 5.0 * micron     # target transverse half-width
   src_plane   = x_rear + 20.0 * micron   # rear+20um source plane = 23um
 
   # Fully ionized CD2, rho ~= 1.06 g/cc: one C and two D per unit.
@@ -39,11 +39,11 @@ end:constant
 
 
 begin:control
-  nx = 2000                      # x:[-10,35]um, nx=2000 -> dx=22.5nm
-  ny = 500                       # y:[-10,10]um @ dy=40nm
-  nz = 500                       # z:[-10,10]um @ dz=40nm
-  x_min = -10.0 * micron
-  x_max =  35.0 * micron
+  nx = 1690                      # x:[-8,30]um -> dx ~= 22.5nm
+  ny = 400                       # y:[-10,10]um @ dy=50nm
+  nz = 400                       # z:[-10,10]um @ dz=50nm
+  x_min = -8.0 * micron
+  x_max =  30.0 * micron
   y_min = -10.0 * micron
   y_max =  10.0 * micron
   z_min = -10.0 * micron
@@ -81,7 +81,7 @@ begin:species
   name = electron
   charge = -1.0
   mass = 1.0
-  nparticles_per_cell = 16
+  nparticles_per_cell = 8
   temp = 0.0
   number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_e, 0.0)
 end:species
@@ -90,7 +90,7 @@ begin:species
   name = deuteron
   charge = 1.0
   mass = 3670.5                  # m_D / m_e
-  nparticles_per_cell = 32       # prioritize D statistics for the high-energy tail
+  nparticles_per_cell = 16       # prioritize D statistics for the high-energy tail
   temp = 0.0
   number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_D, 0.0)
 end:species
@@ -99,7 +99,7 @@ begin:species
   name = carbon
   charge = 6.0
   mass = 22032.0                 # m_C12 / m_e
-  nparticles_per_cell = 8
+  nparticles_per_cell = 4
   temp = 0.0
   number_density = if((x gt x_front) and (x lt x_rear) and (abs(y) lt target_half) and (abs(z) lt target_half), n_C, 0.0)
 end:species

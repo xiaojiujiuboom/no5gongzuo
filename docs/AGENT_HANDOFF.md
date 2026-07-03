@@ -12,8 +12,10 @@
 - 第二发 `r002`，Job ID `1417631`，ASCII/comment-stripped 后成功进入物理推进，但在约 `94.9 fs`、首次 restart-like 输出附近 `OUT_OF_MEMORY`；1 节点 256 ranks 无内存余量，不能直接 production。
 - `r003`，Job ID `1449565`，失败原因仍是 EPOCH3D parser 对注释敏感；实际提交的 `input.deck` 必须 comment-free。
 - `r004`，Job ID `1473749`，comment-free 但在开始前取消，原因是复核发现 r002 自动拓扑为 `1 x 2 x 128`，会放大 halo/buffer；不应重复这个布局。
-- 已提交 `r005`，Job ID `1475280`：2 节点、512 ranks、`t_end=100 fs`、comment-free，并强制 `nprocx/nprocy/nprocz = 8/8/8`。该 run 仍是 microbenchmark，不是 production source。
-- 后续 production 必须等 `r005` 证明两节点内存和输出/restart 正常后再提交。
+- `r005`，Job ID `1475280`，在开始前取消，成本 0；原因是用户要求先看 input，同时 reduced-grid 路线替代该较重两节点 benchmark。
+- `r006`，Job ID `1476316`，reduced-grid/PPC 预览 run 在用户中断前被提交，但仍在 pending，已立即取消，成本 0。
+- 当前暂停所有自动提交；active template 是 reduced 3D 候选：`nx,ny,nz=1690,400,400`，`target_half=5 um`，PPC `e/D/C=8/16/4`，`rear+20 um` 源面保留。
+- 用户强调研究重点是 D，下一步重新评估时应优先考虑提高 D PPC（如 `8/24/4` 或 `8/32/4`）并重算内存；未获用户批准前不要提交新作业。
 
 ### 改动内容
 - 按用户指示采用 Claude 最新策略：3D PIC 作为真实性锚点，不再把高精度 2D 参数矩阵当最终可信度核心。

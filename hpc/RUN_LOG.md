@@ -11,6 +11,66 @@ Postprocessing note:
 - For long runs, use `Data/*.sdf` in postprocessing so files beyond `0009.sdf`
   are included.
 
+## Current paused state after user input review request
+
+- User asked to stop submitting jobs and review the input deck first.
+- All no5 3D PIC jobs are stopped or pending-free at this point; only unrelated
+  `antid3` jobs remain in the user queue.
+- The active template `hpc/templates/epoch3d_dd_cd2_source_compact.deck` is now
+  a reduced-grid candidate, not an approved production deck:
+  - `nx,ny,nz = 1690,400,400`
+  - box `x=[-8,30] um`, `y,z=[-10,10] um`
+  - CD2 `target_half = 5 um`, i.e. `10 um x 10 um` transverse target
+  - PPC `electron/deuteron/carbon = 8/16/4`
+  - source plane remains `rear+20 um`
+  - periodic restart disabled; final output remains restartable
+- Rationale for the reduced candidate:
+  - Old no5 compact deck: `5.00e8` cells and about `6.75e8` macro-particles.
+  - User's previous M4 Pro 3D deck: about `1.10e8` cells and about `8.70e7`
+    estimated macro-particles.
+  - Reduced no5 candidate: about `2.70e8` cells and about `1.49e8`
+    macro-particles. This is still larger than the M4 deck, but much closer
+    than the previous no5 candidate.
+- User noted that the study focuses on deuterons, so before the next submission
+  consider increasing D PPC relative to electrons/carbon, for example
+  `8/24/4` or `8/32/4`, and re-estimate memory. Do not submit until the user
+  approves the reviewed input.
+
+## pic3d_dd_cd2_microbench100fs_reduced_a0_10_t_3um_20260703_r006
+
+- Purpose: reduced-grid/PPC input preview after comparing no5 against the
+  user's existing M4 Pro 3D deck.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench100fs_reduced_a0_10_t_3um_20260703_r006`
+- Job ID: `1476316`
+- Final state: `CANCELLED` before start at user request; cost zero.
+- Slurm: partition `amd_m9_768`, `1` node, `256` MPI ranks, walltime `2:00:00`.
+- The run was accidentally submitted before the user's interruption completed,
+  was still `PENDING`, and was immediately cancelled before any allocation.
+- Proposed input settings:
+  - comment-free uploaded `input.deck`
+  - `nx,ny,nz = 1690,400,400`
+  - `x=[-8,30] um`, `y,z=[-10,10] um`
+  - `target_half = 5 um`
+  - `nparticles_per_cell electron/deuteron/carbon = 8/16/4`
+  - `t_end = 100 fs`
+  - `dt_snapshot = 50 fs`
+  - `nprocx,nprocy,nprocz = 16,4,4`
+  - `full_dump_every = -1`
+  - `restart_dump_every = -1`
+  - `force_final_to_be_restartable = T`
+
+## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005
+
+- Purpose: comment-free two-node benchmark with forced processor topology after
+  `r004` was cancelled before start.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005`
+- Job ID: `1475280`
+- Final state: `CANCELLED` before start at user request; cost zero.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime `1:30:00`.
+- This heavier benchmark was replaced by the reduced-grid input review path.
+
 ## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r004
 
 - Purpose: comment-free rerun of the two-node repair microbenchmark after
@@ -35,42 +95,6 @@ Postprocessing note:
     buffer overhead.
   - A cleaner two-node benchmark should force a more isotropic topology instead
     of repeating the same automatic layout behavior.
-
-## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005
-
-- Purpose: comment-free two-node benchmark with forced processor topology after
-  `r004` was cancelled before start.
-- Remote run directory:
-  `~/pic/no5_dd_li_tpr/runs/pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r005`
-- Job ID: `1475280`
-- Submitted state: `PENDING` at submission.
-- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime `1:30:00`.
-- Cost cap at full walltime: `768` core-hours, about `76.8 CNY` at
-  `0.1 CNY/core-hour`.
-- Run-specific deck settings:
-  - comment-free uploaded `input.deck`
-  - `t_end = 100 fs`
-  - `dt_snapshot = 50 fs`
-  - `nprocx = 8`
-  - `nprocy = 8`
-  - `nprocz = 8`
-  - `full_dump_every = -1`
-  - `restart_dump_every = -1`
-  - `force_final_to_be_restartable = T`
-- Rationale:
-  - The full problem has `2000 x 500 x 500 = 5e8` cells and about `6.75e8`
-    macro-particles at the current PPC.
-  - In `r002`, one scalar grid array at this size is about `3.73 GiB`; tens of
-    field/current/work arrays plus particle arrays and output buffers make
-    hundreds of GiB plausible.
-  - Slurm reported `MaxRSS = 707,781,536K` for the batch cgroup, not for a
-    single MPI rank. This corresponds to about `675 GiB`, exactly at the
-    one-node memory cgroup limit.
-  - The `/usr/bin/time` `Maximum resident set size = 3,589,748K` line belongs to
-    the `mpirun` launcher process and should not be used as total MPI memory.
-  - Forcing `8 x 8 x 8` gives each rank a much more compact local block than
-    `1 x 2 x 128`, reducing halo/buffer overhead and giving the two-node test a
-    fair chance.
 
 ## pic3d_dd_cd2_microbench100fs_a0_10_t_3um_20260703_r003
 
