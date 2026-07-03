@@ -11,6 +11,37 @@ Postprocessing note:
 - For long runs, use `Data/*.sdf` in postprocessing so files beyond `0009.sdf`
   are included.
 
+## 2026-07-03 resource-controlled Stage 1 3D benchmark inputs
+
+- After reviewing `/Volumes/billboom/paperwork/tritium/EXECUTION_stage1_pic.md`,
+  the no5 3D PIC strategy is narrowed to one information-rich benchmark before
+  any production scan:
+  - four native EPOCH3D deuteron probes at `rear+5/10/15/20 um`
+  - deuteron energy distribution output every snapshot
+  - no field grids, no full particle dumps, no periodic restart dumps
+  - use the benchmark to choose the collection plane, necessary `t_end`, and
+    whether the `y/z = +/-10 um` transverse box clips the beam
+- Two review-ready EPOCH3D input templates were added:
+  - `hpc/templates/epoch3d_stage1_benchmark_3um_512_smoke.deck`
+  - `hpc/templates/epoch3d_stage1_benchmark_3um_512_full.deck`
+- Shared physics/settings:
+  - CD2 target: `3 um` thick, transverse half-width `5 um`
+  - box: `x=[-6,26] um`, `y,z=[-10,10] um`
+  - grid: `nx,ny,nz = 2000,250,250`, giving `dx=16 nm`,
+    `dy=dz=80 nm`
+  - PPC `electron/deuteron/carbon = 16/32/4`; deuterons remain prioritized
+  - forced MPI topology `nprocx,nprocy,nprocz = 32,4,4` for `512` ranks
+  - `full_dump_every = -1`, `restart_dump_every = -1`,
+    `force_final_to_be_restartable = F`
+- Scale estimate:
+  - cells: `1.25e8`
+  - active target cells: about `2.93e6`
+  - macro-particles: about `1.52e8`
+  - this is about `26%` of the `3000x400x400` benchmark in both grid cells and
+    macro-particles, while retaining the four-probe 3D benchmark logic
+- These files are input review artifacts only. No new BSCC job has been
+  submitted from them yet.
+
 ## Current paused state after user input review request
 
 - User asked to stop submitting jobs and review the input deck first.
