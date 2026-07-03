@@ -17,6 +17,15 @@ target_cd2:
   converter_policy: stop_to_rest
   stopping_table: data/stopping_D_in_CD2.csv
 
+target_converter:
+  baseline_material: TiD2
+  baseline_status: planned_requires_stopping_and_direct_triton_branch
+  sensitivity_materials: [CD2]
+  report_channels:
+    direct_triton_DdpT: true
+    neutron_to_lithium_Ddn: true
+  notes: "Current Stage B code still implements CD2 neutron branch only."
+
 source_bins:
   n_mu: 15
   n_E: 100
@@ -59,5 +68,6 @@ hpc_pic:
   validation_3d_cases: 1
 
 physics:
-  geometry_lock: laser_thin_foil_deuteron_source_plus_external_thick_cd2_converter
+  geometry_lock: laser_thin_foil_deuteron_source_plus_external_thick_deuteride_converter
   compare_case_A_B_per_source_neutron: true
+  report_direct_DD_tritium_separately: true

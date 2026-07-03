@@ -8,7 +8,7 @@ project. It intentionally separates diagnostic runs from publication runs.
 As of 2026-07-03, the project strategy is changed:
 
 ```text
-3D PIC anchor first -> Stage B source generation -> Stage C OpenMC response
+3D PIC anchor first -> Stage B D-D channels -> Stage C OpenMC Li response
 ```
 
 The previous 2D six-point PIC matrix is no longer the publication backbone.
@@ -19,10 +19,10 @@ outputs are not accepted sources.
 Before any full 3D source run:
 
 ```text
-run a 300 fs 3D microbenchmark
-measure wall-clock per fs, memory, scratch, and restart behavior
-verify rear+20 probe output and transverse boundary adequacy
-choose walltime explicitly from the benchmark plus margin
+run a short 3D smoke test, currently 50 fs
+verify EPOCH parsing, MPI topology, memory, and probe/dist_fn output
+then run one 1500 fs four-probe benchmark if the smoke passes
+choose the final collection plane and t_end from the benchmark
 ```
 
 ## 1. Lock the Physical Geometry
@@ -30,7 +30,7 @@ choose walltime explicitly from the benchmark plus margin
 Baseline geometry:
 
 ```text
-laser -> thin CD2 foil -> vacuum gap -> external thick CD2 converter -> Li tally
+laser -> thin CD2 foil -> vacuum gap -> external thick TiD2 converter -> Li tally
 ```
 
 The PIC source is the deuteron phase space crossing the converter entrance
@@ -40,6 +40,10 @@ output, each SDF probe dump is a time-window record because EPOCH clears the
 sampled particle list after writing. The integrated source is made by
 concatenating windows, or equivalently by running one deliberately long probe
 window after the end time is known.
+
+The baseline converter material is TiD2. CD2 remains a comparison and current
+software bring-up material until D-in-TiD2 stopping and the direct triton branch
+are implemented.
 
 Nominal gap:
 
@@ -115,15 +119,24 @@ and after a cheaper benchmark sets walltime and resolution.
 
 ## 4. 3D PIC Anchor Runs
 
-Use `hpc/templates/epoch3d_dd_cd2_source_compact.deck` as the current starting
-point. The first run is not a production source; it is a 300 fs benchmark.
+Use the resource-controlled Stage 1 benchmark decks as the current starting
+point:
+
+```text
+hpc/templates/epoch3d_stage1_benchmark_3um_512_smoke.deck
+hpc/templates/epoch3d_stage1_benchmark_3um_512_full.deck
+```
+
+The first submitted job is only a 50 fs smoke test. It is not a production
+source. If it passes, the next physics decision run is the 1500 fs four-probe
+benchmark.
 
 ```text
 first 3D case: a0=10
 purpose: source realism anchor, not a full parameter scan
-source: rear+20 um deuteron probe
-gate: yield-weighted source completeness, not raw deuteron weight alone
-restart: required before long production submission
+probes: rear+5/10/15/20 um deuteron probes
+gate: choose the innermost stable plane, t_end, and transverse box adequacy
+restart: periodic restart disabled unless a later recovery test proves safe
 ```
 
 The reviewer-facing credibility argument is:
@@ -136,9 +149,17 @@ Parametric source scans bracket source distortion and carry the robustness argum
 
 ## 5. Stage B and Stage C
 
-Stage B converts the deuteron probe source into a DD neutron source using
-stopping in CD2 and D-D cross sections. Before final use, validate the
-thick-target `Y(E0)` scale against literature/SRIM/PSTAR-style expectations.
+Stage B converts the deuteron probe source into two D-D products:
+
+```text
+D(d,n)3He -> neutron_source.h5 for Stage C
+D(d,p)T   -> direct converter tritium yield/source
+```
+
+Before final use, validate both branch cross sections and the thick-target
+`Y(E0)` scale against literature/SRIM/PSTAR-style expectations. The final
+baseline should use D stopping in TiD2 and the TiD2 deuteron density. CD2 is a
+material-sensitivity case and the currently implemented software path.
 
 Stage C transports the neutron source into Li with OpenMC. Development can run
 locally on the M4 Pro; final histories should be driven by tally uncertainty:
@@ -147,3 +168,6 @@ locally on the M4 Pro; final histories should be driven by tally uncertainty:
 integrated TPR relative error < 5%
 spatial/energy-bin relative error < 10%, or merge bins / increase histories
 ```
+
+Report `T_direct_DD` and `T_Li_neutron` separately before giving any optional
+sum.

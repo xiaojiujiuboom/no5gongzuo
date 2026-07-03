@@ -11,7 +11,7 @@
 - 参数化源扫描给稳健性和审稿防御力，证明结论不是某一次 PIC 源的偶然结果；
 - 已完成的 2D 源只用于代码开发、历史对照和参数区间参考，不作为最终真实性核心。
 
-`hpc/templates/epoch3d_dd_cd2_source_compact.deck` 是当前 3D 候选模板，但不是已经验收的 production deck。第一步必须是 **300 fs 微基准**，用实测 wall-clock、内存、scratch、restart 和横向边界结果决定正式 3D 作业的 walltime/核数/成本。本文档中的 3D 成本数字均为提交前估算或历史保守估算，不能当作报价。
+当前 3D 候选模板已收敛到 `hpc/templates/epoch3d_stage1_benchmark_3um_512_smoke.deck` 与 `hpc/templates/epoch3d_stage1_benchmark_3um_512_full.deck`。第一步是 **50 fs smoke**，确认解析/MPI/内存/输出；通过后再做 **1500 fs 四探针 benchmark**，用实测 wall-clock、内存、scratch 和探针结果决定正式 3D 作业的 walltime/核数/成本。本文档中的 3D 成本数字均为提交前估算或历史保守估算，不能当作报价。
 
 ## 1. 背景动机(为什么这个方向是真的)
 
@@ -54,7 +54,7 @@
 - 宽能谱多 MeV 尾 → 天然产出 >2.82 MeV 中子,正好碰 ⁷Li 阈值通道; 近单能 2.45 MeV D-D 发生器碰不到。
 - µm 源点 → 利于飞行时间/成像。
 
-**正面接住"束-靶=更差加速器"的质疑:** 本设计(激光→氘束→外置 CD2 converter)作为源技术确实类加速器、
+**正面接住"束-靶=更差加速器"的质疑:** 本设计(激光→氘束→外置 deuteride converter；TiD2 baseline，CD2 对照)作为源技术确实类加速器、
 稳态不占优; 但价值在 (a) 代表 IFE 包层真实会看到的畸变脉冲场, (b) 脉冲/宽谱/高瞬时是加速器给不了的
 **另一类**中子场。把限制写在明处,反而显得想清楚了。
 
@@ -103,7 +103,7 @@
 
 **单发 3D 机时预算(历史保守粗估,以现有 2D 例标定; 正式提交前先跑微基准校准):**
 
-下表保留为风险上界提醒，不代表当前 compact 3D deck 的正式价格。当前执行以 300 fs 微基准实测为准。
+下表保留为风险上界提醒，不代表当前 resource-controlled 3D deck 的正式价格。当前执行以 50 fs smoke 和后续 1500 fs benchmark 实测为准。
 
 | 方案 | dx | 盒子/时间 | ~core-hours | ~CNY@0.1 | RAM | 节点(768GB) |
 |---|---|---|---|---|---|---|

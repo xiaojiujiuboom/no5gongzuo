@@ -82,8 +82,8 @@ def gate_stopping_and_yield() -> None:
 def gate_config() -> None:
     cfg = load_config()
     geom = cfg.get("physics", {}).get("geometry_lock")
-    if geom != "laser_thin_foil_deuteron_source_plus_external_thick_cd2_converter":
-        raise AssertionError("physics.geometry_lock is not set to the external converter geometry")
+    if geom != "laser_thin_foil_deuteron_source_plus_external_thick_deuteride_converter":
+        raise AssertionError("physics.geometry_lock is not set to the external deuteride converter geometry")
     thickness = cfg.get("hpc_pic", {}).get("first_2d_scan", {}).get("target_thickness_um")
     if thickness != [5]:
         raise AssertionError("first 2D scan should be the 6-source matrix with thickness fixed at 5 um")

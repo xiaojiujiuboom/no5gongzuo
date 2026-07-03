@@ -9,11 +9,11 @@
 立即执行顺序：
 
 ```text
-1. 3D compact source deck 300 fs 微基准
-   -> 校准真实 wall-clock、内存、横向边界、restart 输出
-2. 3D 单点源生成，优先 a0=10
-   -> rear+20 um D source, t_end 先用 2.5 ps，再用产额加权判据判断是否够
-3. Stage B: 3D D source -> thick CD2 D-D neutron_source.h5
+1. 3D resource-controlled deck 50 fs smoke
+   -> 校准解析、MPI 拓扑、内存、probe/dist_fn 输出
+2. 3D 单点四探针 benchmark，优先 a0=10
+   -> rear+5/10/15/20 um D probes, t_end=1500 fs first benchmark
+3. Stage B: 3D D source -> thick TiD2/CD2 D-D neutron_source.h5 + direct T
 4. Stage C: OpenMC Case A/B, Li6/Li7 分道, per-source-neutron
 5. 2D accepted L_pre=0 源只作为开发/对照/参数化区间锚点
 ```
@@ -46,7 +46,7 @@ python3 moduleA_pic/parametric_beam.py --n 200000 -o deuteron_beam.h5
 python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 ```
 
-当前 `moduleB_source/thick_target.py` 使用占位阻止本领，只能用于软件链路验证。正式结果前必须替换为 SRIM/PSTAR 数据。
+当前 `moduleB_source/thick_target.py` 使用 CD2 占位阻止本领并只输出中子分支，只能用于软件链路验证。正式 baseline 前必须加入 TiD2 阻止本领、TiD2 氘密度和 `D(d,p)T` 直接氚分支。
 
 ## 第二阶段：本地 OpenMC
 
@@ -75,21 +75,22 @@ batches = 50-100
 当前 3D anchor 模板：
 
 ```text
-template = hpc/templates/epoch3d_dd_cd2_source_compact.deck
+smoke template = hpc/templates/epoch3d_stage1_benchmark_3um_512_smoke.deck
+full template  = hpc/templates/epoch3d_stage1_benchmark_3um_512_full.deck
 a0 = 10 first
 target = 3 um CD2
-source plane = rear+20 um
-t_end = 2.5 ps first pass
-dx ~ 22.5 nm, dy = dz = 40 nm
+probe planes = rear+5/10/15/20 um
+t_end = 50 fs smoke, then 1500 fs benchmark if smoke passes
+dx = 16 nm, dy = dz = 80 nm
 ```
 
-提交前必须先跑 300 fs 微基准，检查：
+提交正式 benchmark 前必须先跑 50 fs smoke，检查：
 
 ```text
 wall-clock / step
 内存和 scratch
-restart 文件是否可续算
-氘束到 rear+20 前是否打横向边界
+输出策略是否避免大型 restart
+氘束 probe/dist_fn 是否正常写出
 probe/dist_fn 输出是否正常
 ```
 
@@ -124,7 +125,8 @@ metrics.json
 python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 ```
 
-然后重跑 OpenMC Case B，与 Case A 对比。
+然后重跑 OpenMC Case B，与 Case A 对比。后续 Stage B 完整版还要同时导出/统计
+`T_direct_DD`，它不进入 OpenMC，只在最终产氚账中与 `T_Li_neutron` 分列。
 
 ## 论文主线
 

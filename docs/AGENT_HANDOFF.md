@@ -21,11 +21,11 @@
 - 按用户指示采用 Claude 最新策略：3D PIC 作为真实性锚点，不再把高精度 2D 参数矩阵当最终可信度核心。
 - 从 `origin/claude/supervisor-review` 引入 `docs/PROJECT_POSITIONING.md` 和 `hpc/templates/epoch3d_dd_cd2_source_compact.deck`。
 - 更新 `README.md`、`docs/COMPUTE_STRATEGY.md`、`docs/FORMAL_RUN_PLAN.md`、`hpc/README.md`：当前主线改为 `3D anchor -> Stage B -> Stage C`。
-- 明确 3D 不直接大规模投产：先做 300 fs 微基准，测 wall-clock/内存/restart/横向边界，再决定正式 3D source run。
+- 后续已更新为：先做 50 fs smoke，确认解析/MPI/内存/输出；通过后再做 1500 fs 四探针 benchmark，决定收集面、t_end 和盒子。
 - 2D `L_pre=0` 三个 accepted 5 ps 源保留为 Stage B/C 开发和参数化区间锚点；2D `L_pre=1` timeout partial 不作为正式源。
 
 ### 给后续 agent 的注意
-- 不要直接提交长 3D production run。第一步必须是 300 fs microbenchmark。
+- 不要直接提交长 3D production run。当前第一步是已提交/待完成的 50 fs smoke；通过后才进入 1500 fs 四探针 benchmark。
 - 3D 模板是起点，不是已验证最终 production deck；提交前还要生成显式 Slurm walltime、确认 EPOCH3D binary、节点/内存/scratch/restart。
 - Claude 分支中 3D 成本估计多次修订且存在取舍变化；主线采用保守执行原则：以实测微基准为准。
 
@@ -139,7 +139,8 @@
   源含 >2.82 MeV 中子)已把物理校验点固化,保留。
 - Case B 源正确保留 E-μ 相关(按 μ 分 bin 建多源),strength 归一到 per-source-neutron;
   A/B 比对方式正确。tally 用 `H3-production` + 核素 filter 分道,正确。
-- 几何锁定(薄箔→真空隙→外置厚 CD2 converter→Li)、PIC 源时间窗完整性判据
+- 几何锁定已更新为薄箔→真空隙→外置厚 deuteride converter→Li；TiD2 是 baseline，
+  CD2 是当前软件路径/材料对照。PIC 源时间窗完整性判据
   (rear+20µm 末窗占比 7.19% < 10% 才接受)都是规范做法,勿改。
 - "效应太小"的风险基本解除:smoke 中 >2.82 MeV 中子占比 ~0.17,PIC 氘束多 MeV
   (rear+20µm 积分均 ~2.9 MeV,p99 ~6.7 MeV),⁷Li 阈值通道有料。
