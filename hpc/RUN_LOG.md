@@ -39,10 +39,37 @@ Postprocessing note:
   - macro-particles: about `1.52e8`
   - this is about `26%` of the `3000x400x400` benchmark in both grid cells and
     macro-particles, while retaining the four-probe 3D benchmark logic
-- These files are input review artifacts only. No new BSCC job has been
-  submitted from them yet.
+- At commit `102123b`, these files were input review artifacts only. The
+  smoke template was later submitted as
+  `pic3d_stage1_smoke50fs_2000x250x250_a0_10_t_3um_20260703_r001`.
 
-## Current paused state after user input review request
+## pic3d_stage1_smoke50fs_2000x250x250_a0_10_t_3um_20260703_r001
+
+- Purpose: low-cost 50 fs EPOCH3D smoke test for the resource-controlled Stage
+  1 benchmark input before any 1500 fs benchmark submission.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_smoke50fs_2000x250x250_a0_10_t_3um_20260703_r001`
+- Job ID: `1523494`
+- Initial state after submission: `PENDING`, reason `Priority`.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
+  `1:00:00`.
+- Full-walltime cost cap: `512` core-hours, about `51.2 CNY` at
+  `0.1 CNY/core-hour`; actual billing should stop when the job exits.
+- Submitted input:
+  `hpc/templates/epoch3d_stage1_benchmark_3um_512_smoke.deck`
+- Key checks before submission:
+  - `nx,ny,nz = 2000,250,250`
+  - `nprocx,nprocy,nprocz = 32,4,4`
+  - `t_end = 50 fs`, `dt_snapshot = 50 fs`
+  - PPC `electron/deuteron/carbon = 16/32/4`
+  - four deuteron probes at `rear+5/10/15/20 um`
+  - particle probes and deuteron distribution function only
+  - `full_dump_every = -1`, `restart_dump_every = -1`,
+    `force_final_to_be_restartable = F`
+  - uploaded deck is ASCII-only and comment-free.
+  - no old no5 jobs were running or pending before submission.
+
+## Previous paused state after user input review request
 
 - User asked to stop submitting jobs and review the input deck first.
 - All no5 3D PIC jobs are stopped or pending-free at this point; only unrelated
