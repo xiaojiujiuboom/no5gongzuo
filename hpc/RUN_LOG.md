@@ -196,6 +196,9 @@ Postprocessing note:
   - `nx,ny,nz = 2000,250,250`
   - `nprocx,nprocy,nprocz = 32,4,4`
   - `t_end = 3000 fs`, `dt_snapshot = 250 fs`
+  - template guard for future submissions: `stop_at_walltime = 27000.0`
+    seconds, so an 8 h Slurm job can stop inside EPOCH and force a dump before
+    a hard scheduler kill
   - PPC `electron/deuteron/carbon = 16/32/4`
   - deuteron probes at `rear+2/5/10/15/20 um`
   - particle probes and deuteron distribution function only
@@ -206,6 +209,12 @@ Postprocessing note:
     writes the final dump successfully, that final SDF should be restartable and
     can be used to extend the same run to `4 ps` without starting from `0`.
   - If the job is killed before `t_end`, there is no intermediate restart point.
+  - While Job `1631093` was already running, an attempted Slurm TimeLimit
+    extension to `10:00:00` returned `Access/permission denied`; ordinary user
+    permissions cannot raise the walltime of the active job. The submitted deck
+    also cannot inherit the newly added `stop_at_walltime` guard because EPOCH
+    reads this value at startup. Future long runs should keep this guard or an
+    equivalent earlier-than-Slurm stop.
 - Acceptance checks after completion:
   - `D_rear10` should have enough cumulative macro-particles for stable
     spectrum/angle statistics.
