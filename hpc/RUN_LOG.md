@@ -175,6 +175,47 @@ Postprocessing note:
     prepared template is
     `hpc/templates/epoch3d_stage1_source_diag_3ps_final_restart.deck`.
 
+## pic3d_stage1_source_diag3000fs_finalrestart_2000x250x250_a0_10_t_3um_20260704_r001
+
+- Purpose: 3 ps Stage 1 source-plane diagnostic with `rear+10 um` as the
+  preferred source-plane candidate, while retaining `rear+2/5/15/20 um` probes
+  to answer sheath-region and far-plane reviewer questions.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag3000fs_finalrestart_2000x250x250_a0_10_t_3um_20260704_r001`
+- Job ID: `1631093`
+- State after submission: `PENDING`.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
+  `8:00:00`.
+- Cost cap at full walltime: `4096` core-hours, about `409.6 CNY` at
+  `0.1 CNY/core-hour`.
+- Expected runtime/cost from the completed 1.5 ps benchmark: about `5.6 h`
+  plus final restart I/O, roughly `290-330 CNY`.
+- Submitted input:
+  `hpc/templates/epoch3d_stage1_source_diag_3ps_final_restart.deck`
+- Key settings:
+  - `nx,ny,nz = 2000,250,250`
+  - `nprocx,nprocy,nprocz = 32,4,4`
+  - `t_end = 3000 fs`, `dt_snapshot = 250 fs`
+  - PPC `electron/deuteron/carbon = 16/32/4`
+  - deuteron probes at `rear+2/5/10/15/20 um`
+  - particle probes and deuteron distribution function only
+  - `full_dump_every = -1`, `restart_dump_every = -1`
+  - `force_final_to_be_restartable = T`
+- Restart note:
+  - This run writes no intermediate restart dumps. If it reaches `t_end` and
+    writes the final dump successfully, that final SDF should be restartable and
+    can be used to extend the same run to `4 ps` without starting from `0`.
+  - If the job is killed before `t_end`, there is no intermediate restart point.
+- Acceptance checks after completion:
+  - `D_rear10` should have enough cumulative macro-particles for stable
+    spectrum/angle statistics.
+  - The final-window fraction should fall below about `5-10%` for the chosen
+    source plane, or the run should be extended from the final restart.
+  - Compare `rear+5` to `rear+10`: if spectrum and angular RMS are stable, use
+    `rear+10` or the closest stable plane as the Stage 2 source.
+  - Check `rear+15/20` only to justify that a farther plane is not required, or
+    to decide whether a 4 ps continuation is needed.
+
 ## Previous paused state after user input review request
 
 - User asked to stop submitting jobs and review the input deck first.
