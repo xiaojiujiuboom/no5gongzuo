@@ -295,9 +295,15 @@ Submission walltime policy:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag3000fs_restart0006file_2000x250x250_a0_10_t_3um_20260704_r003`
 - Job ID: `1676859`.
-- State after submission: `PENDING`; the pending job was updated in place from
-  `18:00:00` to `10:00:00` walltime to improve scheduling while still leaving
-  more than `2x` the expected continuation runtime.
+- Final state: `COMPLETED`, exit code `0:0`.
+- Runtime: Slurm elapsed `03:40:55`; EPOCH core runtime `3 hours, 27 minutes,
+  54.45 seconds`.
+- Approximate cost: `1885` core-hours, about `188.5 CNY` at
+  `0.1 CNY/core-hour`. The combined r001/r002/r003 cost through 3 ps is about
+  `415 CNY`.
+- Submission note: the pending job was updated in place from `18:00:00` to
+  `10:00:00` walltime to improve scheduling while still leaving more than `2x`
+  the expected continuation runtime.
 - Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
   `10:00:00`.
 - Restart setup:
@@ -306,6 +312,52 @@ Submission walltime policy:
   - `t_end = 3000 fs` remains unchanged.
   - `stop_at_walltime = 32400.0` seconds (`9 h`) is used as a guard before the
     10 h Slurm limit.
+- Completion checks:
+  - Restart succeeded: EPOCH printed `Load from restart dump OK` and continued
+    from `time = 1.6329268104815327 ps`.
+  - Final file `Data/0012.sdf` has `time = 3.0000090380444037 ps`,
+    `step = 61491`, `restart_flag = 1`, and about `17G` size.
+  - Output files in the continuation directory are `0007.sdf` through
+    `0012.sdf`; `0012.sdf` is a restartable final dump suitable for another
+    continuation.
+  - Small analysis artifacts were copied locally under `hpc/results/`:
+    - `pic3d_stage1_diag3000fs_restart_20260705_sdf_block_summary.csv`
+    - `pic3d_stage1_diag3000fs_restart_20260705_probe_metrics.csv`
+    - `pic3d_stage1_diag3000fs_restart_20260705_probe_cumulative_summary.csv`
+- 3 ps source-plane decision:
+  - `rear+10` is not yet a converged source at 3 ps. Its final 250 fs window
+    contributes about `54.5%` of cumulative probe weight.
+  - Other final-window fractions are also too high: `rear+5` about `39.4%`,
+    `rear+15` about `50.9%`, and `rear+20` about `73.8%`.
+  - The late windows are lower energy, but using this as a final source would
+    be hard to defend under the pre-set `5-10%` convergence criterion.
+  - Decision: extend from the restartable 3 ps final dump. The first extension
+    was prepared as a 4 ps job, then updated in place to 5 ps before it started
+    after user direction.
+
+## pic3d_stage1_source_diag4000fs_restart0012file_2000x250x250_a0_10_t_3um_20260705_r004
+
+- Purpose: 5 ps continuation of the Stage 1 source-plane diagnostic because
+  the 3 ps rear-plane probe windows are not time-converged. The remote run
+  directory name still contains `4000fs` because the pending job was updated in
+  place before start rather than cancelled and resubmitted.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag4000fs_restart0012file_2000x250x250_a0_10_t_3um_20260705_r004`
+- Job ID: `1721080`.
+- State after update: `PENDING`.
+- Job name after update: `no5_s1_3d_5ps`.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
+  `10:00:00`.
+- Restart setup:
+  - `Data/0012.sdf` is symlinked to r003's completed restartable final dump.
+  - SDF header check before submission: `restart_flag = 1`,
+    `time = 3.0000090380444037 ps`.
+  - The continuation deck uses `restart_snapshot = 0012.sdf`.
+  - `t_end = 5000 fs`.
+  - `stop_at_walltime = 32400.0` seconds (`9 h`) guards the 10 h Slurm limit.
+- Runtime estimate:
+  - Based on r003, continuing from 3 ps to 5 ps should take roughly `5.5-6 h`
+    plus final restart I/O, within the `10 h` walltime.
 
 ## Previous paused state after user input review request
 
