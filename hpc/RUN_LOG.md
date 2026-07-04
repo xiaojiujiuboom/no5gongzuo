@@ -102,7 +102,11 @@ Postprocessing note:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001`
 - Job ID: `1559752`
-- Initial state after submission: `PENDING`, reason `Priority`.
+- Final state: `COMPLETED`, exit code `0:0`.
+- Runtime: Slurm elapsed `02:47:33`; EPOCH core runtime `2 hours,
+  47 minutes, 4.30 seconds`.
+- Approximate cost: `1430` core-hours, about `143 CNY` at
+  `0.1 CNY/core-hour`.
 - Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
   `4:00:00`.
 - Full-walltime cost cap: `2048` core-hours, about `204.8 CNY` at
@@ -120,15 +124,51 @@ Postprocessing note:
   - particle probes and deuteron distribution function only
   - `full_dump_every = -1`, `restart_dump_every = -1`,
     `force_final_to_be_restartable = F`
-- Acceptance checks after completion:
-  - EPOCH completes with exit code `0:0` and no NaN/OOM/kill.
-  - Probe/dist_fn output exists in `Data/*.sdf`.
-  - Compare `D_rear05/10/15/20` energy mean, high-energy tail, and angular
-    spread to choose the innermost stable plane.
-  - Use time-resolved `deuteron_en` spectra and probe-window rates to decide
-    whether `1500 fs` is sufficient.
-  - Inspect the `rear+20` transverse distribution for clipping near
-    `y,z = +/-10 um`.
+- Completion checks:
+  - EPOCH3D completed normally with `Exit status: 0`; no NaN, OOM, kill, or
+    nonzero exit was observed.
+  - `slurm.err` contains repeated `ieee_inexact` warnings at normal Fortran
+    stop, matching the earlier smoke run behavior.
+  - Slurm MaxRSS was about `52,750,636K` for the MPI step, far below the
+    two-node memory allocation.
+  - Output stayed small: `Data/0000.sdf` through `Data/0005.sdf`, total
+    `4.7M`; no restart/full particle dump was produced.
+  - Python `sdf_helper`/`sdf.read` segfaulted on these 3D SDF files, so a small
+    temporary C reader against the EPOCH SDF/C library was used for block and
+    probe summaries.
+- SDF/probe summary:
+  - Snapshots were written at about `250, 500, 750, 1000, 1250, 1500 fs`.
+  - Every SDF contains `deuteron_en/deuteron` with `1000` bins.
+  - Probe blocks appear only after ions reach the planes:
+    - `750 fs`: `D_rear05` first appears with `1` macro-particle.
+    - `1000 fs`: `D_rear05` has `511` macro-particles.
+    - `1250 fs`: `D_rear05` has `6092`, `D_rear10` has `3`.
+    - `1500 fs`: `D_rear05` has `17609`, `D_rear10` has `156`.
+    - `D_rear15` and `D_rear20` are absent through `1500 fs`.
+  - `D_rear05` cumulative through `1500 fs`: `24213` macro-particles,
+    total weight `6.16753536e9`, cumulative mean energy about `0.464 MeV`,
+    observed max about `1.095 MeV`.
+  - `D_rear10` cumulative through `1500 fs`: `159` macro-particles, total
+    weight `4.050048e7`, cumulative mean energy about `0.954 MeV`, observed max
+    about `1.307 MeV`.
+  - The final `250 fs` window still contributes `72.7%` of cumulative
+    `D_rear05` weight and `98.1%` of cumulative `D_rear10` weight, so `1500 fs`
+    is not yet a converged source-collection time.
+  - No meaningful high-energy `E_D > 9.8 MeV` tail was observed in this
+    `a0=10`, `3 um` benchmark probe sample.
+- Small analysis artifacts committed under `hpc/results/`:
+  - `pic3d_stage1_benchmark1500fs_20260704_sdf_block_summary.csv`
+  - `pic3d_stage1_benchmark1500fs_20260704_probe_metrics.csv`
+  - `pic3d_stage1_benchmark1500fs_20260704_probe_cumulative_summary.csv`
+- Decision:
+  - This run passed as a resource-controlled 3D benchmark, validating the
+    `2000x250x250`, D-prioritized PPC, four-probe workflow on `512` ranks.
+  - It should not be used as the final Stage 1 source at `rear+10/15/20` because
+    the late probe windows are not saturated.
+  - The next Stage 1 physics run should extend to at least `3000 fs`; `3500` to
+    `4000 fs` is more defensible if the source plane remains `rear+20`.
+    Linear extrapolation from this benchmark gives about `95 CNY/ps` at
+    `512` ranks.
 
 ## Previous paused state after user input review request
 

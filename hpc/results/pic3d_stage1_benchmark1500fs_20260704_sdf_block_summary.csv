@@ -1,0 +1,66 @@
+FILE,/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001/Data/0000.sdf,time_s,2.5003734400076057e-13,step,5125,nblocks,5
+BLOCK,1,id,run_info,name,Run_info,type,7,datatype,8,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,2,id,cpu_rank,name,CPUs/Original rank,type,20,datatype,1,ndims,3,nelements,0,data_length,148,mesh,,dims,31,3,3
+BLOCK,3,id,elapsed_time,name,Wall-time,type,5,datatype,4,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,4,id,grid/deuteron_en/deuteron,name,Grid/deuteron_en/deuteron,type,1,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,,dims,1000
+BLOCK,5,id,deuteron_en/deuteron,name,dist_fn/deuteron_en/deuteron,type,3,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,grid/deuteron_en/deuteron,dims,1000
+FILE,/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001/Data/0001.sdf,time_s,5.0002590022717225e-13,step,10249,nblocks,5
+BLOCK,1,id,run_info,name,Run_info,type,7,datatype,8,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,2,id,cpu_rank,name,CPUs/Original rank,type,20,datatype,1,ndims,3,nelements,0,data_length,148,mesh,,dims,31,3,3
+BLOCK,3,id,elapsed_time,name,Wall-time,type,5,datatype,4,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,4,id,grid/deuteron_en/deuteron,name,Grid/deuteron_en/deuteron,type,1,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,,dims,1000
+BLOCK,5,id,deuteron_en/deuteron,name,dist_fn/deuteron_en/deuteron,type,3,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,grid/deuteron_en/deuteron,dims,1000
+FILE,/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001/Data/0002.sdf,time_s,7.5001445645400756e-13,step,15373,nblocks,10
+BLOCK,1,id,run_info,name,Run_info,type,7,datatype,8,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,2,id,cpu_rank,name,CPUs/Original rank,type,20,datatype,1,ndims,3,nelements,0,data_length,148,mesh,,dims,31,3,3
+BLOCK,3,id,elapsed_time,name,Wall-time,type,5,datatype,4,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,4,id,grid/deuteron_en/deuteron,name,Grid/deuteron_en/deuteron,type,1,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,,dims,1000
+BLOCK,5,id,deuteron_en/deuteron,name,dist_fn/deuteron_en/deuteron,type,3,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,grid/deuteron_en/deuteron,dims,1000
+BLOCK,6,id,D_rear05,name,Grid/Probe/D_rear05,type,2,datatype,4,ndims,3,nelements,1,data_length,24,mesh,,dims,1,1,1
+BLOCK,7,id,D_rear05/Px,name,D_rear05/Px,type,4,datatype,4,ndims,1,nelements,1,data_length,8,mesh,D_rear05,dims,1
+BLOCK,8,id,D_rear05/Py,name,D_rear05/Py,type,4,datatype,4,ndims,1,nelements,1,data_length,8,mesh,D_rear05,dims,1
+BLOCK,9,id,D_rear05/Pz,name,D_rear05/Pz,type,4,datatype,4,ndims,1,nelements,1,data_length,8,mesh,D_rear05,dims,1
+BLOCK,10,id,D_rear05/weight,name,D_rear05/weight,type,4,datatype,4,ndims,1,nelements,1,data_length,8,mesh,D_rear05,dims,1
+FILE,/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001/Data/0003.sdf,time_s,1.0000030126808429e-12,step,20497,nblocks,10
+BLOCK,1,id,run_info,name,Run_info,type,7,datatype,8,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,2,id,cpu_rank,name,CPUs/Original rank,type,20,datatype,1,ndims,3,nelements,0,data_length,148,mesh,,dims,31,3,3
+BLOCK,3,id,elapsed_time,name,Wall-time,type,5,datatype,4,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,4,id,grid/deuteron_en/deuteron,name,Grid/deuteron_en/deuteron,type,1,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,,dims,1000
+BLOCK,5,id,deuteron_en/deuteron,name,dist_fn/deuteron_en/deuteron,type,3,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,grid/deuteron_en/deuteron,dims,1000
+BLOCK,6,id,D_rear05,name,Grid/Probe/D_rear05,type,2,datatype,4,ndims,3,nelements,511,data_length,12264,mesh,,dims,511,511,511
+BLOCK,7,id,D_rear05/Px,name,D_rear05/Px,type,4,datatype,4,ndims,1,nelements,511,data_length,4088,mesh,D_rear05,dims,511
+BLOCK,8,id,D_rear05/Py,name,D_rear05/Py,type,4,datatype,4,ndims,1,nelements,511,data_length,4088,mesh,D_rear05,dims,511
+BLOCK,9,id,D_rear05/Pz,name,D_rear05/Pz,type,4,datatype,4,ndims,1,nelements,511,data_length,4088,mesh,D_rear05,dims,511
+BLOCK,10,id,D_rear05/weight,name,D_rear05/weight,type,4,datatype,4,ndims,1,nelements,511,data_length,4088,mesh,D_rear05,dims,511
+FILE,/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001/Data/0004.sdf,time_s,1.2500403566821175e-12,step,25622,nblocks,15
+BLOCK,1,id,run_info,name,Run_info,type,7,datatype,8,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,2,id,cpu_rank,name,CPUs/Original rank,type,20,datatype,1,ndims,3,nelements,0,data_length,148,mesh,,dims,31,3,3
+BLOCK,3,id,elapsed_time,name,Wall-time,type,5,datatype,4,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,4,id,grid/deuteron_en/deuteron,name,Grid/deuteron_en/deuteron,type,1,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,,dims,1000
+BLOCK,5,id,deuteron_en/deuteron,name,dist_fn/deuteron_en/deuteron,type,3,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,grid/deuteron_en/deuteron,dims,1000
+BLOCK,6,id,D_rear05,name,Grid/Probe/D_rear05,type,2,datatype,4,ndims,3,nelements,6092,data_length,146208,mesh,,dims,6092,6092,6092
+BLOCK,7,id,D_rear05/Px,name,D_rear05/Px,type,4,datatype,4,ndims,1,nelements,6092,data_length,48736,mesh,D_rear05,dims,6092
+BLOCK,8,id,D_rear05/Py,name,D_rear05/Py,type,4,datatype,4,ndims,1,nelements,6092,data_length,48736,mesh,D_rear05,dims,6092
+BLOCK,9,id,D_rear05/Pz,name,D_rear05/Pz,type,4,datatype,4,ndims,1,nelements,6092,data_length,48736,mesh,D_rear05,dims,6092
+BLOCK,10,id,D_rear05/weight,name,D_rear05/weight,type,4,datatype,4,ndims,1,nelements,6092,data_length,48736,mesh,D_rear05,dims,6092
+BLOCK,11,id,D_rear10,name,Grid/Probe/D_rear10,type,2,datatype,4,ndims,3,nelements,3,data_length,72,mesh,,dims,3,3,3
+BLOCK,12,id,D_rear10/Px,name,D_rear10/Px,type,4,datatype,4,ndims,1,nelements,3,data_length,24,mesh,D_rear10,dims,3
+BLOCK,13,id,D_rear10/Py,name,D_rear10/Py,type,4,datatype,4,ndims,1,nelements,3,data_length,24,mesh,D_rear10,dims,3
+BLOCK,14,id,D_rear10/Pz,name,D_rear10/Pz,type,4,datatype,4,ndims,1,nelements,3,data_length,24,mesh,D_rear10,dims,3
+BLOCK,15,id,D_rear10/weight,name,D_rear10/weight,type,4,datatype,4,ndims,1,nelements,3,data_length,24,mesh,D_rear10,dims,3
+FILE,/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_benchmark1500fs_2000x250x250_a0_10_t_3um_20260704_r001/Data/0005.sdf,time_s,1.5000289129089528e-12,step,30746,nblocks,15
+BLOCK,1,id,run_info,name,Run_info,type,7,datatype,8,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,2,id,cpu_rank,name,CPUs/Original rank,type,20,datatype,1,ndims,3,nelements,0,data_length,148,mesh,,dims,31,3,3
+BLOCK,3,id,elapsed_time,name,Wall-time,type,5,datatype,4,ndims,1,nelements,0,data_length,0,mesh,,dims,1
+BLOCK,4,id,grid/deuteron_en/deuteron,name,Grid/deuteron_en/deuteron,type,1,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,,dims,1000
+BLOCK,5,id,deuteron_en/deuteron,name,dist_fn/deuteron_en/deuteron,type,3,datatype,4,ndims,1,nelements,1000,data_length,8000,mesh,grid/deuteron_en/deuteron,dims,1000
+BLOCK,6,id,D_rear05,name,Grid/Probe/D_rear05,type,2,datatype,4,ndims,3,nelements,17609,data_length,422616,mesh,,dims,17609,17609,17609
+BLOCK,7,id,D_rear05/Px,name,D_rear05/Px,type,4,datatype,4,ndims,1,nelements,17609,data_length,140872,mesh,D_rear05,dims,17609
+BLOCK,8,id,D_rear05/Py,name,D_rear05/Py,type,4,datatype,4,ndims,1,nelements,17609,data_length,140872,mesh,D_rear05,dims,17609
+BLOCK,9,id,D_rear05/Pz,name,D_rear05/Pz,type,4,datatype,4,ndims,1,nelements,17609,data_length,140872,mesh,D_rear05,dims,17609
+BLOCK,10,id,D_rear05/weight,name,D_rear05/weight,type,4,datatype,4,ndims,1,nelements,17609,data_length,140872,mesh,D_rear05,dims,17609
+BLOCK,11,id,D_rear10,name,Grid/Probe/D_rear10,type,2,datatype,4,ndims,3,nelements,156,data_length,3744,mesh,,dims,156,156,156
+BLOCK,12,id,D_rear10/Px,name,D_rear10/Px,type,4,datatype,4,ndims,1,nelements,156,data_length,1248,mesh,D_rear10,dims,156
+BLOCK,13,id,D_rear10/Py,name,D_rear10/Py,type,4,datatype,4,ndims,1,nelements,156,data_length,1248,mesh,D_rear10,dims,156
+BLOCK,14,id,D_rear10/Pz,name,D_rear10/Pz,type,4,datatype,4,ndims,1,nelements,156,data_length,1248,mesh,D_rear10,dims,156
+BLOCK,15,id,D_rear10/weight,name,D_rear10/weight,type,4,datatype,4,ndims,1,nelements,156,data_length,1248,mesh,D_rear10,dims,156
