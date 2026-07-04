@@ -229,6 +229,14 @@ Submission walltime policy:
     also cannot inherit the newly added `stop_at_walltime` guard because EPOCH
     reads this value at startup. Future long runs should use a walltime far
     above the estimate and keep an EPOCH stop guard before the Slurm limit.
+  - During runtime, the shrinking walltime margin showed that the final
+    restartable dump might not have enough time to complete safely. EPOCH source
+    inspection confirmed that an empty `Data/DUMP` file requests a restartable
+    dump without stopping the job. A `Data/DUMP` request was therefore issued
+    while the run was near `1.61 ps`. It produced `Data/0006.sdf` of about
+    `17G`; `Data/restart.visit` points to `0006.sdf`, giving a usable
+    continuation point around `1.63 ps` even if the 3 ps run later hits the
+    Slurm walltime.
 - Acceptance checks after completion:
   - `D_rear10` should have enough cumulative macro-particles for stable
     spectrum/angle statistics.
