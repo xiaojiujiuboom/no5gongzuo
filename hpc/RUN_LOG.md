@@ -169,6 +169,11 @@ Postprocessing note:
     `4000 fs` is more defensible if the source plane remains `rear+20`.
     Linear extrapolation from this benchmark gives about `95 CNY/ps` at
     `512` ranks.
+  - To avoid wasting this cost again, the next long-run template should write a
+    restartable final dump only, not periodic restart dumps. This preserves a
+    continuation point at `t_end` while keeping intermediate I/O light. The
+    prepared template is
+    `hpc/templates/epoch3d_stage1_source_diag_3ps_final_restart.deck`.
 
 ## Previous paused state after user input review request
 
