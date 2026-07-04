@@ -295,15 +295,17 @@ Submission walltime policy:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag3000fs_restart0006file_2000x250x250_a0_10_t_3um_20260704_r003`
 - Job ID: `1676859`.
-- State after submission: `PENDING` with reason `(Resources)`.
+- State after submission: `PENDING`; the pending job was updated in place from
+  `18:00:00` to `10:00:00` walltime to improve scheduling while still leaving
+  more than `2x` the expected continuation runtime.
 - Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
-  `18:00:00`.
+  `10:00:00`.
 - Restart setup:
   - `Data/0006.sdf` is symlinked to the completed checkpoint in r001.
   - The continuation deck uses `restart_snapshot = 0006.sdf`.
   - `t_end = 3000 fs` remains unchanged.
-  - `stop_at_walltime = 61200.0` seconds remains as a guard before the 18 h
-    Slurm limit.
+  - `stop_at_walltime = 32400.0` seconds (`9 h`) is used as a guard before the
+    10 h Slurm limit.
 
 ## Previous paused state after user input review request
 
