@@ -237,6 +237,13 @@ Submission walltime policy:
     `17G`; `Data/restart.visit` points to `0006.sdf`, giving a usable
     continuation point around `1.63 ps` even if the 3 ps run later hits the
     Slurm walltime.
+- Final state update:
+  - The run was intentionally cancelled after the restartable `0006.sdf`
+    checkpoint was complete, instead of gambling on the shrinking 8 h walltime
+    margin.
+  - Slurm state: `CANCELLED by 11003861`; elapsed `04:25:08`.
+  - Continuation is handled by
+    `pic3d_stage1_source_diag3000fs_restart0006_2000x250x250_a0_10_t_3um_20260704_r002`.
 - Acceptance checks after completion:
   - `D_rear10` should have enough cumulative macro-particles for stable
     spectrum/angle statistics.
@@ -246,6 +253,30 @@ Submission walltime policy:
     `rear+10` or the closest stable plane as the Stage 2 source.
   - Check `rear+15/20` only to justify that a farther plane is not required, or
     to decide whether a 4 ps continuation is needed.
+
+## pic3d_stage1_source_diag3000fs_restart0006_2000x250x250_a0_10_t_3um_20260704_r002
+
+- Purpose: continuation of the 3 ps Stage 1 source diagnostic from the
+  restartable checkpoint `Data/0006.sdf` written during Job `1631093`.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag3000fs_restart0006_2000x250x250_a0_10_t_3um_20260704_r002`
+- Job ID: `1666070`.
+- State after submission: `PENDING` with reason `(Priority)`.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
+  `18:00:00`.
+- Restart setup:
+  - `Data/0006.sdf` is a symlink to the completed checkpoint in the previous
+    run directory, avoiding an unnecessary 17 GB copy.
+  - The continuation deck adds `restart_snapshot = 6`.
+  - It keeps `t_end = 3000 fs`, so EPOCH should continue from about `1.63 ps`
+    to `3.0 ps` rather than restarting from zero.
+  - It adds `stop_at_walltime = 61200.0` seconds for an EPOCH-controlled stop
+    before the 18 h Slurm limit.
+- Rationale:
+  - Cancelling Job `1631093` after a verified restartable dump avoids risking
+    a hard 8 h walltime kill during the final restart write.
+  - The cost already spent is not wasted because the continuation starts from
+    the saved checkpoint.
 
 ## Previous paused state after user input review request
 
