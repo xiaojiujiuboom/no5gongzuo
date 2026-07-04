@@ -358,6 +358,16 @@ Submission walltime policy:
 - Runtime estimate:
   - Based on r003, continuing from 3 ps to 5 ps should take roughly `5.5-6 h`
     plus final restart I/O, within the `10 h` walltime.
+- 2026-07-05 status update:
+  - Before allocation, the job was put on user hold with
+    `scontrol hold 1721080`; Slurm now reports `PENDING (JobHeldUser)`.
+  - Reason: the 3 ps probe data show a potentially more important physics
+    issue than source-time completeness. The energetic deuterons arrive early,
+    while later windows are lower energy; extending to 5 ps mostly adds slow
+    low-energy deuterons and is unlikely to create a missing multi-MeV tail.
+  - The hold is reversible. Before releasing or replacing this continuation,
+    reassess whether the current `a0=10`, `3 um` solid-CD2, no-preplasma 3D
+    setup is energetic enough for the DD-neutron / Li-TPR objective.
 
 ## Previous paused state after user input review request
 
