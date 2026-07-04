@@ -261,7 +261,7 @@ Submission walltime policy:
 - Remote run directory:
   `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag3000fs_restart0006_2000x250x250_a0_10_t_3um_20260704_r002`
 - Job ID: `1666070`.
-- State after submission: `PENDING` with reason `(Priority)`.
+- Final state: `FAILED`, exit code `16:0`, elapsed `00:00:15`.
 - Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
   `18:00:00`.
 - Restart setup:
@@ -277,6 +277,33 @@ Submission walltime policy:
     a hard 8 h walltime kill during the final restart write.
   - The cost already spent is not wasted because the continuation starts from
     the saved checkpoint.
+- Failure diagnosis:
+  - EPOCH started but aborted before physics with
+    `SDF file Data/ is not a restart dump. Unable to continue.`
+  - The checkpoint itself is valid: a small SDF header checker read
+    `Data/0006.sdf` as `code=Epoch3d`, `step=33470`,
+    `time=1.6329268104815327e-12`, `restart_flag=1`.
+  - The failure is therefore the numeric restart deck syntax
+    `restart_snapshot = 6`, not a corrupt checkpoint.
+  - The next continuation run uses explicit filename syntax
+    `restart_snapshot = 0006.sdf`.
+
+## pic3d_stage1_source_diag3000fs_restart0006file_2000x250x250_a0_10_t_3um_20260704_r003
+
+- Purpose: corrected continuation from the verified restartable checkpoint
+  `Data/0006.sdf`, using explicit filename restart syntax.
+- Remote run directory:
+  `~/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag3000fs_restart0006file_2000x250x250_a0_10_t_3um_20260704_r003`
+- Job ID: `1676859`.
+- State after submission: `PENDING` with reason `(Resources)`.
+- Slurm: partition `amd_m9_768`, `2` nodes, `512` MPI ranks, walltime
+  `18:00:00`.
+- Restart setup:
+  - `Data/0006.sdf` is symlinked to the completed checkpoint in r001.
+  - The continuation deck uses `restart_snapshot = 0006.sdf`.
+  - `t_end = 3000 fs` remains unchanged.
+  - `stop_at_walltime = 61200.0` seconds remains as a guard before the 18 h
+    Slurm limit.
 
 ## Previous paused state after user input review request
 
