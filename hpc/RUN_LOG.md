@@ -11,6 +11,20 @@ Postprocessing note:
 - For long runs, use `Data/*.sdf` in postprocessing so files beyond `0009.sdf`
   are included.
 
+Submission walltime policy:
+
+- For expensive 3D PIC jobs, do not set Slurm walltime close to the runtime
+  estimate. Use a generous upper bound, typically about `2x` the estimate and
+  at least `4-6 h` above it for production-like runs.
+- The scheduler walltime is an upper limit, not a request to keep billing after
+  the program exits. A larger limit can increase queue wait, but it prevents a
+  much worse failure mode: a hard scheduler kill just before EPOCH writes the
+  restartable final dump.
+- Pair long Slurm limits with EPOCH `stop_at_walltime` set safely before the
+  Slurm limit, so EPOCH can stop through its normal path and force an output
+  instead of being killed. For an `18:00:00` Slurm job, use about
+  `stop_at_walltime = 61200.0` seconds (`17 h`).
+
 ## 2026-07-03 resource-controlled Stage 1 3D benchmark inputs
 
 - After reviewing `/Volumes/billboom/paperwork/tritium/EXECUTION_stage1_pic.md`,
@@ -196,9 +210,9 @@ Postprocessing note:
   - `nx,ny,nz = 2000,250,250`
   - `nprocx,nprocy,nprocz = 32,4,4`
   - `t_end = 3000 fs`, `dt_snapshot = 250 fs`
-  - template guard for future submissions: `stop_at_walltime = 27000.0`
-    seconds, so an 8 h Slurm job can stop inside EPOCH and force a dump before
-    a hard scheduler kill
+  - future submissions should use a much wider Slurm walltime, e.g.
+    `18:00:00`, with `stop_at_walltime = 61200.0` seconds so EPOCH can stop
+    inside its own normal output path before a scheduler kill
   - PPC `electron/deuteron/carbon = 16/32/4`
   - deuteron probes at `rear+2/5/10/15/20 um`
   - particle probes and deuteron distribution function only
@@ -213,8 +227,8 @@ Postprocessing note:
     extension to `10:00:00` returned `Access/permission denied`; ordinary user
     permissions cannot raise the walltime of the active job. The submitted deck
     also cannot inherit the newly added `stop_at_walltime` guard because EPOCH
-    reads this value at startup. Future long runs should keep this guard or an
-    equivalent earlier-than-Slurm stop.
+    reads this value at startup. Future long runs should use a walltime far
+    above the estimate and keep an EPOCH stop guard before the Slurm limit.
 - Acceptance checks after completion:
   - `D_rear10` should have enough cumulative macro-particles for stable
     spectrum/angle statistics.

@@ -32,7 +32,7 @@ begin:control
   dt_multiplier = 0.95
   dlb_threshold = 0.5
   stdout_frequency = 500
-  stop_at_walltime = 27000.0
+  stop_at_walltime = 61200.0
   physics_table_location = /publicfs10/fs10-m9/home/m9s003861/pic/software/epoch_release-4.20.1/epoch3d/src/physics_packages/TABLES
 end:control
 
