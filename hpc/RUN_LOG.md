@@ -368,6 +368,18 @@ Submission walltime policy:
   - The hold is reversible. Before releasing or replacing this continuation,
     reassess whether the current `a0=10`, `3 um` solid-CD2, no-preplasma 3D
     setup is energetic enough for the DD-neutron / Li-TPR objective.
+- 2026-07-05 release update:
+  - After discussion, the project keeps the solid-CD2 baseline rather than
+    switching immediately to a foam/CSA route.
+  - Rationale: sub-MeV to MeV deuterons are not useless for the present
+    workflow; forward D-D neutrons can still exceed the `7Li(n,n'T)` threshold,
+    although the total yield may be lower than a tens-of-MeV deuteron source.
+  - The 5 ps continuation is therefore needed for source completeness, not for
+    increasing the deuteron energy. At 3 ps, the latest probe windows still
+    contribute too much of the cumulative source weight, especially at
+    `rear+10/15/20`.
+  - The job was released with `scontrol release 1721080` and returned to
+    pending scheduling.
 
 ## Previous paused state after user input review request
 
