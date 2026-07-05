@@ -109,14 +109,28 @@ static double thick_yield(double E_MeV) {
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        fprintf(stderr, "usage: %s file.sdf...\n", argv[0]);
+        fprintf(stderr, "usage: %s [--e-min-MeV value] file.sdf...\n", argv[0]);
+        return 2;
+    }
+    double e_min_MeV = 0.0;
+    int first_file = 1;
+    if (argc >= 4 && strcmp(argv[1], "--e-min-MeV") == 0) {
+        e_min_MeV = atof(argv[2]);
+        if (!isfinite(e_min_MeV) || e_min_MeV < 0.0) {
+            fprintf(stderr, "invalid --e-min-MeV value: %s\n", argv[2]);
+            return 2;
+        }
+        first_file = 3;
+    }
+    if (first_file >= argc) {
+        fprintf(stderr, "usage: %s [--e-min-MeV value] file.sdf...\n", argv[0]);
         return 2;
     }
     init_yield_table();
     const char *probes[] = {"D_rear02", "D_rear05", "D_rear10", "D_rear15", "D_rear20"};
     const int nprobes = 5;
-    printf("sdf,time_fs,probe,n_macro,weight_sum,E_weighted_mean_MeV,E_max_MeV,ddn_yield_sum,ddn_yield_per_weight\n");
-    for (int ai = 1; ai < argc; ++ai) {
+    printf("sdf,time_fs,probe,E_min_MeV,n_macro,weight_sum,E_weighted_mean_MeV,E_max_MeV,ddn_yield_sum,ddn_yield_per_weight\n");
+    for (int ai = first_file; ai < argc; ++ai) {
         const char *fn = argv[ai];
         sdf_file_t *h = sdf_open(fn, 0, SDF_READ, 0);
         if (!h) {
@@ -139,7 +153,7 @@ int main(int argc, char **argv) {
             sdf_block_t *bpz = find_block(h, idpz);
             sdf_block_t *bw = find_block(h, idw);
             if (!bpx || !bpy || !bpz || !bw) {
-                printf("%s,%.9g,%s,0,0,nan,nan,0,0\n", base, time_fs, probes[pi]);
+                printf("%s,%.9g,%s,%.9g,0,0,nan,nan,0,0\n", base, time_fs, probes[pi], e_min_MeV);
                 continue;
             }
             int64_t n = bpx->dims[0];
@@ -148,7 +162,7 @@ int main(int argc, char **argv) {
             double *pz = read_var(h, bpz);
             double *w = read_var(h, bw);
             if (!px || !py || !pz || !w || n <= 0) {
-                printf("%s,%.9g,%s,0,0,nan,nan,0,0\n", base, time_fs, probes[pi]);
+                printf("%s,%.9g,%s,%.9g,0,0,nan,nan,0,0\n", base, time_fs, probes[pi], e_min_MeV);
                 continue;
             }
             double rest = M_D_KG * C_LIGHT * C_LIGHT;
@@ -164,6 +178,9 @@ int main(int argc, char **argv) {
                 }
                 double p2 = px[i] * px[i] + py[i] * py[i] + pz[i] * pz[i];
                 double E = (sqrt(rest * rest + p2 * C_LIGHT * C_LIGHT) - rest) / J_PER_MEV;
+                if (E < e_min_MeV) {
+                    continue;
+                }
                 double y = thick_yield(E);
                 wsum += w[i];
                 Esum += w[i] * E;
@@ -172,10 +189,10 @@ int main(int argc, char **argv) {
                 ++kept;
             }
             if (kept <= 0 || wsum <= 0.0) {
-                printf("%s,%.9g,%s,0,0,nan,nan,0,0\n", base, time_fs, probes[pi]);
+                printf("%s,%.9g,%s,%.9g,0,0,nan,nan,0,0\n", base, time_fs, probes[pi], e_min_MeV);
             } else {
-                printf("%s,%.9g,%s,%lld,%.9e,%.9g,%.9g,%.9e,%.9e\n",
-                       base, time_fs, probes[pi], (long long)kept, wsum,
+                printf("%s,%.9g,%s,%.9g,%lld,%.9e,%.9g,%.9g,%.9e,%.9e\n",
+                       base, time_fs, probes[pi], e_min_MeV, (long long)kept, wsum,
                        Esum / wsum, Emax, ysum, ysum / wsum);
             }
         }

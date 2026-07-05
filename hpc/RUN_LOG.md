@@ -1421,3 +1421,76 @@ Generated files:
 - `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_allE_normalized_spectrum.csv`
 - `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_allE_spectrum_summary.csv`
 - `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_allE_normalized_spectrum.png`
+
+## Rear+10 5 ps D-D Yield-Weighted Convergence Check
+
+Date: 2026-07-05 / 2026-07-06 CST on BSCC.
+
+Run:
+
+- Remote directory:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag4000fs_restart0012file_2000x250x250_a0_10_t_3um_20260705_r004`.
+- Slurm Job `1721080`, `amd_m9_768`, 2 nodes / 512 ranks.
+- Completed normally in `04:48:07`, exit code `0:0`.
+- Final restartable dump: `Data/0020.sdf`, time `5.000015 ps`, size about
+  `14G`.
+- Peak memory reported by `sacct` was about `342 GB`, comfortably below the
+  768 GB node memory envelope for the two-node run.
+
+Method:
+
+- Use `sdf_probe_dd_yield_metrics` directly on SDF probe blocks, avoiding large
+  CSV extraction where possible.
+- The tool now supports `--e-min-MeV value`; this was used to compute both
+  all-energy and Stage-B-gated (`E_D >= 0.4 MeV`) D-D-yield-weighted window
+  contributions.
+- Decision criterion remains: do not accept a final source time for absolute
+  yield if the final 250 fs window contributes more than about `10%` of the
+  cumulative D-D-yield-weighted total.
+
+Rear+10 `E_D >= 0.4 MeV` result:
+
+| interval | D-D-yield-weighted contribution |
+|---|---:|
+| 0-3 ps | 8.3513e4 |
+| 3-4 ps | 6.1439e5 |
+| 4-5 ps | 1.1987e6 |
+| 0-5 ps total | 1.8966e6 |
+| 4.75-5.00 ps final window | 2.7904e5 |
+
+Fractions:
+
+- 3-4 ps fraction of 0-5 ps: `32.4%`.
+- 4-5 ps fraction of 0-5 ps: `63.2%`.
+- Final 250 fs fraction of 0-5 ps: `14.7%`.
+- Final 250 fs fraction of the 4-5 ps increment: `23.3%`.
+
+All-energy sanity check:
+
+- 4-5 ps fraction of 0-5 ps: `65.5%`.
+- Final 250 fs fraction of 0-5 ps: `16.6%`.
+
+Interpretation:
+
+- 5 ps is not accepted as the final source-collection time for absolute yield.
+  The final window is smaller than the earlier 4-5 ps windows, but still above
+  the 10% acceptance target.
+- The late population is still soft. For `E_D >= 0.4 MeV`, the 4-5 ps windows
+  have mean energies around `0.466-0.470 MeV`, with max energies below
+  `0.95 MeV` at rear+10; this is not a newly growing high-energy tail.
+- Because `Data/0020.sdf` is restartable, the correct response is a minimal
+  restart continuation rather than rerunning 0-5 ps.
+
+Continuation submitted:
+
+- New remote directory:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag6000fs_restart0020file_2000x250x250_a0_10_t_3um_20260706_r005`.
+- Slurm Job `1837542`, submitted to `amd_m9_768`, 2 nodes / 512 ranks.
+- `restart_snapshot = 0020.sdf`, `t_end = 6000 fs`,
+  `dt_snapshot = 250 fs`, final dump restartable.
+- Walltime set to `8:00:00`; `stop_at_walltime = 25200 s`.
+
+Generated files:
+
+- `hpc/results/pic3d_stage1_rear10_5ps_dd_yield_windows.csv`
+- `hpc/results/pic3d_stage1_rear10_5ps_dd_yield_convergence_summary.csv`
