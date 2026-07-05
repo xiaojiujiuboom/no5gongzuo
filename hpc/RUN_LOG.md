@@ -1579,3 +1579,39 @@ Generated files:
 - `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_normalized_spectrum.csv`
 - `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_spectrum_summary.csv`
 - `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_normalized_spectrum.png`
+
+## Formal 2D Scan Pilot
+
+Date: 2026-07-06 CST.
+
+Purpose:
+
+- Start the cheaper parameter-scan branch after the 3D anchor demonstrated the
+  source extraction and spectrum-stability workflow.
+- Submit only one formal 2D pilot before launching the full 7-point scan, so
+  the actual runtime, memory, probe output size, and parser behavior are known.
+
+Submitted pilot:
+
+- Run directory:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic2d_stage1_formal5ps_10nm_a0_10_t_3um_20260706_r001`.
+- Slurm Job `1846890`, `amd_m9_768`, 1 node / 160 ranks, walltime `6:00:00`.
+- Physics point: `a0=10`, `CD2 thickness=3 um`, no preplasma.
+- Box: `x=-6..36 um`, `y=-15..15 um`.
+- Grid: `nx=4200`, `ny=3000`, i.e. `dx=dy=10 nm`.
+- Target: front at `x=0`, rear at `x=thickness`, half-width `5 um`.
+- PPC: electron/deuteron/carbon = `16/48/8`.
+- Probes: `rear+5`, `rear+10`, `rear+15`, `rear+20`.
+- `t_end=5 ps`, `dt_snapshot=250 fs`, probe and deuteron energy distribution
+  outputs only.
+
+Rationale:
+
+- The old 2D diagnostic box (`x=-10..90 um`, `y=+-40 um`) was oversized for the
+  current source-plane strategy and was intended for early far-probe diagnosis.
+- The new 2D box follows the 3D anchor geometry more closely while keeping
+  enough downstream space for `rear+20` and transverse margin beyond the
+  `+-10 um` 3D transverse box.
+- `10 nm` resolves the cold and relativistic skin-depth scale better than the
+  earlier `25 nm` diagnostic grid. The first pilot will determine whether this
+  accuracy is affordable for the 7-point scan.

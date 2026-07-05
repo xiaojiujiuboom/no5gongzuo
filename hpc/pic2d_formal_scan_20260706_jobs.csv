@@ -1,0 +1,2 @@
+run_id,job_id,state,partition,nodes,tasks,walltime_h,a0,target_thickness_um,dx_nm,dy_nm,ppc,source_planes,t_end_ps,notes
+pic2d_stage1_formal5ps_10nm_a0_10_t_3um_20260706_r001,1846890,RUNNING,amd_m9_768,1,160,6,10,3,10,10,16/48/8,rear+5/10/15/20,5,baseline pilot for formal 2D scan; x=-6..36um y=-15..15um; aligned to 3D anchor except 2D higher transverse resolution and D PPC
