@@ -19,6 +19,7 @@ from moduleB_source.cross_section import sigma_ddn_bosch_hale_mb
 from moduleB_source.kinematics import dd_neutron_lab
 from moduleB_source.stopping import stopping_power_MeV_per_cm
 from moduleB_source.thick_target import thick_target_yield
+from moduleC_openmc.nuclear_data import LI7_MT205_THRESHOLD_MEV
 from interfaces.schema import write_deuteron_beam
 from utils.config import load_config
 
@@ -50,7 +51,7 @@ def gate_schema_and_pipeline(tmp: Path) -> None:
         raise AssertionError("source size mismatch")
     if float(source.attrs["Y_total"]) <= 0.0:
         raise AssertionError("Y_total must be positive")
-    if not np.any(source.E > 2.82):
+    if not np.any(source.E > LI7_MT205_THRESHOLD_MEV):
         raise AssertionError("expected some source neutrons above the Li7 threshold")
 
 

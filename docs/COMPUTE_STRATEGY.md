@@ -141,7 +141,7 @@ python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 最关键的判断：
 
 - `6Li` 通道应对源谱细节相对钝感。
-- `7Li` 通道应对 >2.82 MeV 的前向高能尾敏感。
+- `7Li` 通道应对 >3.1454 MeV 的前向高能尾敏感（当前 OpenMC `Li7` MT205 `(n,Xt)` 阈值）。
 - A/B 对比优先用“每源中子 TPR”，避免总产额归一化掩盖谱形效应。
 
 ## OpenMC API 依据
@@ -149,6 +149,6 @@ python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 按 OpenMC stable 文档实现 Stage C：
 
 - `EnergyFilter` 的能量边界使用 eV。
-- `H3-production` 属于 particle production score，可用于产氚 tally。
+- `H3-production` 属于 particle production score，可用于产氚 tally；当前 `Li7.h5` 中它对应 MT205 `(n,Xt)` 总产氚生产截面。
 - 多个外源可通过 `Settings.source = [IndependentSource, ...]` 设置，并用 `strength` 表示相对源强。
 - `PolarAzimuthal` 可用 `mu` 和 `phi` 分布指定相对于 +z 的角分布。

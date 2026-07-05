@@ -24,9 +24,9 @@
 
 **预期物理图像（也是论文卖点，代码要能显式呈现出来）：**
 - **⁶Li(n,α)T 主通道**：靠中子慢化后的低能中子，对源谱细节**钝感** → Case A ≈ Case B。
-- **⁷Li(n,n't)⁴He 阈值通道**：Q ≈ −2.47 MeV，实验室阈值 ≈ **2.82 MeV**。热核 D-D 中子 2.45 MeV 卡在阈值下；
-  只有**束-靶前向被顶过 2.82 MeV 的高能尾**能开启它 → 对"谱里多少料在 2.82 MeV 以上"和"朝哪个方向"极度敏感。
-- 因此 Case A 与 Case B 的 TPR 差异应**集中在 ⁷Li 通道、集中在 >2.82 MeV 能段、且各向异性**。
+- **⁷Li 产氚阈值通道**：当前 OpenMC `Li7.h5` 中 `H3-production` 对应 MT205 `(n,Xt)` 总产氚截面，294 K 阈值为 **3.1454 MeV**。热核 D-D 中子 2.45 MeV 卡在阈值下；
+  只有**束-靶前向被顶过 3.1454 MeV 的高能尾**能开启它 → 对"谱里多少料在 3.1454 MeV 以上"和"朝哪个方向"极度敏感。
+- 因此 Case A 与 Case B 的 TPR 差异应**集中在 ⁷Li 通道、集中在 >3.1454 MeV 能段、且各向异性**。注意：MT205 是总产氚 `(n,Xt)`，不是排他单一 `(n,n'alpha)T` tally；在几 MeV 的 `Li7` 区间可表述为由阈值产氚通道主导。
 
 ---
 
@@ -48,7 +48,7 @@
 | D(d,n)³He | **+3.269 MeV** | 本项目中子来源；E_d→0 时中子能 →2.45 MeV |
 | D(d,p)T | +4.033 MeV | 另一分支，不产中子，可忽略（只影响氘消耗，本文不算） |
 | ⁶Li(n,α)T | +4.78 MeV | 无阈值，热中子截面极大（~940 barn @2200 m/s） |
-| ⁷Li(n,n't)⁴He | −2.467 MeV | **阈值 ≈ 2.82 MeV（实验室系）** |
+| ⁷Li MT205 `(n,Xt)` total tritium production | library-defined | OpenMC HDF5 294 K 阈值 **3.1454 MeV**；几 MeV 区间由阈值产氚通道主导 |
 
 ### 2.3 D(d,n)³He 截面：Bosch-Hale 参数化 **[VERIFY]**
 以质心系能量 E（**keV**）为自变量，截面（**mb**）：
@@ -206,7 +206,7 @@ def dd_neutron_lab(E_d_MeV, dir_d_unit, rng):
 ```
 **[GATE-kin]** 数值自检（必须复现）：
 - `E_d→0`：`E_n_lab → 2.45 MeV`（任意方向都接近）。
-- `E_d=1 MeV`，**前向**（u 与 dir_d 同向）：`E_n_lab ≈ 4.14 MeV`（>2.82，开 ⁷Li 通道）。
+- `E_d=1 MeV`，**前向**（u 与 dir_d 同向）：`E_n_lab ≈ 4.14 MeV`（>3.1454，开 ⁷Li MT205 产氚）。
 - `E_d=1 MeV`，**后向**：`E_n_lab ≈ 1.76 MeV`。
 对不上说明 boost 写错，禁止进入 build_source。
 （可选精化：D-D 的 CM 角分布在 >1 MeV 有轻微 (1+a·cos²θ) 各向异性，先按各向同性做，讨论里注明。）
@@ -237,7 +237,7 @@ sum(weight) → Y_total 写入 attrs
   fig2 中子角分布（应前向偏置）
 ```
 **[GATE-B]**：
-- fig1 能谱有 2.45 MeV 峰且高能侧拖尾越过 2.82 MeV；
+- fig1 能谱有 2.45 MeV 峰且高能侧拖尾越过 3.1454 MeV；
 - fig2 明显前向偏置；
 - `Y_total/n_deuterons_total`（每氘平均产额）量级与文献厚靶 D-D 产额一致（**[VERIFY]** 对照厚靶 D-D 产额表，典型 ~1e-6…1e-5/氘 量级，具体核）。
 三者全过才算模块 B 完成。**这两张图是论文主结果之一。**
@@ -300,6 +300,7 @@ for i in range(NB):
 
 ### 7.4 Tally `tallies.py`（**⁶Li 与 ⁷Li 必须分道**）
 - 产氚用 **`score='H3-production'`**（汇总所有产氚反应，绕开 MT 记账坑）；用 **nuclide filter** 拆两核素。
+  当前已核对 `Li7.h5`：该 score 对 `Li7` 对应 `reaction_205`/MT205/`(n,Xt)` 总产氚生产截面，阈值 3.1454 MeV，不写成排他单一反应道。
   **[VERIFY]** 确认安装版 OpenMC 支持该 score 名；若不支持，Li6 退回 `score='(n,t)'`/MT=105，Li7 用产氚 score 或对应 MT。
 ```python
 t_li6 = openmc.Tally(name='TPR_Li6'); t_li6.nuclides=['Li6']; t_li6.scores=['H3-production']
@@ -307,7 +308,7 @@ t_li7 = openmc.Tally(name='TPR_Li7'); t_li7.nuclides=['Li7']; t_li7.scores=['H3-
 # 空间分布：柱网格 mesh tally
 mesh = openmc.RegularMesh(); mesh.dimension=[1,20,20]  # 或 CylindricalMesh 更贴几何
 t_map = openmc.Tally(name='TPR_map'); t_map.filters=[openmc.MeshFilter(mesh)]; t_map.scores=['H3-production']
-# 能量分辨：看 ⁷Li 贡献是否集中在 >2.82 MeV
+# 能量分辨：看 ⁷Li 贡献是否集中在 >3.1454 MeV
 efilter = openmc.EnergyFilter(np.logspace(3, 7.3, 60))  # eV
 t_li7_E = openmc.Tally(name='TPR_Li7_vsE'); t_li7_E.nuclides=['Li7']
 t_li7_E.filters=[efilter]; t_li7_E.scores=['H3-production']
@@ -319,9 +320,9 @@ t_li7_E.filters=[efilter]; t_li7_E.scores=['H3-production']
 - **每 shot 氚数** = tally 值 × `Y_total`（来自 neutron_source.h5 的 attrs）。
 - **A/B 对比用"每源中子 TPR"**（不乘 Y_total），这样隔离掉总产额差异、只比较**谱形畸变**的影响 —— 这正是论文要的量。
 - 检查每个 tally 的相对统计误差 < 5%（不够就加 particles）。
-- 出图：TPR(r,z) 云图；Case A vs B 的 ⁶Li/⁷Li 分道柱状；⁷Li 的 TPR-vs-能量曲线（标出 2.82 MeV 阈值线）；A−B 相对偏差谱。
+- 出图：TPR(r,z) 云图；Case A vs B 的 ⁶Li/⁷Li 分道柱状；⁷Li 的 TPR-vs-能量曲线（标出 3.1454 MeV MT205 阈值线）；A−B 相对偏差谱。
 
-**[GATE-C]**：⁶Li 通道 A≈B（差异小）；⁷Li 通道 A、B 差异明显且 B 的贡献集中在 >2.82 MeV。
+**[GATE-C]**：⁶Li 通道 A≈B（差异小）；⁷Li 通道 A、B 差异明显且 B 的贡献集中在 >3.1454 MeV。
 若两通道都无差异 → 回查源是否真畸变（模块 B）或 Case B 源是否误用了各向同性。
 
 ### 7.6 多库比对（有余力才做，否则进"未来工作"）
@@ -337,7 +338,7 @@ t_li7_E.filters=[efilter]; t_li7_E.scores=['H3-production']
 | GATE-σ | Bosch-Hale 截面 | 对 ENDF/NRL 两点核对（数量级+趋势）；注意 CM=lab/2 |
 | GATE-kin | 运动学 boost | E_d→0→2.45；1 MeV 前向≈4.14、后向≈1.76 MeV |
 | GATE-B | 中子源项 | 能谱有2.45峰+越阈尾、角分布前向偏置、每氘产额量级对文献 |
-| GATE-C | 锂靶 TPR | ⁶Li 通道 A≈B；⁷Li 通道 A/B 差异集中在>2.82 MeV |
+| GATE-C | 锂靶 TPR | ⁶Li 通道 A≈B；⁷Li 通道 A/B 差异集中在 >3.1454 MeV |
 | GATE-norm | 归一化 | 任何放大因子已除回；每shot绝对产额量级合理 |
 
 ---
@@ -364,7 +365,7 @@ Week4: (可选)多库 → 全部成图/成表 → 按第10节写稿 → 自查(G
 3. 中子角分布（前向各向异性）
 4. TPR(r,z) 空间云图（Case B）
 5. Case A vs B：总 TPR、⁶Li/⁷Li 分道对比
-6. ⁷Li TPR-vs-中子能量（标 2.82 MeV 阈值线）+ A−B 偏差谱
+6. ⁷Li TPR-vs-中子能量（标 3.1454 MeV MT205 阈值线）+ A−B 偏差谱
 
 **表**（`outputs/tables/`）：
 - 总 TPR、⁶Li/⁷Li 占比、天然 vs 富集、A/B 相对偏差(%)（及多库误差带，若做）
@@ -449,9 +450,9 @@ openmc:      {batches: 100, particles: 1000000, libraries: [FENDL-3.2]}
 | 材料 | 金属 Li, ρ=0.534 g/cm³ | |
 | 富集 | ⁶Li {7.59%, 90%}(+可选30/60%) | 最影响 TPR |
 | 温度 | 293.6 K | 室温截面 |
-| 产氚 score | H3-production + nuclide filter 拆 Li6/Li7 | [VERIFY] 版本文档 |
+| 产氚 score | H3-production + nuclide filter 拆 Li6/Li7 | Li7 已核对为 MT205 `(n,Xt)` 总产氚 |
 | 空间 tally | 柱网格(r,z)≈20×20 | TPR(r,z) |
-| 能量 tally | log 1e3–2e7 eV, 50–100 bins | 验证 ⁷Li 集中 >2.82 MeV |
+| 能量 tally | log 1e3–2e7 eV, 50–100 bins | 验证 ⁷Li 集中 >3.1454 MeV |
 | 收敛 | 积分量相对误差<5%, 单体素<10% | 不达标加 particles |
 | 光子输运 | 关 | |
 | 归一化 | tally×Y_total=每shot氚数; A/B比对用"每源中子TPR" | 隔离谱形效应 |
@@ -463,5 +464,5 @@ openmc:      {batches: 100, particles: 1000000, libraries: [FENDL-3.2]}
 ### A.4 已知前人工作与本文定位（诚实边界）
 - **中子源侧（激光→D-D 中子，PIC+MC）**：已被大量研究（Trident、多篇 PIC+MCNPX/Geant4），**非本文创新**。勿把论文写成"搭了个激光中子源"。
 - **紧凑 D-D 源→增殖体 mock-up TPR**：已有实验工作（放电型 D-D 源 + FENDL C/E 比对）；2.5 MeV 下锂产氚计算亦有。
-- **本文 niche（未见直接撞车）**：激光驱动的**畸变+各向异性+脉冲** D-D 源打锂靶，定量 TPR 相对理想各向同性单能源的偏差、并锁定其集中在 ⁷Li 阈值窗口(>2.82 MeV)。属**增量新意**，小论文足够；撑博士需后续系统扫描+定标律+多库预算。
+- **本文 niche（未见直接撞车）**：激光驱动的**畸变+各向异性+脉冲** D-D 源打锂靶，定量 TPR 相对理想各向同性单能源的偏差、并锁定其集中在 ⁷Li MT205 产氚阈值窗口(>3.1454 MeV)。属**增量新意**，小论文足够；撑博士需后续系统扫描+定标律+多库预算。
 - **必写假设**：仅计 D-D 分支；CD₂ 中 ¹²C(d,n)/体相/hole-boring 等其他产中子道不计，聚焦 2.45 MeV 峰附近谱形。

@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:
 
 from interfaces.schema import read_neutron_source
 from moduleC_openmc._compat import require_openmc
+from moduleC_openmc.nuclear_data import LI7_MT205_THRESHOLD_MEV
 
 
 def _combined_mean_std(tally) -> tuple[float, float, float]:
@@ -53,15 +54,16 @@ def _source_stats(neutron_h5: str | None) -> dict[str, float]:
     src = read_neutron_source(neutron_h5)
     w = src.weight
     total = float(np.sum(w))
-    above = src.E > 2.82
+    above = src.E > LI7_MT205_THRESHOLD_MEV
     forward = src.dir[:, 2] > 0.8
+    threshold_tag = f"{LI7_MT205_THRESHOLD_MEV:g}".replace(".", "p")
     return {
         "source_N": float(src.E.size),
         "source_Y_total": total,
         "source_E_weighted_mean_MeV": float(np.average(src.E, weights=w)),
         "source_E_max_MeV": float(np.max(src.E)),
-        "source_weight_frac_E_gt_2p82": float(np.sum(w[above]) / total),
-        "source_weight_frac_E_gt_2p82_mu_gt_0p8": float(np.sum(w[above & forward]) / total),
+        f"source_weight_frac_E_gt_{threshold_tag}": float(np.sum(w[above]) / total),
+        f"source_weight_frac_E_gt_{threshold_tag}_mu_gt_0p8": float(np.sum(w[above & forward]) / total),
     }
 
 
@@ -137,7 +139,13 @@ def compare(case_a: str | Path, case_b: str | Path, output_dir: str | Path, sour
     e_mid = 0.5 * (e_lo_a + e_hi_a) / 1.0e6
     ax.step(e_mid, mean_a, where="mid", label="Case A")
     ax.step(e_mid, mean_b, where="mid", label="Case B")
-    ax.axvline(2.82, color="k", linestyle="--", linewidth=1.0, label="Li7 threshold")
+    ax.axvline(
+        LI7_MT205_THRESHOLD_MEV,
+        color="k",
+        linestyle="--",
+        linewidth=1.0,
+        label=f"Li7 MT205 threshold ({LI7_MT205_THRESHOLD_MEV:g} MeV)",
+    )
     ax.set_xlabel("Incident neutron energy (MeV)")
     ax.set_ylabel("Li7 TPR per source neutron")
     ax.set_title("Li7 threshold-window contribution")
@@ -164,4 +172,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -10,7 +10,7 @@
 
 激光束-靶产生的畸变谱中子（多普勒展宽 + 前向各向异性），打进锂靶后的 TPR，相对理想各向同性单能 2.45 MeV 源差多少、差在哪？
 
-预期物理图像：差异主要集中在 `7Li(n,n'alpha)T` 阈值窗口（约 >2.82 MeV）和前向角区；`6Li(n,alpha)T` 主通道对源谱细节相对钝感。
+预期物理图像：差异主要集中在 `7Li` 产氚阈值窗口和前向角区；当前 OpenMC HDF5 核数据中 `Li7` 的 `H3-production` 对应 MT205 `(n,Xt)` 总产氚截面，294 K 阈值为 3.1454 MeV。`6Li(n,alpha)T` 主通道对源谱细节相对钝感。
 
 ## 技术路线
 
@@ -73,14 +73,14 @@ config.yaml
 | sigma | Bosch-Hale 截面 | 对 ENDF/NRL 两点核对数量级和趋势 |
 | kin | 两体 boost | `E_d -> 0` 得约 2.45 MeV；1 MeV 前向约 4.14 MeV、后向约 1.76 MeV |
 | B | 中子源项 | 能谱有 2.45 MeV 峰和越阈高能尾，角分布前向偏置 |
-| C | 锂靶 TPR | `6Li` 通道 A≈B，`7Li` 通道差异集中在 >2.82 MeV |
+| C | 锂靶 TPR | `6Li` 通道 A≈B，`7Li` 通道差异集中在 MT205 阈值以上（当前库为 >3.1454 MeV） |
 | norm | 归一化 | 每源中子 TPR 与每 shot 绝对产额分开报告，放大因子已除回 |
 
 ## 必须核实的占位项
 
 1. `D(d,n)3He` 与 `D(d,p)T` 截面绝对值：至少对照 ENDF/B 或 NRL Formulary 两个能量点。
 2. D 在 TiD2 和 CD2 中的阻止本领：正式结果前使用 SRIM/PSTAR/可靠表格替换占位模型。
-3. OpenMC 产氚 score/MT：按实际安装版本确认 `H3-production`、`(n,t)` 或 MT 号。
+3. OpenMC 产氚 score/MT：当前已确认 `H3-production` 对 `Li7` 使用 MT205 `(n,Xt)` 总产氚生产截面；论文中按 3.1454 MeV 阈值标图，不写成单一排他反应道。
 4. TiD2/CD2 密度、锂密度、Li6 富集度、靶几何尺寸：按实验或论文设定锁定。
 
 ## 诚实边界

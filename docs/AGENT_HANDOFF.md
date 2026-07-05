@@ -136,13 +136,13 @@
 ### 结论(通过项,勿回退)
 - Bosch-Hale 系数、`E_cm = E_lab/2`、两体 boost、产额积分 `n_D·σ/S`、逆 CDF 采样反应能量:
   与规格一致,单位正确。GATE 测试(2.449 / 4.14 / 1.76 MeV;截面单调且越界置零;产额随 E0 升;
-  源含 >2.82 MeV 中子)已把物理校验点固化,保留。
+  源含 >3.1454 MeV 中子)已把物理校验点固化,保留。
 - Case B 源正确保留 E-μ 相关(按 μ 分 bin 建多源),strength 归一到 per-source-neutron;
-  A/B 比对方式正确。tally 用 `H3-production` + 核素 filter 分道,正确。
+  A/B 比对方式正确。tally 用 `H3-production` + 核素 filter 分道,正确。当前已核对 `Li7` 的该 score 对应 HDF5 `reaction_205`、MT205、`(n,Xt)` 总产氚生产截面,不是排他单一反应道。
 - 几何锁定已更新为薄箔→真空隙→外置厚 deuteride converter→Li；TiD2 是 baseline，
   CD2 是当前软件路径/材料对照。PIC 源时间窗完整性判据
   (rear+20µm 末窗占比 7.19% < 10% 才接受)都是规范做法,勿改。
-- "效应太小"的风险基本解除:smoke 中 >2.82 MeV 中子占比 ~0.17,PIC 氘束多 MeV
+- "效应太小"的风险基本解除:smoke 中 >3.1454 MeV 中子占比非零,PIC 氘束多 MeV
   (rear+20µm 积分均 ~2.9 MeV,p99 ~6.7 MeV),⁷Li 阈值通道有料。
 
 ### 下一步建议(codex 可执行,按优先级)

@@ -1245,3 +1245,77 @@ Process correction:
 - Do not submit production PIC scans with an optimistic hard walltime. Set walltime from observed EPOCH ETA plus safety margin, or run a short benchmark first.
 - The first-scan config now marks walltime as required per submission, and the renderer no longer has a walltime default. It refuses to render Slurm files unless `--hours` is provided explicitly.
 - Future `L_pre=1` reruns should either use at least 8 h walltime or first benchmark a higher-rank run to prove the higher rank count reduces wall-clock time enough to justify its cost.
+
+## Li7 MT205 / H3-production Nuclear-Data Check
+
+Date: 2026-07-05.
+
+Purpose:
+
+- Replace the older informal `>2.82 MeV` Li7 threshold wording with the actual
+  OpenMC HDF5 tally threshold used by the current calculations.
+- Confirm what OpenMC `H3-production` means for `Li7`, and whether it can be
+  described as a pure single `(n,n'alpha)T` channel.
+- Run the same natural-lithium Case A/B OpenMC smoke case with four nuclear-data
+  libraries to estimate the `Li7` tritium-production library spread.
+
+Findings from the HDF5 data:
+
+- In all four checked libraries, `Li7/reactions/reaction_205` has
+  `mt = 205`, `label = (n,Xt)`, and `redundant = 1`.
+- The 294 K MT205 cross section starts at `3.1454 MeV` in all four checked
+  `Li7.h5` files.
+- The maximum tabulated MT205 cross section in these checked files is
+  approximately `0.3805 barn` at `7.5 MeV`.
+- Interpretation: OpenMC `H3-production` is a total tritium-production score.
+  For `Li7` it maps to MT205 `(n,Xt)` in these HDF5 libraries, not an exclusive
+  single-channel tally. In the few-MeV `Li7` threshold region it is physically
+  dominated by the threshold tritium-production channel, so the paper should say
+  "total tritium production, dominated by `7Li(n,n'alpha)T`" rather than claiming
+  an exclusive `(n,n'alpha)T` tally.
+
+PIC-derived source statistic with the corrected threshold:
+
+| source | value |
+|---|---:|
+| `neutron_source.h5` particles | 46,358 |
+| `Y_total` | 8.3513e4 n/shot |
+| weighted mean energy | 2.6441 MeV |
+| max energy | 4.0840 MeV |
+| weight fraction above 3.1454 MeV | 0.13736 |
+| weight fraction above 3.1454 MeV and `mu > 0.8` | 0.08877 |
+
+Four-library natural-lithium Case B `Li7` results:
+
+| library | `TPR_Li7` per source neutron | relative error |
+|---|---:|---:|
+| `endfb71_lanl` | 7.147324e-05 | 0.004220 |
+| `fendl32` | 7.147632e-05 | 0.004221 |
+| `endfb80` | 7.144851e-05 | 0.004216 |
+| `jeff33` | 7.147632e-05 | 0.004221 |
+
+Library spread summary:
+
+- Mean `TPR_Li7`: `7.146860e-05` per source neutron.
+- Min/max: `7.144851e-05` to `7.147632e-05`.
+- Relative half range: `1.9458e-4`, i.e. about `0.0195%`.
+- The library spread is much smaller than the current Monte Carlo statistical
+  uncertainty for this smoke case.
+- Case A `Li7` remains exactly zero in the OpenMC tallies, as expected because
+  the ideal 2.45 MeV D-D source is below the 3.1454 MeV MT205 threshold.
+
+Generated local result files:
+
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_xs_libraries.csv`
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_library_summary.csv`
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_xs_with_neutron_spectrum.png`
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_tpr_library_uncertainty.csv`
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_tpr_library_uncertainty_band.csv`
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_tpr_library_uncertainty.png`
+
+Verification:
+
+- `python tests/test_gates.py` passed after the threshold constant was moved to
+  `moduleC_openmc/nuclear_data.py`.
+- FENDL-3.2, ENDF/B-VIII.0, and JEFF-3.3 clean OpenMC reruns completed with no
+  missing-library warnings after full extraction.
