@@ -380,6 +380,27 @@ Submission walltime policy:
     `rear+10/15/20`.
   - The job was released with `scontrol release 1721080` and returned to
     pending scheduling.
+- 2026-07-05 DD-yield-weighted correction:
+  - The earlier final-window fractions were particle-weight fractions, not
+    DD-yield-weighted fractions. A dedicated SDF/C reader was added to compute
+    per-probe-window `sum(weight * Y_DDn(E))`, using the current Stage 2
+    `D(d,n)3He` thick-target yield kernel from `moduleB_source/thick_target.py`.
+  - This is the correct convergence diagnostic for the Stage 2 neutron branch
+    under the current provisional CD2 stopping table; it is still not the final
+    absolute-yield model.
+
+| probe | last-window particle-weight fraction | last-window DD(n)-yield fraction | cumulative weighted mean E | observed Emax |
+|---|---:|---:|---:|---:|
+| rear+2 um | 27.1% | 31.9% | 0.159 MeV | 1.00 MeV |
+| rear+5 um | 39.4% | 38.0% | 0.210 MeV | 1.09 MeV |
+| rear+10 um | 54.5% | 40.5% | 0.370 MeV | 1.31 MeV |
+| rear+15 um | 50.9% | 34.6% | 0.550 MeV | 1.35 MeV |
+| rear+20 um | 73.8% | 62.1% | 0.827 MeV | 1.37 MeV |
+
+  - Interpretation: yield weighting reduces the apparent late-window
+    importance because the late deuterons are generally lower energy, but the
+    3 ps source is still not accepted under the `5-10%` yield-convergence gate.
+    The 5 ps continuation remains justified as a source-completeness run.
 
 ## Previous paused state after user input review request
 
