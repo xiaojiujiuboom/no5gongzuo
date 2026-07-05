@@ -21,10 +21,11 @@ Accepted 3D anchor:
 
 Current formal 2D matrix:
 
-- effective jobs: `1855864`, `1855868`, `1855869`, and restart continuations
-  `1869667` through `1869670`
+- current effective jobs: `1855864`, `1873138`, `1873136`, `1869667`,
+  `1873137`, `1869669`, and `1869670`
 - original high-risk jobs `1855865`, `1855866`, `1855867`, and `1855870`
   were cancelled only after `Data/0004.sdf` restart dumps were verified
+- quota-failed jobs: `1855868`, `1855869`, and `1869668`
 - `t_end = 6 ps`
 - `1` node, `256` ranks
 - original low-risk runs use `10 h` walltime; restart continuations use `18 h`
@@ -72,6 +73,24 @@ r002 continuation outputs; do not treat the r002 directory alone as the full
 
 Important remote files and directories that must be preserved are listed in
 `hpc/IMPORTANT_RUNS.md`.
+
+## Quota Recovery
+
+On 2026-07-06 CST, several jobs failed with MPI-IO messages containing
+`Disk quota exceeded`, even though `/publicfs10` had large global free space.
+This means the account or project is subject to a smaller hidden quota.
+
+Immediate recovery:
+
+- removed obsolete intermediate 3D restart SDF files and old early 2D diagnostic
+  SDF files;
+- kept accepted 3D anchor `r006`, active formal 2D runs, input decks, Slurm
+  logs, and restart files needed by hard-linked continuations;
+- project usage dropped from about `94G` to about `47G`;
+- replacement jobs submitted:
+  - `1855868` -> `1873138` full rerun, `a0=10,t=1um`
+  - `1855869` -> `1873136` full rerun, `a0=10,t=2um`
+  - `1869668` -> `1873137` restart continuation, `a0=15,t=3um`
 
 ## Remote Layout
 

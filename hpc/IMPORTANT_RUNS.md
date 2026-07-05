@@ -87,15 +87,15 @@ Common 2D settings:
   permissions. For jobs that may exceed the `10 h` limit, use EPOCH restart
   dumps and continuation rather than rerunning from zero.
 
-Current 7 active/effective 2D scan points:
+Current 7 active/effective 2D scan points after quota recovery:
 
 | job | run | a0 | thickness um | state at latest check | node |
 |---:|---|---:|---:|---|---|
 | `1855864` | `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001` | 5 | 3 | RUNNING | `wqd10nbd04c18` |
-| `1855868` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001` | 10 | 1 | RUNNING | `wqd10nbd07c16` |
-| `1855869` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001` | 10 | 2 | RUNNING | `wqd10nbd08c06` |
+| `1873138` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r002` | 10 | 1 | RUNNING full rerun after quota cleanup | `wqd10nbd02c17` |
+| `1873136` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r002` | 10 | 2 | RUNNING full rerun after quota cleanup | `wqd10nbc13c12` |
 | `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | 10 | 3 | RUNNING restart continuation | `wqd10nbc11c12` |
-| `1869668` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002` | 15 | 3 | RUNNING restart continuation | `wqd10nbd02c17` |
+| `1873137` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r003` | 15 | 3 | RUNNING restart rerun after quota cleanup | `wqd10nbc13c14` |
 | `1869669` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002` | 20 | 3 | RUNNING restart continuation | `wqd10nbd05c15` |
 | `1869670` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002` | 10 | 4 | RUNNING restart continuation | `wqd10nbd06c13` |
 
@@ -210,10 +210,30 @@ The quota commands available to the user account did not report a smaller
 explicit quota. Treat `/publicfs10` free space and project `du` as the current
 operational check, and recheck before launching additional 3D runs.
 
+Later on 2026-07-06 CST, hidden quota limits did trigger MPI-IO
+`Disk quota exceeded` failures. Cleanup log:
+
+```text
+/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/CLEANUP_20260706_QUOTA.txt
+```
+
+Removed obsolete intermediate restart SDF files from old 3D chain runs and old
+early 2D diagnostic SDF files. Kept accepted 3D `r006`, current formal 2D runs,
+and restart files needed by hard-linked continuations. Project usage dropped to
+about `47G`.
+
+Quota-failed jobs and replacements:
+
+| failed job | point | failure | replacement |
+|---:|---|---|---:|
+| `1855868` | `a0=10,t=1um` | quota failure near `4.97 ps`, no valid restart | `1873138` full rerun |
+| `1855869` | `a0=10,t=2um` | quota failure near `2.73 ps`, no valid restart | `1873136` full rerun |
+| `1869668` | `a0=15,t=3um` | quota failure after restart | `1873137` restart from `0004.sdf` |
+
 Monitoring command for the current effective 7 scan points:
 
 ```bash
-squeue -j 1855864,1855868,1855869,1869667,1869668,1869669,1869670 \
+squeue -j 1855864,1873138,1873136,1869667,1873137,1869669,1869670 \
   -o "%.18i %.9P %.22j %.10T %.12M %.12l %.6D %.5C %R"
 ```
 

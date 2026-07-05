@@ -1787,3 +1787,31 @@ Restart-continuation action:
 - Disk check at the same time: `/publicfs10` had about `4.1P` free and the
   project directory used about `94G`; no smaller account quota was reported by
   the available quota commands.
+
+Quota failure and recovery:
+
+- At about 2026-07-06 05:44 CST, several jobs failed with MPI-IO messages:
+  `mca_fbtl_posix_pwritev: error in (p)write(v):Disk quota exceeded`.
+  The filesystem still reported about `4.1P` globally free, so this is a hidden
+  account/project quota, not global disk exhaustion.
+- Failed jobs:
+  - `1855868` (`a0=10,t=1um`) failed after `02:25:15`, near `4.97 ps`; no
+    valid restart checkpoint was available.
+  - `1855869` (`a0=10,t=2um`) failed after `02:23:41`, near `2.73 ps`; no
+    valid restart checkpoint was available.
+  - `1869668` (`a0=15,t=3um` restart continuation) failed after `00:24:43`
+    after successfully loading `Data/0004.sdf`.
+- Cleanup was performed on remote:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/CLEANUP_20260706_QUOTA.txt`.
+  Obsolete intermediate 3D restart SDF files and old early 2D diagnostic SDF
+  files were removed. Accepted 3D `r006`, active formal 2D runs, input decks,
+  Slurm logs, and restart files needed by hard-linked continuations were kept.
+  Project usage dropped from about `94G` to about `47G`.
+- Replacement jobs submitted:
+  - `1873138`: full rerun for `a0=10,t=1um`, replacing `1855868`.
+  - `1873136`: full rerun for `a0=10,t=2um`, replacing `1855869`.
+  - `1873137`: restart rerun for `a0=15,t=3um`, replacing `1869668`, again
+    using original r001 `Data/0004.sdf`.
+- Job `1855864` (`a0=5,t=3um`) became walltime-risky. Live TimeLimit extension
+  was denied. A runtime `Data/DUMP` was requested, but as of this entry no
+  `Data/restart.visit` had been created, so the job must not be cancelled yet.

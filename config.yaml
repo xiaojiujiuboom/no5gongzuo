@@ -54,9 +54,11 @@ hpc_pic:
     E_gate_min_MeV: 0.4
     accepted_3d_job_id: 1837996
   formal_2d_scan:
-    status: running
-    job_ids: [1855864, 1855868, 1855869, 1869667, 1869668, 1869669, 1869670]
+    status: running_with_quota_recovery
+    job_ids: [1855864, 1873138, 1873136, 1869667, 1873137, 1869669, 1869670]
     cancelled_after_restart_dump_job_ids: [1855865, 1855866, 1855867, 1855870]
+    failed_quota_job_ids: [1855868, 1855869, 1869668]
+    quota_recovery_job_ids: [1873136, 1873137, 1873138]
     a0_scan:
       target_thickness_um: 3
       a0: [5, 10, 15, 20]
@@ -89,12 +91,12 @@ hpc_pic:
       stop_at_walltime_s: 34200
     walltime_protection:
       can_extend_running_jobs: false
-      dump_requested_jobs: [1855865, 1855866, 1855867, 1855870]
+      dump_requested_jobs: [1855864, 1855865, 1855866, 1855867, 1855870]
       latest_restart_dump: 0004.sdf
-      continuation_job_ids: [1869667, 1869668, 1869669, 1869670]
+      continuation_job_ids: [1869667, 1869669, 1869670, 1873137]
       continuation_walltime_h: 18
       continuation_stop_at_walltime_s: 61200
-      note: "Running Slurm TimeLimit extension was denied; Data/DUMP was requested for high-risk 2D jobs. After Data/0004.sdf was confirmed, the high-risk originals were cancelled and restart continuations were submitted."
+      note: "Running Slurm TimeLimit extension was denied. Four high-risk jobs were safely continued from Data/0004.sdf. A later hidden quota limit caused jobs 1855868, 1855869, and 1869668 to fail; old intermediate SDF files were removed, project usage dropped to about 47G, and replacement jobs 1873136, 1873137, and 1873138 were submitted. Job 1855864 has a DUMP request pending, but no verified restart.visit yet."
   optional_followup_2d_scan:
     preplasma_L_um: [1]
     apply_to: [baseline, best_2d_point]
