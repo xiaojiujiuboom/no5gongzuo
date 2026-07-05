@@ -1725,3 +1725,32 @@ Immediate monitoring plan:
 - On completion, analyze all probes using the same D-D-yield-weighted
   final-window criterion used for the 3D anchor, with `rear+10` as the primary
   source plane and `rear+5/15/20` as source-plane robustness checks.
+
+Runtime walltime-risk update:
+
+- The 7-job matrix started running on 2026-07-06 CST.
+- At elapsed `01:47:54`, all jobs were still `RUNNING` with no stderr output.
+- Live Slurm walltime extension was attempted for the jobs closest to or above
+  the 10 h walltime:
+  - `1855865` (`a0=10,t=3um`)
+  - `1855866` (`a0=15,t=3um`)
+  - `1855867` (`a0=20,t=3um`)
+  - `1855870` (`a0=10,t=4um`)
+- Slurm denied all live extensions with `Access/permission denied`.
+- To avoid losing the already-spent compute, an EPOCH runtime restart-dump
+  request was placed in each high-risk run directory by creating `Data/DUMP`.
+  The jobs continue running; if any stop before 6 ps, continue from the latest
+  restart dump instead of rerunning from zero.
+- The DUMP requests were confirmed processed: `Data/restart.visit` points to
+  `0003.sdf` in all four high-risk runs. The restart dump sizes are about
+  `1.9G` for `1855865`, `1855866`, and `1855867`, and about `2.2G` for
+  `1855870`.
+- Latest walltime-risk snapshot:
+  - `1855864`: `1.17 ps`, ETA `7h19m`, continue; slower than early ETA
+    but still inside the 10 h walltime.
+  - `1855865`: `0.94 ps`, ETA `8h49m`, restart `Data/0003.sdf` confirmed.
+  - `1855866`: `0.85 ps`, ETA `10h16m`, restart `Data/0003.sdf` confirmed.
+  - `1855867`: `0.76 ps`, ETA `11h21m`, restart `Data/0003.sdf` confirmed.
+  - `1855868`: `3.81 ps`, ETA `1h02m`, continue.
+  - `1855869`: `2.20 ps`, ETA `3h03m`, continue.
+  - `1855870`: `0.99 ps`, ETA `9h05m`, restart `Data/0003.sdf` confirmed.

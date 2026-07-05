@@ -46,24 +46,53 @@ openmc:
 
 hpc_pic:
   accepted_source:
-    plane: rear+20um
-    t_end_ps: 4.0
+    plane: rear+10um
+    t_end_ps: 6.0
     dt_snapshot_fs: 250
     acceptance_latest_window_fraction: 0.10
-  first_2d_scan:
-    a0: [5, 10, 20]
-    preplasma_L_um: [0, 1]
-    target_thickness_um: [5]
+    metric: DD_yield_weighted
+    E_gate_min_MeV: 0.4
+    accepted_3d_job_id: 1837996
+  formal_2d_scan:
+    status: running
+    job_ids: [1855864, 1855865, 1855866, 1855867, 1855868, 1855869, 1855870]
+    a0_scan:
+      target_thickness_um: 3
+      a0: [5, 10, 15, 20]
+    thickness_scan:
+      a0: 10
+      target_thickness_um: [1, 2, 3, 4]
+    preplasma_L_um: [0]
+    source_planes: [rear+5um, rear+10um, rear+15um, rear+20um]
+    primary_source_plane: rear+10um
+    t_end_ps: 6.0
+    dt_snapshot_fs: 250
+    grid:
+      nx: 4200
+      ny: 3000
+      dx_nm: 10
+      dy_nm: 10
+      x_min_um: -6
+      x_max_um: 36
+      y_min_um: -15
+      y_max_um: 15
     ppc:
       electron: 16
-      deuteron: 16
+      deuteron: 48
       carbon: 8
     slurm:
       partition: amd_m9_768
-      ranks: 160
-      walltime_h: null  # Required per submission; do not rely on a script default.
+      nodes: 1
+      ranks: 256
+      walltime_h: 10
+      stop_at_walltime_s: 34200
+    walltime_protection:
+      can_extend_running_jobs: false
+      dump_requested_jobs: [1855865, 1855866, 1855867, 1855870]
+      note: "Running Slurm TimeLimit extension was denied; Data/DUMP was requested for high-risk 2D jobs so they can be restarted instead of rerun."
   optional_followup_2d_scan:
-    target_thickness_um: [3]
+    preplasma_L_um: [1]
+    apply_to: [baseline, best_2d_point]
   production_dimension: 2d3v
   validation_3d_cases: 1
 

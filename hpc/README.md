@@ -2,28 +2,61 @@
 
 ## Current Priority
 
-The active PIC strategy is now 3D-first for realism:
+The active Stage 1 strategy is now:
 
-1. Run a 300 fs 3D microbenchmark from `hpc/templates/epoch3d_dd_cd2_source_compact.deck`.
-2. Use the benchmark to choose explicit walltime, nodes/ranks, memory, and restart policy.
-3. Run one 3D source anchor, initially `a0=10`.
-4. Feed the extracted rear+20 deuteron source to Stage B and Stage C.
+1. Use the completed 3D anchor as the realism/dimensionality reference.
+2. Use the formal 2D matrix as the lower-cost parameter scan.
+3. Feed the accepted `rear+10`, D-D-yield-weighted deuteron source into
+   Stage B and Stage C after the 2D scan is postprocessed.
 
-Do not resume high-resolution 2D parameter scanning unless Stage B/C shows it is necessary.
+Accepted 3D anchor:
 
-## Legacy 2D Scan
+- `a0=10`, CD2 thickness `3 um`
+- `2000 x 250 x 250`, PPC `electron/deuteron/carbon = 16/32/4`
+- source plane: `rear+10`
+- accepted collection time: `6 ps`
+- accepted by D-D-yield-weighted final-window criterion:
+  `5.75-6.00 ps / 0-6 ps = 5.57%` for `E_D >= 0.4 MeV`
+- key job: `1837996`
 
-Generate the manifest:
+Current formal 2D matrix:
+
+- jobs: `1855864` through `1855870`
+- `t_end = 6 ps`
+- `1` node, `256` ranks, `10 h` walltime
+- `force_final_to_be_restartable = T`
+- `stop_at_walltime = 34200 s`
+- source planes: `rear+5/10/15/20`, primary `rear+10`
+- matrix:
+  - fixed `thickness=3 um`, scan `a0={5,10,15,20}`
+  - fixed `a0=10`, scan `thickness={1,2,3,4} um`
+
+See `hpc/IMPORTANT_RUNS.md` for the authoritative job/resource index.
+
+## Walltime Protection
+
+Running Slurm jobs cannot currently be extended by the user account:
+`scontrol update JobId=<id> TimeLimit=...` returns `Access/permission denied`.
+
+For long/risky jobs:
+
+- submit with generous Slurm walltime up front;
+- set EPOCH `stop_at_walltime` safely before Slurm walltime;
+- set `force_final_to_be_restartable = T`;
+- if a running job becomes risky, request an EPOCH restart dump with:
 
 ```bash
-python3 scripts/make_pic_scan_manifest.py
+touch Data/DUMP
 ```
 
-Output:
+Current high-risk 2D jobs with `Data/DUMP` requested:
 
-```text
-hpc/pic_first_2d_scan.csv
-```
+- `1855865`: `a0=10`, `thickness=3 um`
+- `1855866`: `a0=15`, `thickness=3 um`
+- `1855867`: `a0=20`, `thickness=3 um`
+- `1855870`: `a0=10`, `thickness=4 um`
+
+## Remote Layout
 
 Remote project root:
 
@@ -55,10 +88,9 @@ ssh blsc-m9-no5 'bash -s' < hpc/bootstrap_remote.sh
 Each run should export only compact diagnostics back to this repo:
 
 ```text
-deuteron_beam.h5
-summary.json
-metrics.json
+small CSV summaries
 quicklook plots
+deuteron_beam.h5 / neutron_source.h5 only when needed
 ```
 
 Keep full SDF output on the supercomputer unless a specific file is needed for debugging.

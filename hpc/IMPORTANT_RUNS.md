@@ -83,6 +83,9 @@ Common 2D settings:
 - Slurm `amd_m9_768`, `1` node, `256` ranks, walltime `10 h`
 - final output is restartable: `force_final_to_be_restartable = T`
 - `stop_at_walltime = 34200 s`
+- Running job walltime extension was attempted and denied by Slurm
+  permissions. For jobs that may exceed the `10 h` limit, use EPOCH restart
+  dumps and continuation rather than rerunning from zero.
 
 Current 7 active 2D jobs:
 
@@ -95,6 +98,38 @@ Current 7 active 2D jobs:
 | `1855868` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001` | 10 | 1 | RUNNING | `wqd10nbd07c16` |
 | `1855869` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001` | 10 | 2 | RUNNING | `wqd10nbd08c06` |
 | `1855870` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_20260706_r001` | 10 | 4 | RUNNING | `wqd10nbd08c20` |
+
+Walltime-risk status from the latest check at about elapsed `01:47:54`:
+
+| job | point | latest physical time | latest ETA | action |
+|---:|---|---:|---:|---|
+| `1855864` | `a0=5,t=3um` | `1.17 ps` | `7h19m` | continue; still inside 10 h walltime but slower than early ETA |
+| `1855865` | `a0=10,t=3um` | `0.94 ps` | `8h49m` | restart `Data/0003.sdf` confirmed |
+| `1855866` | `a0=15,t=3um` | `0.85 ps` | `10h16m` | restart `Data/0003.sdf` confirmed |
+| `1855867` | `a0=20,t=3um` | `0.76 ps` | `11h21m` | restart `Data/0003.sdf` confirmed |
+| `1855868` | `a0=10,t=1um` | `3.81 ps` | `1h02m` | continue |
+| `1855869` | `a0=10,t=2um` | `2.20 ps` | `3h03m` | continue |
+| `1855870` | `a0=10,t=4um` | `0.99 ps` | `9h05m` | restart `Data/0003.sdf` confirmed |
+
+The `Data/DUMP` requests were placed in the four high-risk run directories on
+2026-07-06 CST because Slurm denied live walltime extension:
+
+```text
+Access/permission denied for job 1855865
+Access/permission denied for job 1855866
+Access/permission denied for job 1855867
+Access/permission denied for job 1855870
+```
+
+The requests were processed successfully. Each high-risk run now has
+`Data/restart.visit` pointing to `0003.sdf`:
+
+| job | restart dump | size |
+|---:|---|---:|
+| `1855865` | `Data/0003.sdf` | `1.9G` |
+| `1855866` | `Data/0003.sdf` | `1.9G` |
+| `1855867` | `Data/0003.sdf` | `1.9G` |
+| `1855870` | `Data/0003.sdf` | `2.2G` |
 
 Remote run directory pattern:
 
