@@ -1,0 +1,5 @@
+library,li7_h5,size_bytes,sha256_16,mt,label,redundant,threshold_MeV,sigma_3MeV_b,sigma_4MeV_b,sigma_5MeV_b,sigma_6MeV_b,sigma_8MeV_b,sigma_10MeV_b,sigma_14MeV_b,sigma_20MeV_b
+endfb71_lanl,/Users/oomb/Downloads/mcnp_endfb71/Li7.h5,1128848,0aff92a1da5b7c5f,205,"(n,Xt)",1,3.1454,0.0,0.03728221,0.101351,0.373715,0.379,0.3606727,0.302352,0.1951517
+fendl32,/Volumes/billboom/openmc_data/libs/fendl32/neutron/Li7.h5,883896,f261968904018a39,205,"(n,Xt)",1,3.1454,0.0,0.03728221,0.101351,0.373715,0.379,0.3606727,0.302352,0.11756143999999999
+endfb80,/Volumes/billboom/openmc_data/libs/endfb80/neutron/Li7.h5,1190592,a2a5a7a5901628c7,205,"(n,Xt)",1,3.1454,0.0,0.03728221,0.101351,0.373715,0.379,0.3606727,0.302352,0.1951517
+jeff33,/Volumes/billboom/openmc_data/libs/jeff33/Li7.h5,1157648,f8ca454e45fb5ff3,205,"(n,Xt)",1,3.1454,0.0,0.03728221,0.101351,0.373715,0.379,0.3606727,0.302352,0.1951517

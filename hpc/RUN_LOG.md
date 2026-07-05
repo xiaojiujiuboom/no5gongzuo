@@ -1304,10 +1304,45 @@ Library spread summary:
 - Case A `Li7` remains exactly zero in the OpenMC tallies, as expected because
   the ideal 2.45 MeV D-D source is below the 3.1454 MeV MT205 threshold.
 
+Path-switch verification:
+
+- The four libraries did switch to four distinct `Li7.h5` files. Their sizes and
+  SHA-256 prefixes differ:
+  - `endfb71_lanl`: `/Users/oomb/Downloads/mcnp_endfb71/Li7.h5`,
+    `sha256[:16] = 0aff92a1da5b7c5f`.
+  - `fendl32`: `/Volumes/billboom/openmc_data/libs/fendl32/neutron/Li7.h5`,
+    `sha256[:16] = f261968904018a39`.
+  - `endfb80`: `/Volumes/billboom/openmc_data/libs/endfb80/neutron/Li7.h5`,
+    `sha256[:16] = a2a5a7a5901628c7`.
+  - `jeff33`: `/Volumes/billboom/openmc_data/libs/jeff33/Li7.h5`,
+    `sha256[:16] = f8ca454e45fb5ff3`.
+- However, the MT205 cross section itself is identical in the source-relevant
+  near-threshold region:
+
+| library | sigma(3 MeV) b | sigma(4 MeV) b | sigma(5 MeV) b | sigma(20 MeV) b |
+|---|---:|---:|---:|---:|
+| `endfb71_lanl` | 0 | 0.03728221 | 0.101351 | 0.1951517 |
+| `fendl32` | 0 | 0.03728221 | 0.101351 | 0.11756144 |
+| `endfb80` | 0 | 0.03728221 | 0.101351 | 0.1951517 |
+| `jeff33` | 0 | 0.03728221 | 0.101351 | 0.1951517 |
+
+- Dense interpolation over `3.1454-20 MeV` shows essentially zero spread from
+  threshold through 14 MeV, and the first large spread appears near 20 MeV
+  where FENDL-3.2 is lower.
+- Therefore the `~0.02%` Case B `Li7` library spread is not a fake path-switch
+  artifact. It is a consequence of this specific PIC-DD source reaching only
+  `4.084 MeV`, which samples the near-threshold interval where the checked
+  libraries use the same MT205 curve.
+- Paper wording should be: "For the present source, which populates only the
+  3.1-4.1 MeV `Li7` threshold window, the checked libraries give nearly
+  identical MT205 tritium production. Larger library separation exists at much
+  higher neutron energies and is not probed by this source."
+
 Generated local result files:
 
 - `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_xs_libraries.csv`
 - `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_library_summary.csv`
+- `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_point_check.csv`
 - `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_mt205_xs_with_neutron_spectrum.png`
 - `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_tpr_library_uncertainty.csv`
 - `hpc/results/pic3d_3ps_rear10_Egt0p4_li7_tpr_library_uncertainty_band.csv`
