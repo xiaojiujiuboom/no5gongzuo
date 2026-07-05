@@ -91,7 +91,7 @@ Current 7 active/effective 2D scan points after quota recovery:
 
 | job | run | a0 | thickness um | state at latest check | node |
 |---:|---|---:|---:|---|---|
-| `1855864` | `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001` | 5 | 3 | RUNNING | `wqd10nbd04c18` |
+| `1874262` | `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r002` | 5 | 3 | RUNNING full rerun after quota cleanup | `wqd10nbc13c13` |
 | `1873138` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r002` | 10 | 1 | RUNNING full rerun after quota cleanup | `wqd10nbd02c17` |
 | `1873136` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r002` | 10 | 2 | RUNNING full rerun after quota cleanup | `wqd10nbc13c12` |
 | `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | 10 | 3 | RUNNING restart continuation | `wqd10nbc11c12` |
@@ -220,12 +220,15 @@ Later on 2026-07-06 CST, hidden quota limits did trigger MPI-IO
 Removed obsolete intermediate restart SDF files from old 3D chain runs and old
 early 2D diagnostic SDF files. Kept accepted 3D `r006`, current formal 2D runs,
 and restart files needed by hard-linked continuations. Project usage dropped to
-about `47G`.
+about `47G`, then to about `26G` after removing the accepted 3D run's obsolete
+input restart `Data/0020.sdf`, superseded `0003.sdf` restart dumps, and the bad
+partial `a0=5` runtime DUMP output.
 
 Quota-failed jobs and replacements:
 
 | failed job | point | failure | replacement |
 |---:|---|---|---:|
+| `1855864` | `a0=5,t=3um` | stuck after quota failure while writing runtime DUMP; no valid `restart.visit` | `1874262` full rerun |
 | `1855868` | `a0=10,t=1um` | quota failure near `4.97 ps`, no valid restart | `1873138` full rerun |
 | `1855869` | `a0=10,t=2um` | quota failure near `2.73 ps`, no valid restart | `1873136` full rerun |
 | `1869668` | `a0=15,t=3um` | quota failure after restart | `1873137` restart from `0004.sdf` |
@@ -233,7 +236,7 @@ Quota-failed jobs and replacements:
 Monitoring command for the current effective 7 scan points:
 
 ```bash
-squeue -j 1855864,1873138,1873136,1869667,1873137,1869669,1869670 \
+squeue -j 1874262,1873138,1873136,1869667,1873137,1869669,1869670 \
   -o "%.18i %.9P %.22j %.10T %.12M %.12l %.6D %.5C %R"
 ```
 

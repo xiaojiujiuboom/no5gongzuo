@@ -1815,3 +1815,19 @@ Quota failure and recovery:
 - Job `1855864` (`a0=5,t=3um`) became walltime-risky. Live TimeLimit extension
   was denied. A runtime `Data/DUMP` was requested, but as of this entry no
   `Data/restart.visit` had been created, so the job must not be cancelled yet.
+
+Additional quota cleanup and a0=5 rerun:
+
+- Job `1855864` stopped making progress after writing a partial runtime DUMP:
+  stdout, stderr, and `Data/0005.sdf` stopped updating around 2026-07-06
+  05:37 CST. `Data/0005.sdf` had no accompanying `Data/restart.visit`, so it was
+  not accepted as a continuation checkpoint.
+- Removed additional obsolete files:
+  - accepted 3D r006 input restart `Data/0020.sdf`; the final accepted
+    `Data/0024.sdf` remains kept;
+  - superseded 2D original-run `Data/0003.sdf` restart dumps for the jobs that
+    already have verified `Data/0004.sdf` continuations;
+  - the bad partial `a0=5` `Data/0005.sdf`.
+- Project usage dropped to about `26G`.
+- `1855864` was cancelled and replacement full rerun `1874262` was submitted
+  with Slurm walltime `18:00:00` and `stop_at_walltime = 61200.0`.

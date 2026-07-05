@@ -21,11 +21,11 @@ Accepted 3D anchor:
 
 Current formal 2D matrix:
 
-- current effective jobs: `1855864`, `1873138`, `1873136`, `1869667`,
+- current effective jobs: `1874262`, `1873138`, `1873136`, `1869667`,
   `1873137`, `1869669`, and `1869670`
 - original high-risk jobs `1855865`, `1855866`, `1855867`, and `1855870`
   were cancelled only after `Data/0004.sdf` restart dumps were verified
-- quota-failed jobs: `1855868`, `1855869`, and `1869668`
+- quota-failed/stuck jobs: `1855864`, `1855868`, `1855869`, and `1869668`
 - `t_end = 6 ps`
 - `1` node, `256` ranks
 - original low-risk runs use `10 h` walltime; restart continuations use `18 h`
@@ -86,8 +86,9 @@ Immediate recovery:
   SDF files;
 - kept accepted 3D anchor `r006`, active formal 2D runs, input decks, Slurm
   logs, and restart files needed by hard-linked continuations;
-- project usage dropped from about `94G` to about `47G`;
+- project usage dropped from about `94G` to about `26G` after a second cleanup;
 - replacement jobs submitted:
+  - `1855864` -> `1874262` full rerun, `a0=5,t=3um`
   - `1855868` -> `1873138` full rerun, `a0=10,t=1um`
   - `1855869` -> `1873136` full rerun, `a0=10,t=2um`
   - `1869668` -> `1873137` restart continuation, `a0=15,t=3um`
