@@ -152,6 +152,14 @@ stop_at_walltime = 61200.0
 Slurm walltime = 18:00:00
 ```
 
+The r002 jobs were verified to start from the checkpoint: each printed
+`Load from restart dump OK`. EPOCH also prints warnings such as
+`Particle species "D_rear10" from restart dump not found in input deck.
+Ignoring.` These refer to particle-probe records stored in the restart SDF, not
+to the physical deuteron species. For analysis, do not use the r002 directory
+alone. Merge the original r001 probe/output files up to `0004.sdf` with the r002
+continuation outputs after the restart.
+
 Remote run directory pattern:
 
 ```text
@@ -190,6 +198,17 @@ runs/pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002
 Keep the four original high-risk r001 directories too, at least until the r002
 continuations complete and their outputs are validated, because their
 `Data/0004.sdf` files are hard-linked into the continuation directories.
+
+Disk snapshot on 2026-07-06 CST:
+
+```text
+/publicfs10 filesystem: 5.8P total, 1.8P used, 4.1P available, 30% used
+project directory: /publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr = 94G
+```
+
+The quota commands available to the user account did not report a smaller
+explicit quota. Treat `/publicfs10` free space and project `du` as the current
+operational check, and recheck before launching additional 3D runs.
 
 Monitoring command:
 

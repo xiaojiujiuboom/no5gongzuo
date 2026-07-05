@@ -1776,3 +1776,14 @@ Restart-continuation action:
   - `1855870` -> `1869670`
 - At submission check, the four continuation jobs were `PENDING`; the three
   lower-risk original jobs `1855864`, `1855868`, and `1855869` continued running.
+- Follow-up check showed all four continuation jobs started running and printed
+  `Load from restart dump OK`.
+- EPOCH printed warnings that particle species such as `D_rear05` from the
+  restart dump were not found in the input deck. These are particle-probe output
+  records stored in the restart SDF, not the physical `deuteron` species. The
+  postprocessing rule is therefore: merge r001 outputs through `0004.sdf` with
+  r002 outputs after restart; do not analyze the r002 directory alone as a full
+  0-6 ps source.
+- Disk check at the same time: `/publicfs10` had about `4.1P` free and the
+  project directory used about `94G`; no smaller account quota was reported by
+  the available quota commands.
