@@ -1580,6 +1580,76 @@ Generated files:
 - `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_spectrum_summary.csv`
 - `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_normalized_spectrum.png`
 
+## Rear+10 5 ps vs 6 ps Absolute-Yield Convergence Check
+
+Date: 2026-07-05 / 2026-07-06 CST.
+
+Purpose:
+
+- Decide whether the `a0=10`, `3 um` 3D anchor source should stop at 6 ps or
+  continue to 7 ps.
+- Use D-D-yield-weighted convergence, not raw deuteron-count convergence,
+  because Stage 2 is driven by `weight * Y_DD(E)`.
+
+Completed run:
+
+- Run directory:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag6000fs_restart0020hardlink_2000x250x250_a0_10_t_3um_20260706_r006`.
+- Job ID: `1837996`.
+- Final state: `COMPLETED`, exit code `0:0`.
+- Slurm elapsed: `02:06:32` on `2` nodes / `512` ranks.
+- Approximate cost: `1080` core-hours, about `108 CNY` at
+  `0.1 CNY/core-hour`.
+- Peak memory from `sacct`: MPI step about `243 GB`, safely below the
+  two-node memory allocation.
+- Output: `Data/0021.sdf` through `Data/0024.sdf`; the final `0024.sdf` is a
+  restartable dump of about `13 GB`.
+
+Main `rear+10`, `E_D >= 0.4 MeV` result:
+
+| quantity | value |
+|---|---:|
+| D-D-yield-weighted total, 0-5 ps | `1.8966e6` |
+| D-D-yield-weighted increment, 5-6 ps | `7.8243e5` |
+| D-D-yield-weighted total, 0-6 ps | `2.6791e6` |
+| 5-6 ps increment / 0-6 ps total | `29.2%` |
+| final 5.75-6.00 ps window / 0-6 ps total | `5.57%` |
+| final 5.75-6.00 ps window / 5-6 ps increment | `19.1%` |
+
+Spectral-shape check:
+
+- 0-5 ps vs 0-6 ps `Y_DD(E)`-weighted total-variation distance: `0.0128`.
+- Jensen-Shannon distance: `0.0131`.
+- Cosine similarity: `0.99967`.
+- The 5-6 ps-only spectrum remains soft and stable:
+  - mean `0.484 MeV`
+  - p90 `0.571 MeV`
+  - p99 `0.691 MeV`
+  - no new `E_D > 1 MeV` tail in the binned result.
+
+Decision:
+
+- Accept `6 ps` as the 3D anchor collection time for absolute-yield reporting
+  at `rear+10`, under the strict final-window criterion
+  `last 250 fs / cumulative Y_DD-weighted source < 10%`.
+- Do not extend this same 3D anchor to 7 ps. Further extension would mostly
+  refine normalization at high cost while the normalized source spectrum is
+  already stable.
+- The next resource focus is the formal 2D scan, with this 3D point used as the
+  dimensionality anchor and source-extraction validation.
+
+Generated files:
+
+- `hpc/tools/compare_rear10_spectrum_5ps_6ps.py`
+- `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_normalized_spectrum.csv`
+- `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_spectrum_summary.csv`
+- `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_normalized_spectrum.png`
+- `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_allE_normalized_spectrum.csv`
+- `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_allE_spectrum_summary.csv`
+- `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_allE_normalized_spectrum.png`
+- `hpc/results/pic3d_stage1_rear10_6ps_dd_yield_windows.csv`
+- `hpc/results/pic3d_stage1_rear10_6ps_dd_yield_convergence_summary.csv`
+
 ## Formal 2D Scan Pilot
 
 Date: 2026-07-06 CST.
