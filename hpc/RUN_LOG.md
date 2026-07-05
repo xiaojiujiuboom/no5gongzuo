@@ -427,6 +427,49 @@ Submission walltime policy:
     as `rear+15` or `rear+20` is preferable for Stage 2, or whether the physical
     converter is intentionally modeled as being close enough to intercept this
     expanding plume.
+- 2026-07-05 Stage B/C chain smoke from 3 ps `rear+10`:
+  - Built a gated deuteron source from all `D_rear10` probe windows through
+    `3 ps`, with `E_D > 0.4 MeV`.
+  - PIC +x was mapped to the downstream +z convention used by Stage B/C:
+    `dir = (py, pz, px) / |p|`.
+  - Local outputs:
+    - `outputs/pic3d_3ps_rear10_Egt0p4/deuteron_beam.h5`
+    - `outputs/pic3d_3ps_rear10_Egt0p4/neutron_source.h5`
+    - `outputs/pic3d_3ps_rear10_Egt0p4/openmc_case_A_li6_90/`
+    - `outputs/pic3d_3ps_rear10_Egt0p4/openmc_case_B_li6_90/`
+  - Small committed summaries:
+    - `hpc/results/pic3d_3ps_rear10_Egt0p4_chain_summary.csv`
+    - `hpc/results/pic3d_3ps_rear10_Egt0p4_openmc_case_comparison_li6_90.csv`
+    - `hpc/results/pic3d_3ps_rear10_Egt0p4_openmc_case_comparison_li6_7p59.csv`
+    - `hpc/results/pic3d_3ps_rear10_Egt0p4_case_B_source_stats.csv`
+
+| stage | key result |
+|---|---:|
+| gated deuteron source | 46,358 macro-D, weight 1.18e10 D/shot |
+| gated deuteron energy | weighted mean 0.492 MeV, max 1.307 MeV |
+| Stage B neutron source | 8.35e4 n/shot in the current CD2 D(d,n) model |
+| Stage B neutron spectrum | weighted mean 2.644 MeV, max 4.084 MeV |
+| Stage B threshold tail | 35.6% of neutron weight above 2.82 MeV |
+| OpenMC Case A Li6 TPR | 1.283e-1 per source neutron |
+| OpenMC Case A Li7 TPR | 0, as expected for 2.45 MeV ideal source |
+| OpenMC Case B Li6 TPR | 1.298e-1 per source neutron |
+| OpenMC Case B Li7 TPR | 8.317e-6 per source neutron |
+
+  - Verification:
+    - `python tests/test_gates.py` passed.
+    - `moduleB_source/build_source.py` completed with the real PIC-derived
+      `deuteron_beam.h5`.
+    - OpenMC 0.15.0 Case A and Case B both ran with
+      `20 batches x 50,000 particles` using
+      `/Users/oomb/Downloads/mcnp_endfb71/cross_sections.xml`.
+    - `TPR_Li6` and `TPR_Li7` separated tallies were produced.
+  - Natural-lithium (`Li6=7.59 at%`) A/B was also run with the same source and
+    statistics. Results:
+    - Case A: `TPR_Li6 = 1.120e-2`, `TPR_Li7 = 0`.
+    - Case B: `TPR_Li6 = 1.074e-2`, `TPR_Li7 = 7.147e-5`.
+  - Boundary: this smoke uses the currently implemented CD2 `D(d,n)3He`
+    neutron branch only. The direct `D(d,p)T` triton branch and TiD2 converter
+    baseline remain planned implementation work before final physics claims.
 
 ## Previous paused state after user input review request
 
