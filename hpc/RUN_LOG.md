@@ -1490,6 +1490,20 @@ Continuation submitted:
   `dt_snapshot = 250 fs`, final dump restartable.
 - Walltime set to `8:00:00`; `stop_at_walltime = 25200 s`.
 
+Update:
+
+- Job `1837542` failed after `00:00:30` while loading the `Data/0020.sdf`
+  restart through a symlink. Error: `MPI_ERR_TRUNCATE` from MPI-IO on
+  `Data/0020.sdf`.
+- Header check on the source `Data/0020.sdf` remains valid:
+  `restart_flag=1`, `time=5.000015 ps`, `nblocks=71`. Therefore the current
+  working assumption is an MPI-IO/path issue, not a corrupt 5 ps restart file.
+- Retry Job `1837996` was submitted in
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag6000fs_restart0020hardlink_2000x250x250_a0_10_t_3um_20260706_r006`,
+  using a hard link to the same `Data/0020.sdf` instead of a symlink.
+- Expected wall-clock after allocation is about `2.3-2.7 h`, based on the
+  observed 3 ps to 5 ps continuation timing.
+
 Generated files:
 
 - `hpc/results/pic3d_stage1_rear10_5ps_dd_yield_windows.csv`
