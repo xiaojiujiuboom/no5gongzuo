@@ -1,2 +1,9 @@
 run_id,job_id,state,partition,nodes,tasks,walltime_h,a0,target_thickness_um,dx_nm,dy_nm,ppc,source_planes,t_end_ps,notes
-pic2d_stage1_formal5ps_10nm_a0_10_t_3um_20260706_r001,1846890,RUNNING,amd_m9_768,1,160,6,10,3,10,10,16/48/8,rear+5/10/15/20,5,baseline pilot for formal 2D scan; x=-6..36um y=-15..15um; aligned to 3D anchor except 2D higher transverse resolution and D PPC
+pic2d_stage1_formal5ps_10nm_a0_10_t_3um_20260706_r001,1846890,CANCELLED_BY_STRATEGY,amd_m9_768,1,160,6,10,3,10,10,16/48/8,rear+5/10/15/20,5,cancelled after 01:18:27 at about 1.19ps because the formal matrix was upgraded to 6ps and 256 ranks; approximate sunk cost 209 core-hours / 21 CNY
+pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001,1855864,PENDING,amd_m9_768,1,256,10,5,3,10,10,16/48/8,rear+5/10/15/20,6,a0 scan point; final restartable output enabled; stop_at_walltime 34200s
+pic2d_stage1_formal6ps_10nm_a0_10_t_3um_20260706_r001,1855865,PENDING,amd_m9_768,1,256,10,10,3,10,10,16/48/8,rear+5/10/15/20,6,baseline overlap point aligned to 3D anchor; final restartable output enabled; stop_at_walltime 34200s
+pic2d_stage1_formal6ps_10nm_a0_15_t_3um_20260706_r001,1855866,PENDING,amd_m9_768,1,256,10,15,3,10,10,16/48/8,rear+5/10/15/20,6,a0 scan point; final restartable output enabled; stop_at_walltime 34200s
+pic2d_stage1_formal6ps_10nm_a0_20_t_3um_20260706_r001,1855867,PENDING,amd_m9_768,1,256,10,20,3,10,10,16/48/8,rear+5/10/15/20,6,a0 scan point; final restartable output enabled; stop_at_walltime 34200s
+pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001,1855868,PENDING,amd_m9_768,1,256,10,10,1,10,10,16/48/8,rear+5/10/15/20,6,thickness scan point; final restartable output enabled; stop_at_walltime 34200s
+pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001,1855869,PENDING,amd_m9_768,1,256,10,10,2,10,10,16/48/8,rear+5/10/15/20,6,thickness scan point; final restartable output enabled; stop_at_walltime 34200s
+pic2d_stage1_formal6ps_10nm_a0_10_t_4um_20260706_r001,1855870,PENDING,amd_m9_768,1,256,10,10,4,10,10,16/48/8,rear+5/10/15/20,6,thickness scan point; final restartable output enabled; stop_at_walltime 34200s

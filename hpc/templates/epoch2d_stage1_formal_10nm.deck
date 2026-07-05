@@ -22,9 +22,10 @@ begin:control
   x_max = 36.0 * micron
   y_min = -15.0 * micron
   y_max =  15.0 * micron
-  t_end = 5000.0 * femto
+  t_end = 6000.0 * femto
   dt_multiplier = 0.95
-  stdout_frequency = 1000
+  stdout_frequency = 2000
+  stop_at_walltime = 34200.0
   physics_table_location = /publicfs10/fs10-m9/home/m9s003861/pic/software/epoch_release-4.20.1/epoch2d/src/physics_packages/TABLES
 end:control
 
@@ -139,4 +140,7 @@ begin:output
   particle_weight = never
   particle_probes = always
   distribution_functions = always
+  full_dump_every = -1
+  restart_dump_every = -1
+  force_final_to_be_restartable = T
 end:output

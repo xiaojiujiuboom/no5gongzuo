@@ -1685,3 +1685,43 @@ Rationale:
 - `10 nm` resolves the cold and relativistic skin-depth scale better than the
   earlier `25 nm` diagnostic grid. The first pilot will determine whether this
   accuracy is affordable for the 7-point scan.
+
+Update after 3D 6 ps convergence:
+
+- The 3D anchor reached the D-D-yield-weighted 10% final-window convergence
+  criterion at 6 ps. To keep the 2D/3D comparison consistent, the formal 2D
+  matrix was upgraded from 5 ps to 6 ps before the pilot finished.
+- The running 5 ps pilot, Job `1846890`, was cancelled after `01:18:27`, at
+  about `1.19 ps`. Approximate sunk cost was `209` core-hours, about `21 CNY`.
+  This was preferred over completing a 5 ps job that would not match the new
+  formal 6 ps matrix.
+- The 2D template now uses `t_end = 6000 fs`, `stop_at_walltime = 34200 s`,
+  `full_dump_every = -1`, `restart_dump_every = -1`, and
+  `force_final_to_be_restartable = T`.
+- The Slurm template now uses one full `amd_m9_768` node with `256` MPI ranks
+  and a `10:00:00` walltime. This should reduce wall-clock time relative to
+  160 ranks while avoiding the likely communication/cost penalty of a 512-rank
+  two-node 2D run. The 10 h walltime is an upper bound, not a billing duration
+  after normal completion.
+
+Submitted 6 ps matrix:
+
+| run | job | a0 | thickness um | state at submission |
+|---|---:|---:|---:|---|
+| `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001` | `1855864` | 5 | 3 | PENDING |
+| `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_20260706_r001` | `1855865` | 10 | 3 | PENDING |
+| `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_20260706_r001` | `1855866` | 15 | 3 | PENDING |
+| `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_20260706_r001` | `1855867` | 20 | 3 | PENDING |
+| `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001` | `1855868` | 10 | 1 | PENDING |
+| `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001` | `1855869` | 10 | 2 | PENDING |
+| `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_20260706_r001` | `1855870` | 10 | 4 | PENDING |
+
+Immediate monitoring plan:
+
+- Once the first 256-rank job starts, check parser success, processor topology,
+  initial load-balance redistribution, ETA, memory, and output size.
+- If the first started job shows severe 256-rank inefficiency or abnormal I/O,
+  pause/cancel still-pending siblings before large cost accumulates.
+- On completion, analyze all probes using the same D-D-yield-weighted
+  final-window criterion used for the 3D anchor, with `rear+10` as the primary
+  source plane and `rear+5/15/20` as source-plane robustness checks.
