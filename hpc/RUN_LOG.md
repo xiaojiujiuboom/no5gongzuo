@@ -1508,3 +1508,74 @@ Generated files:
 
 - `hpc/results/pic3d_stage1_rear10_5ps_dd_yield_windows.csv`
 - `hpc/results/pic3d_stage1_rear10_5ps_dd_yield_convergence_summary.csv`
+
+## Rear+10 4 ps vs 5 ps Normalized Spectrum Check
+
+Date: 2026-07-05 / 2026-07-06 CST.
+
+Purpose:
+
+- Determine whether extending the cumulative source from 4 ps to 5 ps changes
+  the normalized spectral shape, or mainly increases the absolute normalization.
+- Primary comparison is `rear+10`, `E_D >= 0.4 MeV`, `weight * Y_DD(E)`
+  normalized energy spectra.
+
+Method:
+
+- Added `sdf_probe_energy_hist`, a C SDF tool that bins probe-particle energy
+  directly from SDF files without exporting multi-GB phase-space CSVs.
+- The 4-5 ps increment was histogrammed from `Data/0017.sdf` through
+  `Data/0020.sdf`.
+- The 0-4 ps raw histograms were reconstructed from the existing 0-4 ps
+  normalized spectrum and its stored total weights.
+
+Main `E_D >= 0.4 MeV` result:
+
+| source | metric | total | mean E MeV | p50 MeV | p90 MeV | p95 MeV | p99 MeV |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 0-4 ps | D-D yield weighted | 6.9790e5 | 0.4953 | 0.4681 | 0.5856 | 0.6277 | 0.7452 |
+| 4-5 ps only | D-D yield weighted | 1.1987e6 | 0.4889 | 0.4635 | 0.5766 | 0.6142 | 0.6897 |
+| 0-5 ps | D-D yield weighted | 1.8966e6 | 0.4913 | 0.4652 | 0.5800 | 0.6193 | 0.7069 |
+
+Shape metrics for normalized `Y_DD(E)`-weighted spectra, 0-4 ps vs 0-5 ps:
+
+- L1 distance: `0.03321`.
+- Total-variation distance: `0.01660`.
+- Jensen-Shannon distance: `0.02880`.
+- Cosine similarity: `0.99962`.
+
+Interpretation:
+
+- The normalized `E_D >= 0.4 MeV` source spectrum is effectively stable by
+  5 ps. The 4-5 ps-only spectrum nearly overlaps the 0-4 ps and 0-5 ps spectra.
+- The late contribution is still soft: the 4-5 ps-only `Y_DD`-weighted `p99`
+  is `0.6897 MeV`, and it does not add an `E_D > 1 MeV` tail.
+- However, absolute normalization is not converged at 5 ps. The 4-5 ps window
+  carries `63.2%` of the 0-5 ps `E_D >= 0.4 MeV` D-D-yield-weighted total, and
+  the 4.75-5.00 ps final window still carries `14.7%`.
+- Practical stopping rule:
+  - For spectral-shape studies, 5 ps is already sufficient and 4 ps is close.
+  - For absolute yield reporting, continue until the final 250 fs
+    D-D-yield-weighted window is below `10%` of cumulative yield and the
+    normalized spectrum remains stable. Based on the current trend, 6 ps is
+    likely to satisfy the 10% criterion; `5%` would be a more conservative
+    optional target.
+
+All-energy sanity check:
+
+- 0-4 ps vs 0-5 ps `Y_DD`-weighted total-variation distance: `0.03117`.
+- Cosine similarity: `0.99831`.
+- The all-energy result has the same interpretation: continuing from 4 ps to
+  5 ps mainly changes the normalization, while the useful spectral shape is
+  already stable.
+
+Generated files:
+
+- `hpc/tools/sdf_probe_energy_hist.c`
+- `hpc/tools/compare_rear10_spectrum_4ps_5ps.py`
+- `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_normalized_spectrum.csv`
+- `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_spectrum_summary.csv`
+- `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_normalized_spectrum.png`
+- `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_normalized_spectrum.csv`
+- `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_spectrum_summary.csv`
+- `hpc/results/pic3d_stage1_rear10_4ps_vs_5ps_allE_normalized_spectrum.png`
