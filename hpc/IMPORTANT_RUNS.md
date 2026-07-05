@@ -87,17 +87,17 @@ Common 2D settings:
   permissions. For jobs that may exceed the `10 h` limit, use EPOCH restart
   dumps and continuation rather than rerunning from zero.
 
-Current 7 active 2D jobs:
+Current 7 active/effective 2D scan points:
 
 | job | run | a0 | thickness um | state at latest check | node |
 |---:|---|---:|---:|---|---|
 | `1855864` | `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001` | 5 | 3 | RUNNING | `wqd10nbd04c18` |
-| `1855865` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_20260706_r001` | 10 | 3 | RUNNING | `wqd10nbd05c15` |
-| `1855866` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_20260706_r001` | 15 | 3 | RUNNING | `wqd10nbd07c08` |
-| `1855867` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_20260706_r001` | 20 | 3 | RUNNING | `wqd10nbd07c11` |
 | `1855868` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001` | 10 | 1 | RUNNING | `wqd10nbd07c16` |
 | `1855869` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001` | 10 | 2 | RUNNING | `wqd10nbd08c06` |
-| `1855870` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_20260706_r001` | 10 | 4 | RUNNING | `wqd10nbd08c20` |
+| `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | 10 | 3 | PENDING restart continuation | `(None)` |
+| `1869668` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002` | 15 | 3 | PENDING restart continuation | `(None)` |
+| `1869669` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002` | 20 | 3 | PENDING restart continuation | `(None)` |
+| `1869670` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002` | 10 | 4 | PENDING restart continuation | `(None)` |
 
 Walltime-risk status from the latest check at about elapsed `01:47:54`:
 
@@ -131,11 +131,65 @@ The requests were processed successfully. Each high-risk run now has
 | `1855867` | `Data/0003.sdf` | `1.9G` |
 | `1855870` | `Data/0003.sdf` | `2.2G` |
 
+After the user requested not to risk walltime loss, a second DUMP was requested
+and verified. `Data/restart.visit` lists `0004.sdf` for all four high-risk
+original runs. Those original jobs were then cancelled after about `01:55:01`,
+and 18 h continuation jobs were submitted from hard-linked `Data/0004.sdf`
+files:
+
+| old job | new job | restart run | restart file |
+|---:|---:|---|---|
+| `1855865` | `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | `Data/0004.sdf` |
+| `1855866` | `1869668` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002` | `Data/0004.sdf` |
+| `1855867` | `1869669` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002` | `Data/0004.sdf` |
+| `1855870` | `1869670` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002` | `Data/0004.sdf` |
+
+The continuation decks use:
+
+```text
+restart_snapshot = 0004.sdf
+stop_at_walltime = 61200.0
+Slurm walltime = 18:00:00
+```
+
 Remote run directory pattern:
 
 ```text
 /publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/<run_id>
 ```
+
+## Remote Files Not To Delete
+
+Remote project root:
+
+```text
+/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr
+```
+
+Critical completed 3D anchor:
+
+```text
+runs/pic3d_stage1_source_diag6000fs_restart0020hardlink_2000x250x250_a0_10_t_3um_20260706_r006
+```
+
+Keep its `Data/0024.sdf`, `Data/restart.visit`, probe SDF files, `input.deck`,
+and `submit.slurm`; this is the accepted 6 ps 3D reference.
+
+Critical active 2D runs:
+
+```text
+runs/pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001
+runs/pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001
+runs/pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001
+runs/pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002
+runs/pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002
+runs/pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002
+runs/pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002
+```
+
+Keep the four original high-risk r001 directories too, at least until the r002
+continuations complete and their outputs are validated, because their
+`Data/0004.sdf` files are hard-linked into the continuation directories.
 
 Monitoring command:
 

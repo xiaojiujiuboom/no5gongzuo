@@ -1754,3 +1754,25 @@ Runtime walltime-risk update:
   - `1855868`: `3.81 ps`, ETA `1h02m`, continue.
   - `1855869`: `2.20 ps`, ETA `3h03m`, continue.
   - `1855870`: `0.99 ps`, ETA `9h05m`, restart `Data/0003.sdf` confirmed.
+
+Restart-continuation action:
+
+- A second runtime `Data/DUMP` request was placed for the four high-risk jobs
+  so cancellation would not fall back to the older `0003.sdf` checkpoint.
+- The second DUMP completed on 2026-07-06 CST. In all four original run
+  directories, `Data/restart.visit` lists both `0003.sdf` and `0004.sdf`.
+- Verified `Data/0004.sdf` sizes:
+  - `1855865`: about `1.9G`
+  - `1855866`: about `1.9G`
+  - `1855867`: about `1.9G`
+  - `1855870`: about `2.2G`
+- Four continuation directories were created with hard-linked `Data/0004.sdf`
+  files, explicit `restart_snapshot = 0004.sdf`, Slurm walltime `18:00:00`,
+  and EPOCH `stop_at_walltime = 61200.0`.
+- The original high-risk jobs were cancelled after about `01:55:01` runtime:
+  - `1855865` -> `1869667`
+  - `1855866` -> `1869668`
+  - `1855867` -> `1869669`
+  - `1855870` -> `1869670`
+- At submission check, the four continuation jobs were `PENDING`; the three
+  lower-risk original jobs `1855864`, `1855868`, and `1855869` continued running.

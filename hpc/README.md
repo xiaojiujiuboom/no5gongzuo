@@ -49,12 +49,19 @@ For long/risky jobs:
 touch Data/DUMP
 ```
 
-Current high-risk 2D jobs with `Data/DUMP` requested:
+Current high-risk 2D jobs handled by restart continuation:
 
-- `1855865`: `a0=10`, `thickness=3 um`
-- `1855866`: `a0=15`, `thickness=3 um`
-- `1855867`: `a0=20`, `thickness=3 um`
-- `1855870`: `a0=10`, `thickness=4 um`
+- `1855865` -> `1869667`: `a0=10`, `thickness=3 um`
+- `1855866` -> `1869668`: `a0=15`, `thickness=3 um`
+- `1855867` -> `1869669`: `a0=20`, `thickness=3 um`
+- `1855870` -> `1869670`: `a0=10`, `thickness=4 um`
+
+The continuation runs use hard-linked `Data/0004.sdf`, explicit
+`restart_snapshot = 0004.sdf`, Slurm walltime `18:00:00`, and EPOCH
+`stop_at_walltime = 61200.0`.
+
+Important remote files and directories that must be preserved are listed in
+`hpc/IMPORTANT_RUNS.md`.
 
 ## Remote Layout
 
