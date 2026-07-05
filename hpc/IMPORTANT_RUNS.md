@@ -94,12 +94,12 @@ Current 7 active/effective 2D scan points:
 | `1855864` | `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001` | 5 | 3 | RUNNING | `wqd10nbd04c18` |
 | `1855868` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001` | 10 | 1 | RUNNING | `wqd10nbd07c16` |
 | `1855869` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001` | 10 | 2 | RUNNING | `wqd10nbd08c06` |
-| `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | 10 | 3 | PENDING restart continuation | `(None)` |
-| `1869668` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002` | 15 | 3 | PENDING restart continuation | `(None)` |
-| `1869669` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002` | 20 | 3 | PENDING restart continuation | `(None)` |
-| `1869670` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002` | 10 | 4 | PENDING restart continuation | `(None)` |
+| `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | 10 | 3 | RUNNING restart continuation | `wqd10nbc11c12` |
+| `1869668` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002` | 15 | 3 | RUNNING restart continuation | `wqd10nbd02c17` |
+| `1869669` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002` | 20 | 3 | RUNNING restart continuation | `wqd10nbd05c15` |
+| `1869670` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002` | 10 | 4 | RUNNING restart continuation | `wqd10nbd06c13` |
 
-Walltime-risk status from the latest check at about elapsed `01:47:54`:
+Pre-restart walltime-risk status at about elapsed `01:47:54`:
 
 | job | point | latest physical time | latest ETA | action |
 |---:|---|---:|---:|---|
@@ -210,10 +210,10 @@ The quota commands available to the user account did not report a smaller
 explicit quota. Treat `/publicfs10` free space and project `du` as the current
 operational check, and recheck before launching additional 3D runs.
 
-Monitoring command:
+Monitoring command for the current effective 7 scan points:
 
 ```bash
-squeue -j 1855864,1855865,1855866,1855867,1855868,1855869,1855870 \
+squeue -j 1855864,1855868,1855869,1869667,1869668,1869669,1869670 \
   -o "%.18i %.9P %.22j %.10T %.12M %.12l %.6D %.5C %R"
 ```
 

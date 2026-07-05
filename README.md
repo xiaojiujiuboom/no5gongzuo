@@ -2,9 +2,26 @@
 
 激光驱动 D-D 脉冲中子源 -> 外部锂靶产氚特性的跨尺度模拟方案。当前仓库用于明确科学问题、模块边界、数据契约、验证关卡和小论文执行路线。
 
-**2026-07-03 策略更新**：项目不再以高精度 2D PIC 参数矩阵作为最终可信度核心。当前主线改为 **3D PIC 源锚点 + Stage B 半解析 D-D converter + Stage C OpenMC Li 产氚响应**。已有 2D `L_pre=0` accepted sources 保留用于开发、对照和参数化源区间校准；`L_pre=1` 高精度 2D 扫描暂停，不再盲目重跑。
+**2026-07-06 状态更新**：当前主线已经从“准备 3D benchmark”推进到
+**已完成 6 ps 3D PIC 源锚点 + 正在运行正式 2D 参数矩阵 + Stage B/C 源项/输运链路开发**。3D 用来给论文可信度和维度修正提供 anchor；2D 用来做更便宜的趋势扫描和参数筛选；Stage B/C 负责把 PIC 氘束映射到 D-D 中子源、直接 D-D 氚和锂靶 TPR。
 
-**2026-07-03 Stage B 更新**：D-D converter 需要分两条产氚账：`D(d,p)T` 在 converter 内直接产氚，`D(d,n)3He` 产生中子后进入 Li 靶再产氚。论文报告应分列 `T_direct_DD` 与 `T_Li_neutron`，必要时再给总和。第二靶 baseline 计划采用 TiD2；CD2 保留为当前代码路径和后续材料敏感性对照。
+**2026-07-06 计算状态快照**：
+
+- 3D anchor 已接受：`a0=10`、CD2 厚度 `3 um`、源面 `rear+10`、收集到 `6 ps`。
+  D-D 产额加权的最后 `250 fs` 窗口占 `0-6 ps` 的 `5.57%`，满足当前 `<10%`
+  收敛标准。关键 job：`1837996`。
+- 正式 2D 矩阵正在超算运行：固定厚度 `3 um` 扫 `a0={5,10,15,20}`；
+  固定 `a0=10` 扫厚度 `{1,2,3,4} um`。有效 job 为
+  `1855864`、`1855868`、`1855869` 和 restart 续跑
+  `1869667-1869670`。
+- 4 个高风险 2D job 已在确认 `Data/0004.sdf` 后取消，并从 hard-linked
+  checkpoint 续跑。续跑已打印 `Load from restart dump OK`。后处理必须合并
+  原 r001 输出到 `0004.sdf` 与 r002 续跑输出，不能只看 r002 目录。
+- 超算项目目录约 `94G`；`/publicfs10` 约 `4.1P` 可用。重要远端目录见
+  [hpc/IMPORTANT_RUNS.md](hpc/IMPORTANT_RUNS.md)，未验证完成前不要删除旧 r001
+  目录。
+
+**Stage B 更新**：D-D converter 需要分两条产氚账：`D(d,p)T` 在 converter 内直接产氚，`D(d,n)3He` 产生中子后进入 Li 靶再产氚。论文报告应分列 `T_direct_DD` 与 `T_Li_neutron`，必要时再给总和。第二靶 baseline 计划采用 TiD2；CD2 保留为当前代码路径和后续材料敏感性对照。
 
 ## 核心问题
 
@@ -22,6 +39,13 @@ deuteron_beam.h5              neutron_source.h5 + direct T     Li6/Li7 分道 + 
 
 关键设计：Stage B 不用 Geant4，而是用 Python 半解析源项（D-D 截面 + 阻止本领 + 两体 boost）生成 D-D 中子源，并单独统计 `D(d,p)T` 直接氚。OpenMC 负责中子输运和锂靶产氚，不负责初级氘束-靶聚变。
 
+当前 PIC 数据使用原则：
+
+- 3D anchor 是论文主可信度基准，不做昂贵的大矩阵。
+- 2D 矩阵用于趋势、优化和参数敏感性；2D 绝对产额需要通过 3D anchor 谨慎解释。
+- Stage B 输入采用 `rear+10` 氘束相空间，并使用 D-D 产额加权收敛而不是单纯粒子数收敛。
+- 如果使用 restart 续跑点，后处理必须跨 r001/r002 目录合并 probe 数据。
+
 ## 当前文档
 
 - [一个月小论文执行框架_激光D-D中子源驱动锂靶产氚.md](一个月小论文执行框架_激光D-D中子源驱动锂靶产氚.md)：面向课题执行的路线、周计划、风险和论文骨架。
@@ -30,6 +54,8 @@ deuteron_beam.h5              neutron_source.h5 + direct T     Li6/Li7 分道 + 
 - [docs/STAGE2_DD_CHANNELS.md](docs/STAGE2_DD_CHANNELS.md)：锁定 Stage B 的 D-D 双分支、直接氚统计和 TiD2 baseline 计划。
 - [docs/COMPUTE_STRATEGY.md](docs/COMPUTE_STRATEGY.md)：本地 M4 Pro 与超算的计算分工、运行顺序和数据传输原则。
 - [docs/PROJECT_POSITIONING.md](docs/PROJECT_POSITIONING.md)：项目重新定位、3D 可信度策略和论文主张边界。
+- [hpc/README.md](hpc/README.md)：超算运行策略、墙时保护和远端布局。
+- [hpc/IMPORTANT_RUNS.md](hpc/IMPORTANT_RUNS.md)：当前最重要的 3D/2D job、远端目录、不要删除的文件。
 
 ## 当前可运行内容
 
@@ -88,4 +114,4 @@ config.yaml
 - 中子源侧（激光 -> D-D 中子）已有大量前人工作，本文创新点不应写成“搭建了激光中子源”。
 - 更合理的卖点是：把激光 D-D 源的谱-角畸变，定量映射到外部锂靶 TPR，并指出偏差集中于 `7Li` 阈值窗口。
 - 当前 Stage B 实现只聚焦 CD2 的 D(d,n) 中子分支；TiD2 baseline、`D(d,p)T` 直接氚、体相反应、hole-boring 等需要作为实现状态和假设边界说明。
-- 3D PIC 不做大矩阵；先做 50 fs smoke 校准解析/MPI/内存/输出，再做 1500 fs 四探针 benchmark 决定正式 source run。
+- 3D PIC 已完成一个 6 ps source anchor。后续参数扫描优先依靠 2D 矩阵；如要追加 3D，只做少量验证点或最终最优点复核。

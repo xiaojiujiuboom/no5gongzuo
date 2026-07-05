@@ -21,11 +21,16 @@ Accepted 3D anchor:
 
 Current formal 2D matrix:
 
-- jobs: `1855864` through `1855870`
+- effective jobs: `1855864`, `1855868`, `1855869`, and restart continuations
+  `1869667` through `1869670`
+- original high-risk jobs `1855865`, `1855866`, `1855867`, and `1855870`
+  were cancelled only after `Data/0004.sdf` restart dumps were verified
 - `t_end = 6 ps`
-- `1` node, `256` ranks, `10 h` walltime
+- `1` node, `256` ranks
+- original low-risk runs use `10 h` walltime; restart continuations use `18 h`
+  walltime and `stop_at_walltime = 61200.0`
 - `force_final_to_be_restartable = T`
-- `stop_at_walltime = 34200 s`
+- original low-risk runs keep `stop_at_walltime = 34200.0`
 - source planes: `rear+5/10/15/20`, primary `rear+10`
 - matrix:
   - fixed `thickness=3 um`, scan `a0={5,10,15,20}`
@@ -59,6 +64,11 @@ Current high-risk 2D jobs handled by restart continuation:
 The continuation runs use hard-linked `Data/0004.sdf`, explicit
 `restart_snapshot = 0004.sdf`, Slurm walltime `18:00:00`, and EPOCH
 `stop_at_walltime = 61200.0`.
+
+All four restart continuations printed `Load from restart dump OK`. For
+postprocessing, merge each original r001 directory through `0004.sdf` with its
+r002 continuation outputs; do not treat the r002 directory alone as the full
+0-6 ps history.
 
 Important remote files and directories that must be preserved are listed in
 `hpc/IMPORTANT_RUNS.md`.
