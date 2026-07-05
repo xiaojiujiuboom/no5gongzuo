@@ -15,6 +15,7 @@ outputs/
 runs/
 local_geant4_data/
 data/phase_space/
+hpc/results/phase_space/
 data/objectives/*.json
 data/objectives/*.tmp
 

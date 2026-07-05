@@ -401,6 +401,32 @@ Submission walltime policy:
     importance because the late deuterons are generally lower energy, but the
     3 ps source is still not accepted under the `5-10%` yield-convergence gate.
     The 5 ps continuation remains justified as a source-completeness run.
+- 2026-07-05 rear+10 phase-space check:
+  - Because the `rear+10` DD(n)-weighted window contribution rebounded at
+    `3 ps`, a point-probe phase-space extractor was added to read the probe
+    crossing positions, momenta, weights, energy, and angles.
+  - Checked `D_rear10` windows at `2500`, `2750`, and `3000 fs`.
+  - Artifacts:
+    - `hpc/results/pic3d_stage1_rear10_phase_space_2500_3000fs.png`
+    - `hpc/results/pic3d_stage1_rear10_phase_space_2500_3000fs_marginals.png`
+    - `hpc/results/pic3d_stage1_rear10_phase_space_2500_3000fs_summary.csv`
+
+| time | weight | E_mean | E_p95 | Emax | theta_p90 | theta<20deg | r_p90 | r<5um |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 2500 fs | 3.95e9 | 0.395 MeV | 0.513 MeV | 0.704 MeV | 15.0 deg | 97.9% | 3.86 um | 96.8% |
+| 2750 fs | 7.79e9 | 0.354 MeV | 0.485 MeV | 0.698 MeV | 16.8 deg | 96.5% | 5.43 um | 85.6% |
+| 3000 fs | 1.95e10 | 0.335 MeV | 0.500 MeV | 0.797 MeV | 19.4 deg | 91.4% | 6.31 um | 75.4% |
+
+  - Interpretation: the `3 ps` rebound is not a narrow clean-beam tail. It is a
+    second, broader forward deuteron wave/plume reaching `rear+10`: transverse
+    size and angular spread both grow from `2.5` to `3.0 ps`.
+  - It is still dominantly forward at `rear+10` (`91%` of the weight remains
+    within `20 deg` at `3 ps`), so it is not random backward plasma. However,
+    calling `rear+10` a clean detached beam would be too strong. The 5 ps
+    continuation should be used to decide whether a farther/cleaner plane such
+    as `rear+15` or `rear+20` is preferable for Stage 2, or whether the physical
+    converter is intentionally modeled as being close enough to intercept this
+    expanding plume.
 
 ## Previous paused state after user input review request
 
