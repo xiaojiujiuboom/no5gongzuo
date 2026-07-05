@@ -1354,3 +1354,70 @@ Verification:
   `moduleC_openmc/nuclear_data.py`.
 - FENDL-3.2, ENDF/B-VIII.0, and JEFF-3.3 clean OpenMC reruns completed with no
   missing-library warnings after full extraction.
+
+## Rear+10 3 ps vs 4 ps Normalized Spectrum Check
+
+Date: 2026-07-05.
+
+Purpose:
+
+- Compare the normalized source-spectrum shape at `rear+10` between the
+  accepted 0-3 ps source and the partial 0-4 ps source.
+- Avoid using raw particle-count growth as a convergence criterion. The primary
+  comparison weights each deuteron by `weight * Y_DD(E)`, where `Y_DD(E)` is the
+  same thick-target D-D yield model used in Stage B.
+
+Inputs:
+
+- 0-3 ps phase-space CSVs:
+  `hpc/results/phase_space/rear10_0to3ps/*_D_rear10_phase.csv`.
+- 3-4 ps phase-space CSVs extracted from Job `1721080`,
+  `Data/0013.sdf` through `Data/0016.sdf`, using
+  `sdf_probe_phase_space_extract`.
+- Main Stage B source gate: `px > 0`, `E_D > 0.4 MeV`.
+
+Main `E_D > 0.4 MeV` result:
+
+| source | metric | total | mean E MeV | p50 MeV | p90 MeV | p95 MeV | p99 MeV | max MeV |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| 0-3 ps | D-D yield weighted | 8.3513e4 | 0.5386 | 0.4937 | 0.6947 | 0.7929 | 0.9839 | 1.3073 |
+| 3-4 ps only | D-D yield weighted | 6.1439e5 | 0.4892 | 0.4655 | 0.5752 | 0.6098 | 0.6818 | 0.8924 |
+| 0-4 ps | D-D yield weighted | 6.9790e5 | 0.4951 | 0.4681 | 0.5856 | 0.6277 | 0.7452 | 1.3073 |
+
+Shape metrics for normalized `Y_DD(E)`-weighted spectra, 0-3 ps vs 0-4 ps:
+
+- L1 distance: `0.27635`.
+- Total-variation distance: `0.13818`.
+- Jensen-Shannon distance: `0.18601`.
+- Cosine similarity: `0.98548`.
+
+Interpretation:
+
+- The 3-4 ps contribution is not a newly growing high-energy tail. It is a
+  softer late population: its `Y_DD`-weighted `p99` is only `0.6818 MeV`, and
+  no `E_D > 1 MeV` particles were seen in that added window.
+- However, for the `E_D > 0.4 MeV` accepted-source gate, the 3-4 ps window still
+  contributes `88.0%` of the 0-4 ps D-D-yield-weighted total. Therefore 3 ps is
+  not a good final normalization time for absolute yield.
+- The 0-4 ps normalized shape is already close to the 0-3 ps shape in cosine
+  similarity, but it is measurably shifted toward lower energies. The 5 ps
+  continuation is justified to determine whether the late soft component is
+  saturating.
+
+All-energy sanity check:
+
+- Without the `E_D > 0.4 MeV` gate, the same conclusion holds more strongly:
+  the 3-4 ps contribution carries `90.7%` of the 0-4 ps D-D-yield-weighted
+  total, but is softer than the 0-3 ps distribution.
+- The all-energy 0-3 ps vs 0-4 ps `Y_DD`-weighted total-variation distance is
+  `0.14419`, and cosine similarity is `0.97327`.
+
+Generated files:
+
+- `hpc/tools/compare_rear10_spectrum_3ps_4ps.py`
+- `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_normalized_spectrum.csv`
+- `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_spectrum_summary.csv`
+- `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_normalized_spectrum.png`
+- `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_allE_normalized_spectrum.csv`
+- `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_allE_spectrum_summary.csv`
+- `hpc/results/pic3d_stage1_rear10_3ps_vs_4ps_allE_normalized_spectrum.png`
