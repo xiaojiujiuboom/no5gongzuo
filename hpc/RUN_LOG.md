@@ -1928,3 +1928,61 @@ Low-cost 2D matrix first postprocessing:
 - Interpretation boundary: treat the `16x40nm` matrix as a trend/optimization
   scan. Before making a strong final claim about the thickness optimum, run at
   least one strict same-box/same-PPC resolution check where only `dx,dy` change.
+
+2D full Stage B/C chain:
+
+- Date: 2026-07-06.
+- Inputs:
+  - seven complete `dx=16 nm, dy=40 nm` 2D sources;
+  - `rear+10`, cumulative `0-6 ps`;
+  - `E_D > 0.4 MeV` gate;
+  - `deuteron_beam.h5` generated for all seven points.
+- Stage B:
+  - current CD2 thick-converter `D(d,n)3He` neutron branch;
+  - accelerated table-based builder added as `moduleB_source/build_source_fast.py`;
+  - result summaries written to
+    `hpc/results/full_chain_20260706/neutron_source_summaries.csv`.
+- Stage C:
+  - OpenMC 0.15.0;
+  - cross sections: `/Users/oomb/Downloads/mcnp_endfb71/cross_sections.xml`;
+  - `20 batches x 50,000 particles`, `8` OpenMP threads;
+  - Case A run once for `Li6=7.59 at%` and `Li6=90 at%`;
+  - Case B run for all seven 2D source points and both lithium enrichments.
+- Statistical self-check:
+  - maximum Case B `Li6` relative error: `0.12%`;
+  - maximum Case B `Li7` relative error: `0.86%`;
+  - maximum split `Li6+Li7` total relative error: `0.17%`.
+
+Natural-lithium (`Li6=7.59 at%`) chain summary:
+
+| point | D-D n/shot | n mean MeV | frac n >3.1454 MeV | Li6 TPR/n | Li7 TPR/n | Li total T/shot | rel. total T |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `a0=10,t=1um` | `3.96e11` | `3.076` | `0.348` | `1.022e-2` | `8.693e-3` | `7.48e9` | `0.084` |
+| `a0=10,t=2um` | `1.37e12` | `2.682` | `0.179` | `1.067e-2` | `2.778e-4` | `1.50e10` | `0.168` |
+| `a0=5,t=3um` | `7.51e12` | `2.749` | `0.249` | `1.055e-2` | `4.467e-4` | `8.25e10` | `0.928` |
+| `a0=10,t=3um` | `8.06e12` | `2.756` | `0.256` | `1.053e-2` | `4.998e-4` | `8.89e10` | `1.000` |
+| `a0=15,t=3um` | `1.08e13` | `2.822` | `0.294` | `1.045e-2` | `1.514e-3` | `1.30e11` | `1.456` |
+| `a0=20,t=3um` | `1.82e13` | `3.127` | `0.386` | `1.012e-2` | `8.783e-3` | `3.44e11` | `3.863` |
+| `a0=10,t=4um` | `2.45e13` | `2.857` | `0.329` | `1.039e-2` | `1.447e-3` | `2.90e11` | `3.265` |
+
+Interpretation:
+
+- In the current 2D matrix, `a0=20,t=3um` is the strongest natural-lithium
+  Li-total point in the `t=3um` a0 scan and has a strong Li7 threshold
+  contribution.
+- At fixed `a0=10`, `t=4um` gives the largest Li-total T/shot among the
+  thickness scan points, mainly through larger Stage B neutron yield.
+- These are trend results from the 2D matrix; final paper-level dimensionality
+  claims still require a clean 3D anchor or selected 3D validation point.
+
+3D particle-source caveat after quota cleanup:
+
+- The accepted 3D convergence/timing summaries remain valid, and final
+  `Data/0024.sdf` remains present.
+- The cleanup removed restart boundary SDF files `0006.sdf`, `0012.sdf`, and
+  `0020.sdf`; local particle-probe CSVs already preserve `0004-0019` and
+  `0021-0024`, but particle-level window `0020` is missing.
+- Since no pre-5ps restart remains available, a strict complete particle-level
+  `0-6 ps` 3D `deuteron_beam.h5` would require rerunning the 3D anchor or a
+  selected final 3D validation point. Do not use a normalized missing-window
+  correction as a final paper result.

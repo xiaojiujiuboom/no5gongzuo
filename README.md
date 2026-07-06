@@ -22,12 +22,18 @@
   在低成本矩阵内，`a0=20,t=3um` 约为 `a0=10,t=3um` 的 `2.25x`，
   `a0=10,t=4um` 约为 `3.04x`。最后时间窗产额占比均 `<0.2%`，
   表明 6 ps 在产额加权意义上已经收敛。
+- 7 个 2D 点的 Stage B/C 全流程已完成：`deuteron_beam.h5 -> neutron_source.h5 -> OpenMC Li TPR`。
+  自然锂下，`a0=20,t=3um` 的 Li 总产氚约 `3.44e11 T/shot`
+  (`3.86x` baseline `a0=10,t=3um`)，`a0=10,t=4um` 约
+  `2.90e11 T/shot` (`3.27x`)。完整表格在
+  [hpc/results/full_chain_20260706](hpc/results/full_chain_20260706)。
 - 已用完成的两个旧 `10 nm` 点做交叉检查；由于旧点同时改变了盒子和 PPC，
   它们不是严格网格收敛测试。结果显示薄靶点对数值设置较敏感，因此当前
   `16x40nm` 矩阵应作为趋势扫描，不应直接写成最终收敛精度结论。
 - 2026-07-06 CST 发现隐藏磁盘配额限制，旧大矩阵曾触发
-  `Disk quota exceeded`。已清理旧中间 SDF，项目目录从约 `94G`
-  降低并保留关键 3D/2D 资产。
+  `Disk quota exceeded`。清理过程误删了 3D 粒子级源重构所需的
+  `0020.sdf` 窗口；现有 3D 收敛摘要仍可作 anchor，但严格完整的
+  3D `0-6 ps` 粒子源需要后续 rerun/验证点，不能用缺窗归一化作为论文最终结果。
 - `/publicfs10` 总盘约 `4.1P` 可用，但账号/目录仍可能受隐藏 quota 限制。重要远端目录见
   [hpc/IMPORTANT_RUNS.md](hpc/IMPORTANT_RUNS.md)，未验证完成前不要删除旧 r001
   目录。

@@ -6,8 +6,8 @@ The active Stage 1 strategy is now:
 
 1. Use the completed 3D anchor as the realism/dimensionality reference.
 2. Use a 3D-matched, lower-cost 2D matrix as the parameter scan.
-3. Feed the accepted `rear+10`, D-D-yield-weighted deuteron source into
-   Stage B and Stage C after the 2D scan is postprocessed.
+3. Use the complete 2D matrix for the current Stage B/C parameter trends.
+4. Decide later which 3D point to rerun/validate after the 2D trends are clear.
 
 Accepted 3D anchor:
 
@@ -18,6 +18,11 @@ Accepted 3D anchor:
 - accepted by D-D-yield-weighted final-window criterion:
   `5.75-6.00 ps / 0-6 ps = 5.57%` for `E_D >= 0.4 MeV`
 - key job: `1837996`
+- caveat: during quota recovery, the 3D restart/probe boundary file
+  `0020.sdf` was removed. Local phase-space CSVs preserve all `rear+10`
+  windows except `0020`; do not use a normalized missing-window correction as a
+  final paper result. A clean 3D particle-level source requires a rerun or a
+  selected 3D validation point.
 
 Current low-cost 2D matrix:
 
@@ -55,6 +60,19 @@ First postprocessing pass:
 - all seven points have final-window yield fractions below `0.2%`, so the
   6 ps source is time-converged by the current yield-weighted criterion
 - trend files and plots live in `hpc/results/pic2d_scan16x40_20260706/`
+
+2D full Stage B/C pass:
+
+- all seven 2D points have `deuteron_beam.h5` and `neutron_source.h5`;
+- OpenMC Case B completed for natural lithium (`Li6=7.59 at%`) and enriched
+  lithium (`Li6=90 at%`);
+- OpenMC settings: `20 batches x 50,000 particles`, `8` threads,
+  ENDF/B-VII.1 local HDF5 data;
+- natural-lithium total Li T/shot trend:
+  - `a0=20,t=3um`: `3.44e11`, `3.86x` the `a0=10,t=3um` baseline;
+  - `a0=10,t=4um`: `2.90e11`, `3.27x` the baseline;
+  - `a0=15,t=3um`: `1.30e11`, `1.46x` the baseline.
+- full tables and plots live in `hpc/results/full_chain_20260706/`.
 
 Early trend inside the low-cost matrix:
 
@@ -111,8 +129,9 @@ This means the account or project is subject to a smaller hidden quota.
 
 Immediate recovery:
 
-- removed obsolete intermediate 3D restart SDF files and old early 2D diagnostic
-  SDF files;
+- removed intermediate 3D restart SDF files and old early 2D diagnostic SDF
+  files. This was too aggressive for strict 3D particle-level source
+  reconstruction because it removed the `0020` probe window;
 - kept accepted 3D anchor `r006`, active formal 2D runs, input decks, Slurm
   logs, and restart files needed by hard-linked continuations;
 - project usage dropped from about `94G` to about `26G` after a second cleanup;

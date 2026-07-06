@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:
 from interfaces.schema import read_deuteron_beam, read_neutron_source
 from moduleA_pic.parametric_beam import generate_parametric_beam
 from moduleB_source.build_source import build_neutron_source
+from moduleB_source.build_source_fast import build_neutron_source_fast
 from moduleB_source.cross_section import sigma_ddn_bosch_hale_mb
 from moduleB_source.kinematics import dd_neutron_lab
 from moduleB_source.stopping import stopping_power_MeV_per_cm
@@ -32,6 +33,7 @@ def assert_close(value: float, expected: float, tol: float, name: str) -> None:
 def gate_schema_and_pipeline(tmp: Path) -> None:
     beam_path = tmp / "deuteron_beam.h5"
     source_path = tmp / "neutron_source.h5"
+    fast_source_path = tmp / "neutron_source_fast.h5"
     E, direction, weight, t = generate_parametric_beam(
         n=2000,
         total_deuterons=1.0e9,
@@ -53,6 +55,11 @@ def gate_schema_and_pipeline(tmp: Path) -> None:
         raise AssertionError("Y_total must be positive")
     if not np.any(source.E > LI7_MT205_THRESHOLD_MEV):
         raise AssertionError("expected some source neutrons above the Li7 threshold")
+    build_neutron_source_fast(beam_path, fast_source_path, seed=8, max_particles=500, table_grid=4096)
+    fast_source = read_neutron_source(fast_source_path)
+    rel_delta = abs(float(fast_source.attrs["Y_total"]) - float(source.attrs["Y_total"])) / float(source.attrs["Y_total"])
+    if rel_delta > 5.0e-3:
+        raise AssertionError("fast Stage B yield table disagrees with the reference builder")
 
 
 def gate_cross_section() -> None:
@@ -85,9 +92,21 @@ def gate_config() -> None:
     geom = cfg.get("physics", {}).get("geometry_lock")
     if geom != "laser_thin_foil_deuteron_source_plus_external_thick_deuteride_converter":
         raise AssertionError("physics.geometry_lock is not set to the external deuteride converter geometry")
-    thickness = cfg.get("hpc_pic", {}).get("first_2d_scan", {}).get("target_thickness_um")
-    if thickness != [5]:
-        raise AssertionError("first 2D scan should be the 6-source matrix with thickness fixed at 5 um")
+    scan = cfg.get("hpc_pic", {}).get("formal_2d_scan", {})
+    if scan.get("status") != "completed_full_stageB_stageC":
+        raise AssertionError("formal 2D scan should point at the completed 7-point Stage B/C matrix")
+    if scan.get("job_ids") != [1937305, 1937306, 1937307, 1937308, 1937309, 1937310, 1937311]:
+        raise AssertionError("formal 2D scan job IDs do not match the completed low-cost matrix")
+    grid = scan.get("grid", {})
+    if (grid.get("nx"), grid.get("ny"), grid.get("dx_nm"), grid.get("dy_nm")) != (2000, 500, 16, 40):
+        raise AssertionError("formal 2D scan grid should be the completed 16x40 nm low-cost matrix")
+    a0 = scan.get("a0_scan", {}).get("a0")
+    thickness = scan.get("thickness_scan", {}).get("target_thickness_um")
+    if a0 != [5, 10, 15, 20] or thickness != [1, 2, 3, 4]:
+        raise AssertionError("formal 2D scan should contain the current a0 and thickness sweeps")
+    full_chain = scan.get("full_chain", {})
+    if full_chain.get("result_dir") != "hpc/results/full_chain_20260706":
+        raise AssertionError("formal 2D full-chain result directory is not recorded")
 
 
 def gate_kinematics() -> None:

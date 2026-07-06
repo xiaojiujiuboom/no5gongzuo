@@ -43,6 +43,20 @@ Decision:
 - The normalized `0-5 ps` vs `0-6 ps` D-D-yield-weighted spectrum is stable:
   total-variation distance `0.0128`, cosine similarity `0.99967`.
 
+Current particle-source caveat:
+
+- The accepted 3D timing/convergence summaries remain valid, and the final
+  `Data/0024.sdf` remains present.
+- During the 2026-07-06 quota recovery, the restart boundary SDF files
+  `0006.sdf`, `0012.sdf`, and `0020.sdf` were removed from the old 3D chain.
+  This was later recognized as too aggressive because `0020.sdf` contains the
+  missing `4.75-5.00 ps` particle-probe window needed for a strictly complete
+  particle-level `0-6 ps` 3D `deuteron_beam.h5`.
+- Local particle-probe CSVs are already available for `0004-0019` and
+  `0021-0024`; the only particle-level 3D `rear+10` gap is window `0020`.
+- Until a 3D rerun is performed, use 3D as a convergence/dimensionality anchor
+  and rely on the complete 2D matrix for the full Stage B/C parameter trends.
+
 Key 3D job chain:
 
 | job | run | state | purpose |
@@ -267,12 +281,13 @@ Later on 2026-07-06 CST, hidden quota limits did trigger MPI-IO
 /publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/CLEANUP_20260706_QUOTA.txt
 ```
 
-Removed obsolete intermediate restart SDF files from old 3D chain runs and old
-early 2D diagnostic SDF files. Kept accepted 3D `r006`, current formal 2D runs,
-and restart files needed by hard-linked continuations. Project usage dropped to
-about `47G`, then to about `26G` after removing the accepted 3D run's obsolete
-input restart `Data/0020.sdf`, superseded `0003.sdf` restart dumps, and the bad
-partial `a0=5` runtime DUMP output.
+Removed intermediate restart SDF files from old 3D chain runs and old early 2D
+diagnostic SDF files. This reduced project usage to about `47G`, then to about
+`26G`, but it also removed 3D restart/probe boundary files that are useful for
+strict particle-level source reconstruction. In particular, removing
+`Data/0020.sdf` was a mistake for final 3D source extraction; keep all remaining
+3D and 2D SDF/probe products unless the user explicitly approves a specific
+path.
 
 Quota-failed jobs and replacements:
 
@@ -299,3 +314,47 @@ Immediate postprocessing after completion:
 4. Compare normalized spectra, especially `0-5 ps` vs `0-6 ps` if needed.
 5. Rank scan points by D-D-yield-weighted source quality, neutron source above
    the Li7 threshold-relevant energy region, angular concentration, and cost.
+
+## 2D Full Stage B/C Results
+
+Date: 2026-07-06.
+
+Scope:
+
+- Seven complete `dx=16 nm, dy=40 nm` 2D sources.
+- Source plane `rear+10`, collection `0-6 ps`, gate `E_D > 0.4 MeV`.
+- Stage B current implementation: CD2 thick-converter `D(d,n)3He` neutron
+  branch only.
+- Stage C: OpenMC 0.15.0, ENDF/B-VII.1 local HDF5 data,
+  `20 batches x 50,000 particles`, `8` OpenMP threads.
+- Li cases: natural lithium (`Li6=7.59 at%`) and enriched lithium
+  (`Li6=90 at%`).
+
+Natural lithium summary:
+
+| point | D-D n/shot | n mean MeV | frac n >3.1454 MeV | Li6 TPR/n | Li7 TPR/n | Li total T/shot | rel. total T |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `a0=10,t=1um` | `3.96e11` | `3.076` | `0.348` | `1.022e-2` | `8.693e-3` | `7.48e9` | `0.084` |
+| `a0=10,t=2um` | `1.37e12` | `2.682` | `0.179` | `1.067e-2` | `2.778e-4` | `1.50e10` | `0.168` |
+| `a0=5,t=3um` | `7.51e12` | `2.749` | `0.249` | `1.055e-2` | `4.467e-4` | `8.25e10` | `0.928` |
+| `a0=10,t=3um` | `8.06e12` | `2.756` | `0.256` | `1.053e-2` | `4.998e-4` | `8.89e10` | `1.000` |
+| `a0=15,t=3um` | `1.08e13` | `2.822` | `0.294` | `1.045e-2` | `1.514e-3` | `1.30e11` | `1.456` |
+| `a0=20,t=3um` | `1.82e13` | `3.127` | `0.386` | `1.012e-2` | `8.783e-3` | `3.44e11` | `3.863` |
+| `a0=10,t=4um` | `2.45e13` | `2.857` | `0.329` | `1.039e-2` | `1.447e-3` | `2.90e11` | `3.265` |
+
+Statistical self-check:
+
+- Maximum OpenMC relative error among all 14 Case B runs:
+  - `Li6`: `0.12%`.
+  - `Li7`: `0.86%`.
+  - split `Li6+Li7` total: `0.17%`.
+- These statistics are adequate for trend ranking.
+
+Result files:
+
+- `hpc/results/full_chain_20260706/pic2d_full_chain_openmc_summary.csv`
+- `hpc/results/full_chain_20260706/pic2d_full_chain_natural_li_summary.csv`
+- `hpc/results/full_chain_20260706/pic2d_full_chain_li6_90_summary.csv`
+- `hpc/results/full_chain_20260706/pic2d_stageB_neutron_yield_trends.png`
+- `hpc/results/full_chain_20260706/pic2d_full_chain_natural_tpr_trends.png`
+- `hpc/results/full_chain_20260706/pic2d_full_chain_li6_90_tpr_trends.png`

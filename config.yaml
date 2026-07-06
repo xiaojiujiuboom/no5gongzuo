@@ -54,8 +54,10 @@ hpc_pic:
     E_gate_min_MeV: 0.4
     accepted_3d_job_id: 1837996
   formal_2d_scan:
-    status: running_with_quota_recovery
-    job_ids: [1874262, 1873138, 1873136, 1869667, 1873137, 1869669, 1869670]
+    status: completed_full_stageB_stageC
+    job_ids: [1937305, 1937306, 1937307, 1937308, 1937309, 1937310, 1937311]
+    completed_core_hours: 920.91
+    completed_cost_cny_at_0p1_per_core_hour: 92.09
     cancelled_after_restart_dump_job_ids: [1855865, 1855866, 1855867, 1855870]
     failed_quota_job_ids: [1855864, 1855868, 1855869, 1869668]
     quota_recovery_job_ids: [1873136, 1873137, 1873138, 1874262]
@@ -66,29 +68,29 @@ hpc_pic:
       a0: 10
       target_thickness_um: [1, 2, 3, 4]
     preplasma_L_um: [0]
-    source_planes: [rear+5um, rear+10um, rear+15um, rear+20um]
+    source_planes: [rear+2um, rear+5um, rear+10um, rear+15um, rear+20um]
     primary_source_plane: rear+10um
     t_end_ps: 6.0
     dt_snapshot_fs: 250
     grid:
-      nx: 4200
-      ny: 3000
-      dx_nm: 10
-      dy_nm: 10
+      nx: 2000
+      ny: 500
+      dx_nm: 16
+      dy_nm: 40
       x_min_um: -6
-      x_max_um: 36
-      y_min_um: -15
-      y_max_um: 15
+      x_max_um: 26
+      y_min_um: -10
+      y_max_um: 10
     ppc:
       electron: 16
-      deuteron: 48
-      carbon: 8
+      deuteron: 32
+      carbon: 4
     slurm:
       partition: amd_m9_768
       nodes: 1
-      ranks: 256
-      walltime_h: 10
-      stop_at_walltime_s: 34200
+      ranks: 64
+      walltime_h: 18
+      stop_at_walltime_s: 61200
     walltime_protection:
       can_extend_running_jobs: false
       dump_requested_jobs: [1855864, 1855865, 1855866, 1855867, 1855870]
@@ -97,6 +99,23 @@ hpc_pic:
       continuation_walltime_h: 18
       continuation_stop_at_walltime_s: 61200
       note: "Running Slurm TimeLimit extension was denied. Four high-risk jobs were safely continued from Data/0004.sdf. A later hidden quota limit caused jobs 1855868, 1855869, and 1869668 to fail; old intermediate SDF files were removed, and replacement jobs 1873136, 1873137, and 1873138 were submitted. Job 1855864 then became stuck while writing a runtime DUMP with no verified restart.visit; more obsolete restart SDF files were removed, project usage dropped to about 26G, and replacement job 1874262 was submitted."
+    full_chain:
+      source_plane: rear+10um
+      E_gate_min_MeV: 0.4
+      stageB_converter_material_current: CD2
+      stageB_neutron_branch: D(d,n)3He
+      stageB_direct_triton_branch: planned_not_in_current_results
+      openmc_version: 0.15.0
+      nuclear_data: ENDF/B-VII.1 local HDF5
+      batches: 20
+      particles_per_batch: 50000
+      threads: 8
+      result_dir: hpc/results/full_chain_20260706
+      natural_li_best_a0_scan_point: pic2d_a0_20_t_3um
+      natural_li_best_thickness_scan_point: pic2d_a0_10_t_4um
+    resolution_checks:
+      completed_10nm_job_ids: [1873138, 1873136]
+      caveat: "The completed 10 nm points changed box and PPC as well as grid, so they are resolution warnings rather than strict convergence tests."
   optional_followup_2d_scan:
     preplasma_L_um: [1]
     apply_to: [baseline, best_2d_point]

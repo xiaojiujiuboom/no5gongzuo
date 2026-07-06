@@ -29,12 +29,13 @@ static int read_mesh(sdf_file_t *h, sdf_block_t *b) {
 
 int main(int argc, char **argv) {
     if (argc < 4) {
-        fprintf(stderr, "usage: %s file.sdf ProbeName output.csv\n", argv[0]);
+        fprintf(stderr, "usage: %s file.sdf ProbeName output.csv [E_min_MeV]\n", argv[0]);
         return 2;
     }
     const char *fn = argv[1];
     const char *probe = argv[2];
     const char *out = argv[3];
+    double E_min_MeV = argc >= 5 ? atof(argv[4]) : 0.0;
     sdf_file_t *h = sdf_open(fn, 0, SDF_READ, 0);
     if (!h) {
         fprintf(stderr, "open_failed,%s\n", fn);
@@ -69,14 +70,14 @@ int main(int argc, char **argv) {
     double *py = read_var(h, bpy);
     double *pz = read_var(h, bpz);
     double *w = read_var(h, bw);
-    if (!px || !py || !pz || !w || n <= 0 || !bm->grids || bm->ngrids < 3) {
+    if (!px || !py || !pz || !w || n <= 0 || !bm->grids || bm->ngrids < 2) {
         fprintf(stderr, "data_read_failed,%s,%s\n", fn, probe);
         sdf_close(h);
         return 1;
     }
     double *x = (double *)bm->grids[0];
     double *y = (double *)bm->grids[1];
-    double *z = (double *)bm->grids[2];
+    double *z = bm->ngrids >= 3 ? (double *)bm->grids[2] : NULL;
 
     FILE *f = fopen(out, "w");
     if (!f) {
@@ -94,12 +95,15 @@ int main(int argc, char **argv) {
         }
         double p2 = px[i] * px[i] + py[i] * py[i] + pz[i] * pz[i];
         double E = (sqrt(rest * rest + p2 * C_LIGHT * C_LIGHT) - rest) / J_PER_MEV;
+        if (E < E_min_MeV) {
+            continue;
+        }
         double theta_y = atan2(py[i], px[i]) * 180.0 / M_PI;
         double theta_z = atan2(pz[i], px[i]) * 180.0 / M_PI;
         double theta_3d = atan2(sqrt(py[i] * py[i] + pz[i] * pz[i]), px[i]) * 180.0 / M_PI;
         double x_um = (double)x[i] * 1.0e6;
         double y_um = (double)y[i] * 1.0e6;
-        double z_um = (double)z[i] * 1.0e6;
+        double z_um = z ? (double)z[i] * 1.0e6 : 0.0;
         double r_um = sqrt(y_um * y_um + z_um * z_um);
         fprintf(f, "%.9g,%s,%.9g,%.9g,%.9g,%.9g,%.17g,%.17g,%.17g,%.9e,%.9g,%.9g,%.9g,%.9g\n",
                 time_fs, probe, x_um, y_um, z_um, r_um, px[i], py[i], pz[i],

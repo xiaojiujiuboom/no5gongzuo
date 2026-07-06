@@ -80,6 +80,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--batches", type=int, default=None)
     parser.add_argument("--particles", type=int, default=None)
     parser.add_argument("--cross-sections", default=None, help="Path to OpenMC cross_sections.xml")
+    parser.add_argument("--threads", type=int, default=None, help="OpenMC CPU threads for --run")
     parser.add_argument("--run", action="store_true", help="run OpenMC after exporting XML")
     return parser
 
@@ -102,7 +103,7 @@ def main() -> None:
     model.export_to_xml(outdir)
     print(f"exported OpenMC XML to {outdir}")
     if args.run:
-        model.run(cwd=outdir)
+        model.run(cwd=outdir, threads=args.threads)
 
 
 if __name__ == "__main__":
