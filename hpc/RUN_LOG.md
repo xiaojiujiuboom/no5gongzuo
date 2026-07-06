@@ -1986,3 +1986,22 @@ Interpretation:
   `0-6 ps` 3D `deuteron_beam.h5` would require rerunning the 3D anchor or a
   selected final 3D validation point. Do not use a normalized missing-window
   correction as a final paper result.
+
+2D analysis report:
+
+- Date: 2026-07-06.
+- Added a reproducible analysis script:
+  `scripts/make_pic2d_analysis.py`.
+- Added report:
+  `docs/PIC2D_ANALYSIS_20260706.md`.
+- Added compact analysis products:
+  - `hpc/results/full_chain_20260706/pic2d_paper_summary.csv`;
+  - `hpc/results/full_chain_20260706/pic2d_analysis_tables.md`;
+  - `hpc/results/full_chain_20260706/pic2d_full_chain_analysis_dashboard.png`.
+- Main interpretation:
+  - `a0=20,t=3um` is the preferred 3D validation candidate because it produces
+    the strongest natural-lithium total T/shot in the current 2D matrix and
+    the strongest Li7 threshold contribution.
+  - `a0=10,t=4um` remains the total-yield optimization candidate at fixed
+    `a0=10`.
+  - The 2D matrix is trend evidence, not final absolute 3D yield evidence.

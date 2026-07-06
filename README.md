@@ -73,6 +73,8 @@ deuteron_beam.h5              neutron_source.h5 + direct T     Li6/Li7 分道 + 
 - [docs/STAGE2_DD_CHANNELS.md](docs/STAGE2_DD_CHANNELS.md)：锁定 Stage B 的 D-D 双分支、直接氚统计和 TiD2 baseline 计划。
 - [docs/COMPUTE_STRATEGY.md](docs/COMPUTE_STRATEGY.md)：本地 M4 Pro 与超算的计算分工、运行顺序和数据传输原则。
 - [docs/PROJECT_POSITIONING.md](docs/PROJECT_POSITIONING.md)：项目重新定位、3D 可信度策略和论文主张边界。
+- [docs/PIC2D_ANALYSIS_20260706.md](docs/PIC2D_ANALYSIS_20260706.md)：当前 7 点 2D
+  PIC -> D-D source -> OpenMC 全链路参数趋势、候选点和限制条件。
 - [hpc/README.md](hpc/README.md)：超算运行策略、墙时保护和远端布局。
 - [hpc/IMPORTANT_RUNS.md](hpc/IMPORTANT_RUNS.md)：当前最重要的 3D/2D job、远端目录、不要删除的文件。
 
