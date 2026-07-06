@@ -74,6 +74,17 @@ First postprocessing pass:
   - `a0=15,t=3um`: `1.30e11`, `1.46x` the baseline.
 - full tables and plots live in `hpc/results/full_chain_20260706/`.
 
+Scope caveat after the 2026-07-06 reset:
+
+- current paper baseline is the implemented CD2 converter D(d,n) neutron branch;
+- robust publication quantities are per-source-neutron Li6/Li7 TPR and A/B
+  source-fidelity comparisons;
+- absolute `T/shot` values are diagnostic until D-D cross sections are checked
+  against ENDF/NRL and D-in-CD2 stopping is replaced by a documented
+  SRIM/PSTAR/equivalent table;
+- TiD2 and direct `D(d,p)T` converter tritium are future extensions, not
+  current paper claims.
+
 Early trend inside the low-cost matrix:
 
 - fixed `thickness=3um`: `a0=20` gives about `2.25x` the `a0=10` D-D source

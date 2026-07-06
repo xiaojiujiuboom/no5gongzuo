@@ -23,7 +23,7 @@
   `a0=10,t=4um` 约为 `3.04x`。最后时间窗产额占比均 `<0.2%`，
   表明 6 ps 在产额加权意义上已经收敛。
 - 7 个 2D 点的 Stage B/C 全流程已完成：`deuteron_beam.h5 -> neutron_source.h5 -> OpenMC Li TPR`。
-  自然锂下，`a0=20,t=3um` 的 Li 总产氚约 `3.44e11 T/shot`
+  自然锂下，诊断归一化的 `a0=20,t=3um` Li 总产氚约 `3.44e11 T/shot`
   (`3.86x` baseline `a0=10,t=3um`)，`a0=10,t=4um` 约
   `2.90e11 T/shot` (`3.27x`)。完整表格在
   [hpc/results/full_chain_20260706](hpc/results/full_chain_20260706)。
@@ -38,7 +38,7 @@
   [hpc/IMPORTANT_RUNS.md](hpc/IMPORTANT_RUNS.md)，未验证完成前不要删除旧 r001
   目录。
 
-**Stage B 更新**：D-D converter 需要分两条产氚账：`D(d,p)T` 在 converter 内直接产氚，`D(d,n)3He` 产生中子后进入 Li 靶再产氚。论文报告应分列 `T_direct_DD` 与 `T_Li_neutron`，必要时再给总和。第二靶 baseline 计划采用 TiD2；CD2 保留为当前代码路径和后续材料敏感性对照。
+**2026-07-06 论文范围收窄**：当前小论文主线改为 **CD2 converter 的每源中子 Li-TPR 保真度研究**。Stage B 当前只使用 `D(d,n)3He` 中子分支，OpenMC 只计算中子进入 Li 后的 `Li6/Li7` 分道 TPR/n。TiD2 converter 和 `D(d,p)T` 直接氚分支列为未来工作；`T/shot` 绝对数只作为诊断归一化，不能在 `GATE-sigma` 和 `GATE-stopping` 通过前写成最终定量结论。
 
 ## 核心问题
 
@@ -49,12 +49,12 @@
 ## 技术路线
 
 ```text
-[A] EPOCH 3D PIC anchor       [B] 半解析源项 Python              [C] OpenMC 输运
-激光打 CD2 产生 D 束       ->  厚 TiD2/CD2 converter D-D 源  ->  中子进锂靶 TPR
-deuteron_beam.h5              neutron_source.h5 + direct T     Li6/Li7 分道 + 空间/能量 tally
+[A] EPOCH 3D/2D PIC source    [B] 半解析源项 Python              [C] OpenMC 输运
+激光打 CD2 产生 D 束       ->  厚 CD2 converter D(d,n) 源    ->  中子进锂靶 TPR/n
+deuteron_beam.h5              neutron_source.h5                 Li6/Li7 分道 + 空间/能量 tally
 ```
 
-关键设计：Stage B 不用 Geant4，而是用 Python 半解析源项（D-D 截面 + 阻止本领 + 两体 boost）生成 D-D 中子源，并单独统计 `D(d,p)T` 直接氚。OpenMC 负责中子输运和锂靶产氚，不负责初级氘束-靶聚变。
+关键设计：Stage B 不用 Geant4，而是用 Python 半解析源项（D-D 截面 + 阻止本领 + 两体 boost）生成 CD2 converter 的 D-D 中子源。OpenMC 负责中子输运和锂靶产氚，不负责初级氘束-靶聚变。当前论文稳健量是 `TPR per source neutron`；绝对厚靶中子数和 `T/shot` 需要先完成截面与阻止本领硬核验。
 
 当前 PIC 数据使用原则：
 
@@ -70,9 +70,10 @@ deuteron_beam.h5              neutron_source.h5 + direct T     Li6/Li7 分道 + 
 - [一个月小论文执行框架_激光D-D中子源驱动锂靶产氚.md](一个月小论文执行框架_激光D-D中子源驱动锂靶产氚.md)：面向课题执行的路线、周计划、风险和论文骨架。
 - [AGENT交接规格书_激光D-D中子源_锂靶产氚流水线.md](AGENT交接规格书_激光D-D中子源_锂靶产氚流水线.md)：面向代码实现的公式、接口 schema、模块职责、验证关卡和参数建议。
 - [docs/PHYSICS_LOCK.md](docs/PHYSICS_LOCK.md)：锁定“薄靶产氘束 + 外置厚 deuteride converter + 锂靶 TPR”的物理几何。
-- [docs/STAGE2_DD_CHANNELS.md](docs/STAGE2_DD_CHANNELS.md)：锁定 Stage B 的 D-D 双分支、直接氚统计和 TiD2 baseline 计划。
+- [docs/STAGE2_DD_CHANNELS.md](docs/STAGE2_DD_CHANNELS.md)：锁定当前 CD2 converter、D(d,n) 中子分支和 per-source-neutron 论文范围；TiD2/直接氚为未来工作。
 - [docs/COMPUTE_STRATEGY.md](docs/COMPUTE_STRATEGY.md)：本地 M4 Pro 与超算的计算分工、运行顺序和数据传输原则。
 - [docs/PROJECT_POSITIONING.md](docs/PROJECT_POSITIONING.md)：项目重新定位、3D 可信度策略和论文主张边界。
+- [docs/PAPER_SCOPE_AND_GATES_20260706.md](docs/PAPER_SCOPE_AND_GATES_20260706.md)：当前小论文范围、允许/禁止主张，以及截面和阻止本领硬 GATE。
 - [docs/PIC2D_ANALYSIS_20260706.md](docs/PIC2D_ANALYSIS_20260706.md)：当前 7 点 2D
   PIC -> D-D source -> OpenMC 全链路参数趋势、候选点和限制条件。
 - [hpc/README.md](hpc/README.md)：超算运行策略、墙时保护和远端布局。
@@ -87,7 +88,7 @@ python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 python3 moduleA_pic/parametric_scan.py --n 50000
 ```
 
-说明：当前 Stage B 代码仍从 `data/stopping_D_in_CD2.csv` 读取 D-in-CD2 阻止本领，只实现 CD2 converter 的中子分支，适合软件链路验证和 CD2 对照。正式 TiD2 baseline 前必须加入 D-in-TiD2 阻止本领、TiD2 氘密度，以及 `D(d,p)T` 直接氚分支。
+说明：当前 Stage B 代码仍从 `data/stopping_D_in_CD2.csv` 读取 D-in-CD2 阻止本领，只实现 CD2 converter 的中子分支。这个实现现在就是当前小论文的材料范围，但阻止本领和 D-D 截面仍是绝对产额的硬 GATE；通过前只把绝对 `T/shot` 当诊断数。TiD2 和 `D(d,p)T` 直接氚分支保留为未来扩展。
 
 本机 OpenMC 运行记录见 [docs/OPENMC_LOCAL_RUN.md](docs/OPENMC_LOCAL_RUN.md)。机器相关路径放在本地 `.env`，不要提交。
 
@@ -121,12 +122,12 @@ config.yaml
 | kin | 两体 boost | `E_d -> 0` 得约 2.45 MeV；1 MeV 前向约 4.14 MeV、后向约 1.76 MeV |
 | B | 中子源项 | 能谱有 2.45 MeV 峰和越阈高能尾，角分布前向偏置 |
 | C | 锂靶 TPR | `6Li` 通道 A≈B，`7Li` 通道差异集中在 MT205 阈值以上（当前库为 >3.1454 MeV） |
-| norm | 归一化 | 每源中子 TPR 与每 shot 绝对产额分开报告，放大因子已除回 |
+| norm | 归一化 | 当前论文主写每源中子 TPR；每 shot 绝对产额只作诊断，待 sigma/stopping GATE 后再定量 |
 
 ## 必须核实的占位项
 
 1. `D(d,n)3He` 与 `D(d,p)T` 截面绝对值：至少对照 ENDF/B 或 NRL Formulary 两个能量点。
-2. D 在 TiD2 和 CD2 中的阻止本领：正式结果前使用 SRIM/PSTAR/可靠表格替换占位模型。
+2. D 在 CD2 中的阻止本领：正式绝对产额前使用 SRIM/PSTAR/可靠表格替换占位模型。TiD2 为未来材料扩展。
 3. OpenMC 产氚 score/MT：当前已确认 `H3-production` 对 `Li7` 使用 MT205 `(n,Xt)` 总产氚生产截面；论文中按 3.1454 MeV 阈值标图，不写成单一排他反应道。
 4. TiD2/CD2 密度、锂密度、Li6 富集度、靶几何尺寸：按实验或论文设定锁定。
 
@@ -134,5 +135,5 @@ config.yaml
 
 - 中子源侧（激光 -> D-D 中子）已有大量前人工作，本文创新点不应写成“搭建了激光中子源”。
 - 更合理的卖点是：把激光 D-D 源的谱-角畸变，定量映射到外部锂靶 TPR，并指出偏差集中于 `7Li` 阈值窗口。
-- 当前 Stage B 实现只聚焦 CD2 的 D(d,n) 中子分支；TiD2 baseline、`D(d,p)T` 直接氚、体相反应、hole-boring 等需要作为实现状态和假设边界说明。
+- 当前 Stage B 实现只聚焦 CD2 的 D(d,n) 中子分支；TiD2、`D(d,p)T` 直接氚、体相反应、hole-boring 等作为未来工作或假设边界说明。
 - 3D PIC 已完成一个 6 ps source anchor。后续参数扫描优先依靠 2D 矩阵；如要追加 3D，只做少量验证点或最终最优点复核。

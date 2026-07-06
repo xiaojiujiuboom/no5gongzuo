@@ -5,36 +5,36 @@
 ```text
 激光打薄 CD2 foil
 -> 产生前向 TNSA-like 氘束
--> 氘束进入外置厚 TiD2 baseline converter 并慢化到停
--> 厚靶 D-D 同时产生 D(d,n)3He 中子分支与 D(d,p)T 直接氚分支
--> 中子分支进入外部锂靶，计算 Li 产氚 TPR
+-> 氘束进入外置厚 CD2 converter 并慢化到停
+-> 厚靶 D-D 的 D(d,n)3He 中子分支进入外部锂靶
+-> 计算 Li6/Li7 每源中子 TPR，比较理想源与 PIC 派生源的保真度
 ```
 
-也就是说，Stage B 不是计算薄靶内部“自发中子”作为最终源，而是计算外置厚 deuteride converter 的 D-D 厚靶反应。baseline 物理解释采用 TiD2；CD2 保留为当前软件链路和后续材料敏感性对照。
+也就是说，Stage B 不是计算薄靶内部“自发中子”作为最终源，而是计算外置厚 CD2 converter 的 D-D 厚靶中子分支。当前论文主张收窄为 **CD2 converter 的每源中子 Li-TPR 保真度**。TiD2 和 `D(d,p)T` 直接氚不再作为当前论文承诺，除非后续补齐材料阻止本领、截面核验和直接氚实现。
 
 ## 为什么这样锁定
 
-- 厚靶产额可用 `integral n_D sigma(E_cm) / S(E) dE` 做清晰归一化。
+- 厚靶产额可用 `integral n_D sigma(E_cm) / S(E) dE` 做清晰归一化，但绝对归一化必须等截面与阻止本领 GATE 通过后再作为最终结论。
 - 中子能量-角度畸变来自入射氘束方向和 D-D 两体 boost，论文主问题更干净。
 - OpenMC Stage C 只接收中子源，不需要处理初级带电粒子。
-- `D(d,p)T` 直接氚必须单独报告为 converter 内产额，不能混进 Li tally。
+- `D(d,p)T` 直接氚若未来实现，必须单独报告为 converter 内产额，不能混进 Li tally；当前论文不把它计入结果。
 
 ## Stage B 产物锁定
 
 ```text
 neutron_source.h5              from D(d,n)3He, passed to OpenMC
-triton_direct_source.h5/table   from D(d,p)T, reported outside OpenMC
 ```
 
-论文主表应至少分列：
+当前论文主表优先分列：
 
 ```text
-T_direct_DD
-T_Li_neutron
-T_total = T_direct_DD + T_Li_neutron
+TPR_Li6_per_source_neutron
+TPR_Li7_per_source_neutron
+TPR_Li_total_per_source_neutron
 ```
 
-其中 `T_total` 只有在两个分支都按同一个每 shot 归一化后才报告。
+`T/shot` 只作为诊断归一化展示，不能作为最终定量结论，直到 `GATE-sigma`
+和 `GATE-stopping` 通过。
 
 ## 当前第一轮 PIC 扫描
 

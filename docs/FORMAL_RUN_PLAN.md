@@ -30,7 +30,7 @@ choose the final collection plane and t_end from the benchmark
 Baseline geometry:
 
 ```text
-laser -> thin CD2 foil -> vacuum gap -> external thick TiD2 converter -> Li tally
+laser -> thin CD2 foil -> vacuum gap -> external thick CD2 converter -> Li tally
 ```
 
 The PIC source is the deuteron phase space crossing the converter entrance
@@ -41,9 +41,9 @@ sampled particle list after writing. The integrated source is made by
 concatenating windows, or equivalently by running one deliberately long probe
 window after the end time is known.
 
-The baseline converter material is TiD2. CD2 remains a comparison and current
-software bring-up material until D-in-TiD2 stopping and the direct triton branch
-are implemented.
+For the current fast paper, the baseline converter material is CD2 because it
+matches the implemented Stage B and completed 2D full-chain results. TiD2 is a
+future material extension, not a current paper claim.
 
 Nominal gap:
 
@@ -149,17 +149,17 @@ Parametric source scans bracket source distortion and carry the robustness argum
 
 ## 5. Stage B and Stage C
 
-Stage B converts the deuteron probe source into two D-D products:
+Stage B currently converts the deuteron probe source into the D-D neutron
+product:
 
 ```text
 D(d,n)3He -> neutron_source.h5 for Stage C
-D(d,p)T   -> direct converter tritium yield/source
 ```
 
-Before final use, validate both branch cross sections and the thick-target
-`Y(E0)` scale against literature/SRIM/PSTAR-style expectations. The final
-baseline should use D stopping in TiD2 and the TiD2 deuteron density. CD2 is a
-material-sensitivity case and the currently implemented software path.
+Before final absolute-yield use, validate D(d,n) and D(d,p) cross sections and
+the thick-target `Y(E0)` scale against ENDF/NRL and documented SRIM/PSTAR-style
+stopping expectations. For the current paper, the robust publication quantity is
+Li TPR per source neutron, not absolute T/shot.
 
 Stage C transports the neutron source into Li with OpenMC. Development can run
 locally on the M4 Pro; final histories should be driven by tally uncertainty:
@@ -169,5 +169,6 @@ integrated TPR relative error < 5%
 spatial/energy-bin relative error < 10%, or merge bins / increase histories
 ```
 
-Report `T_direct_DD` and `T_Li_neutron` separately before giving any optional
-sum.
+Do not report `T_direct_DD` in the current paper because the direct triton branch
+is not implemented. If it is added later, report it separately from
+`T_Li_neutron` before giving any optional sum.

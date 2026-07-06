@@ -18,13 +18,19 @@ target_cd2:
   stopping_table: data/stopping_D_in_CD2.csv
 
 target_converter:
-  baseline_material: TiD2
-  baseline_status: planned_requires_stopping_and_direct_triton_branch
-  sensitivity_materials: [CD2]
+  baseline_material: CD2
+  baseline_status: current_paper_scope_cd2_per_source_neutron_fidelity
+  future_materials: [TiD2]
   report_channels:
-    direct_triton_DdpT: true
+    direct_triton_DdpT: future_work_not_in_current_scope
     neutron_to_lithium_Ddn: true
-  notes: "Current Stage B code still implements CD2 neutron branch only."
+  quantitative_scope:
+    primary_observable: per_source_neutron_Li_TPR
+    absolute_per_shot_yields: provisional_until_sigma_and_stopping_gates_pass
+  blockers_before_absolute_yield_claims:
+    sigma_ddn_ddp_against_endf_or_nrl: required
+    stopping_D_in_CD2_from_SRIM_PSTAR_or_equivalent: required
+  notes: "Current paper scope is CD2 converter D(d,n) neutron branch into Li. TiD2 and direct D(d,p)T are future work unless implemented and validated."
 
 source_bins:
   n_mu: 15
@@ -125,4 +131,6 @@ hpc_pic:
 physics:
   geometry_lock: laser_thin_foil_deuteron_source_plus_external_thick_deuteride_converter
   compare_case_A_B_per_source_neutron: true
-  report_direct_DD_tritium_separately: true
+  current_paper_scope: cd2_converter_per_source_neutron_li_tpr_fidelity
+  report_absolute_per_shot_yields_as: provisional_diagnostic_only
+  report_direct_DD_tritium_separately: future_work_not_current_scope

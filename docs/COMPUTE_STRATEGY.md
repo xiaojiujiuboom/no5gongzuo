@@ -13,7 +13,7 @@
    -> 校准解析、MPI 拓扑、内存、probe/dist_fn 输出
 2. 3D 单点四探针 benchmark，优先 a0=10
    -> rear+5/10/15/20 um D probes, t_end=1500 fs first benchmark
-3. Stage B: 3D D source -> thick TiD2/CD2 D-D neutron_source.h5 + direct T
+3. Stage B: 3D/2D D source -> thick CD2 D(d,n) neutron_source.h5
 4. Stage C: OpenMC Case A/B, Li6/Li7 分道, per-source-neutron
 5. 2D accepted L_pre=0 源只作为开发/对照/参数化区间锚点
 ```
@@ -46,7 +46,7 @@ python3 moduleA_pic/parametric_beam.py --n 200000 -o deuteron_beam.h5
 python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 ```
 
-当前 `moduleB_source/thick_target.py` 使用 CD2 占位阻止本领并只输出中子分支，只能用于软件链路验证。正式 baseline 前必须加入 TiD2 阻止本领、TiD2 氘密度和 `D(d,p)T` 直接氚分支。
+当前 `moduleB_source/thick_target.py` 使用 CD2 占位阻止本领并只输出中子分支。当前小论文范围已经收窄为 CD2 converter 的每源中子 Li-TPR 保真度，因此它可以支撑 A/B 谱角畸变比较；但绝对 `T/shot` 需要先通过 D-D 截面和 D-in-CD2 阻止本领 GATE。TiD2 和 `D(d,p)T` 直接氚分支列为未来扩展。
 
 ## 第二阶段：本地 OpenMC
 
@@ -125,8 +125,8 @@ metrics.json
 python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 ```
 
-然后重跑 OpenMC Case B，与 Case A 对比。后续 Stage B 完整版还要同时导出/统计
-`T_direct_DD`，它不进入 OpenMC，只在最终产氚账中与 `T_Li_neutron` 分列。
+然后重跑 OpenMC Case B，与 Case A 对比。当前论文只报告 Li 靶每源中子 TPR/n；
+后续若扩展到总产氚账，再单独实现并报告 `D(d,p)T` converter 直接氚。
 
 ## 论文主线
 

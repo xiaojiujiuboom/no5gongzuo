@@ -2005,3 +2005,20 @@ Interpretation:
   - `a0=10,t=4um` remains the total-yield optimization candidate at fixed
     `a0=10`.
   - The 2D matrix is trend evidence, not final absolute 3D yield evidence.
+
+Paper-scope reset after upstream review:
+
+- Date: 2026-07-06.
+- Decision:
+  - Current fast-paper scope is narrowed to CD2 converter `D(d,n)3He` neutron
+    branch -> OpenMC Li6/Li7 TPR per source neutron.
+  - TiD2 converter and direct `D(d,p)T` converter tritium are future work.
+  - Absolute `T/shot` values remain diagnostic only until `GATE-sigma`
+    (D(d,n) and D(d,p) vs ENDF/NRL) and `GATE-stopping` (documented
+    D-in-CD2 SRIM/PSTAR/equivalent table) pass.
+- Repository updates:
+  - added `docs/PAPER_SCOPE_AND_GATES_20260706.md`;
+  - updated `config.yaml`, README, physics lock, Stage 2 policy, formal run
+    plan, compute strategy, 2D analysis report, and tests;
+  - renamed the existing sigma/stopping checks in `tests/test_gates.py` as
+    provisional sanity checks rather than final physics-data gates.

@@ -62,7 +62,7 @@ def gate_schema_and_pipeline(tmp: Path) -> None:
         raise AssertionError("fast Stage B yield table disagrees with the reference builder")
 
 
-def gate_cross_section() -> None:
+def sanity_cross_section_shape() -> None:
     energies = np.array([10.0, 50.0, 100.0, 500.0])
     sigma = sigma_ddn_bosch_hale_mb(energies)
     if not np.all(np.isfinite(sigma)) or not np.all(sigma > 0):
@@ -74,7 +74,7 @@ def gate_cross_section() -> None:
         raise AssertionError("cross section should be zero outside Bosch-Hale fit range")
 
 
-def gate_stopping_and_yield() -> None:
+def sanity_stopping_and_yield_shape() -> None:
     E = np.array([0.1, 1.0, 10.0])
     S = stopping_power_MeV_per_cm(E)
     if not np.all(np.isfinite(S)) or not np.all(S > 0):
@@ -107,6 +107,15 @@ def gate_config() -> None:
     full_chain = scan.get("full_chain", {})
     if full_chain.get("result_dir") != "hpc/results/full_chain_20260706":
         raise AssertionError("formal 2D full-chain result directory is not recorded")
+    converter = cfg.get("target_converter", {})
+    if converter.get("baseline_material") != "CD2":
+        raise AssertionError("current paper baseline converter must remain CD2 unless Stage B is reimplemented")
+    if converter.get("baseline_status") != "current_paper_scope_cd2_per_source_neutron_fidelity":
+        raise AssertionError("converter scope should be the narrowed CD2 per-source-neutron paper scope")
+    if converter.get("report_channels", {}).get("direct_triton_DdpT") != "future_work_not_in_current_scope":
+        raise AssertionError("direct D(d,p)T must not be treated as current-scope output")
+    if cfg.get("physics", {}).get("current_paper_scope") != "cd2_converter_per_source_neutron_li_tpr_fidelity":
+        raise AssertionError("physics.current_paper_scope should lock the narrowed paper claim")
 
 
 def gate_kinematics() -> None:
@@ -121,12 +130,12 @@ def gate_kinematics() -> None:
 
 def main() -> None:
     gate_config()
-    gate_cross_section()
-    gate_stopping_and_yield()
+    sanity_cross_section_shape()
+    sanity_stopping_and_yield_shape()
     gate_kinematics()
     with tempfile.TemporaryDirectory() as td:
         gate_schema_and_pipeline(Path(td))
-    print("PASS: config, schema, stopping table, sigma, kinematics, and Stage A->B gates")
+    print("PASS: config, schema, provisional sigma/stopping sanity, kinematics, and Stage A->B interface checks")
 
 
 if __name__ == "__main__":

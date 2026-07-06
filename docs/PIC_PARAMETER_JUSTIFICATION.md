@@ -9,8 +9,8 @@ particle statistics, and normalization.
 
 - Interaction type: thin CD2 foil producing an accelerated deuteron beam.
 - Downstream source definition: deuteron phase space crossing the entrance
-  plane of an external deuteride converter. The intended Stage B baseline is
-  TiD2; CD2 remains the current software bring-up and material-comparison path.
+  plane of an external CD2 converter for the current paper. TiD2 is a future
+  material extension, not the current baseline claim.
 - The source is not defined by all ions remaining inside the PIC box at one
   late snapshot, because the fastest particles can leave the box before the
   final dump.
@@ -136,12 +136,12 @@ first paper-quality pass.
 
 ## Handoff to Stage B and C
 
-Stage B uses the probe-crossing deuteron phase space, SRIM/PSTAR-style stopping,
-and D-D cross sections to build two products: the `D(d,n)3He` neutron source for
-OpenMC and the `D(d,p)T` direct triton yield in the converter. The intended
-baseline converter is TiD2; CD2 remains the current software path and a material
-sensitivity case. Thick-target yields `Y(E0)` for both D-D branches must be
-checked against literature-scale values before using them in the final result.
+Stage B uses the probe-crossing deuteron phase space, documented stopping, and
+D-D cross sections to build the `D(d,n)3He` neutron source for OpenMC. Current
+paper scope is CD2 converter, per-source-neutron Li TPR. Thick-target yields
+`Y(E0)` must be checked against ENDF/NRL cross sections and SRIM/PSTAR-style
+stopping before any absolute `T/shot` result is treated as final. The
+`D(d,p)T` direct triton branch and TiD2 material model are future extensions.
 
 Stage C uses only the neutron source in OpenMC with Li tallies. Integrated TPR
 needs relative error below 5%; spatial or energy-resolved bins should be below
