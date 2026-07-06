@@ -22,7 +22,7 @@ Accepted 3D anchor:
 Current low-cost 2D matrix:
 
 - current effective jobs: `1937305`, `1937306`, `1937307`, `1937308`,
-  `1937309`, `1937310`, and `1937311`
+  `1937309`, `1937310`, and `1937311`, all completed normally
 - `t_end = 6 ps`
 - box `x=-6..26 um`, `y=-10..10 um`
 - grid `2000 x 500`, `dx=16 nm`, `dy=40 nm`
@@ -40,16 +40,12 @@ Completed `a0=10,t=1um` and `a0=10,t=2um` 10 nm runs are kept as resolution
 checks. The other slow 10 nm runs were cancelled after restart dumps were
 verified, so their partial data remain available but are not the main scan.
 
-Estimated cost for the new 7-point matrix, using the previous macro-particle
-counts and wall-clock behavior as a guide:
+Measured cost for the new 7-point matrix:
 
-- first measured point `a0=10,t=1um` completed in `00:20:55`, about `2.23 CNY`;
-- after the first 20 min, remaining points reported ETA values of roughly
-  `0.9-1.2 h`;
-- current best estimate: likely below `100 CNY` total if the ETA remains stable;
-- conservative planning range: roughly `100-250 CNY` total;
-- hard Slurm cap if every job ran to the full `18 h`: `7 x 64 x 18 x 0.1 =
-  806.4 CNY`.
+- all seven jobs reached `6.00004 ps` with final restartable `Data/0023.sdf`;
+- total charged compute estimate: `920.91 core-hours`;
+- at `0.1 CNY/core-hour`, total cost is about `92.09 CNY`;
+- the submitted `18 h` walltime was only a safety cap, not the billing duration.
 
 See `hpc/IMPORTANT_RUNS.md` for the authoritative job/resource index.
 

@@ -91,13 +91,21 @@ Current 7 active/effective 2D scan points after cost-control reset:
 
 | job | run | a0 | thickness um | state at latest check | node |
 |---:|---|---:|---:|---|---|
-| `1937305` | `pic2d_stage1_scan6ps_16x40nm_a0_05_t_3um_20260706_r001` | 5 | 3 | RUNNING | `wqd10nbc06c05` |
+| `1937305` | `pic2d_stage1_scan6ps_16x40nm_a0_05_t_3um_20260706_r001` | 5 | 3 | COMPLETED, elapsed `02:44:09` | `wqd10nbc06c05` |
 | `1937306` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_1um_20260706_r001` | 10 | 1 | COMPLETED, elapsed `00:20:55` | `wqd10nbc06c12` |
-| `1937307` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_2um_20260706_r001` | 10 | 2 | RUNNING | `wqd10nbc06c13` |
-| `1937308` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_3um_20260706_r001` | 10 | 3 | RUNNING | `wqd10nbc07c11` |
-| `1937309` | `pic2d_stage1_scan6ps_16x40nm_a0_15_t_3um_20260706_r001` | 15 | 3 | RUNNING | `wqd10nbc07c14` |
-| `1937310` | `pic2d_stage1_scan6ps_16x40nm_a0_20_t_3um_20260706_r001` | 20 | 3 | RUNNING | `wqd10nbc07c15` |
-| `1937311` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_4um_20260706_r001` | 10 | 4 | RUNNING | `wqd10nbc07c15` |
+| `1937307` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_2um_20260706_r001` | 10 | 2 | COMPLETED, elapsed `02:23:43` | `wqd10nbc06c13` |
+| `1937308` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_3um_20260706_r001` | 10 | 3 | COMPLETED, elapsed `02:21:14` | `wqd10nbc07c11` |
+| `1937309` | `pic2d_stage1_scan6ps_16x40nm_a0_15_t_3um_20260706_r001` | 15 | 3 | COMPLETED, elapsed `02:10:46` | `wqd10nbc07c14` |
+| `1937310` | `pic2d_stage1_scan6ps_16x40nm_a0_20_t_3um_20260706_r001` | 20 | 3 | COMPLETED, elapsed `02:03:53` | `wqd10nbc07c15` |
+| `1937311` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_4um_20260706_r001` | 10 | 4 | COMPLETED, elapsed `02:18:41` | `wqd10nbc07c15` |
+
+Final SDF self-check:
+
+- all seven final files are `Data/0023.sdf`;
+- all seven final SDF headers report `time = 6.000040 ps`;
+- all seven final SDF headers report `restart_flag = True`;
+- total measured compute for this 7-point matrix is `920.91 core-hours`,
+  about `92.09 CNY` at `0.1 CNY/core-hour`.
 
 The previous `dx=dy=10 nm` large-box matrix was stopped because the slow points
 were more expensive than the 3D anchor. Two completed 10 nm points are kept as

@@ -1870,3 +1870,19 @@ Cost-control reset of the 2D matrix:
 - Cost estimate at `0.1 CNY/core-hour`: early runtime suggests likely below
   `100 CNY` total if ETA remains stable; conservative planning range
   `100-250 CNY`; hard full-wall cap `7 x 64 x 18 x 0.1 = 806.4 CNY`.
+
+Low-cost 2D matrix completion:
+
+- All seven `dx=16 nm, dy=40 nm` 2D scan jobs completed normally with exit code
+  `0`.
+- Final SDF self-check: all final files are `Data/0023.sdf`, all report
+  `time = 6.000040 ps`, and all have `restart_flag = True`.
+- Runtime and cost:
+  - `1937305` (`a0=5,t=3um`): `02:44:09`, `175.09 core-hours`, `17.51 CNY`.
+  - `1937306` (`a0=10,t=1um`): `00:20:55`, `22.31 core-hours`, `2.23 CNY`.
+  - `1937307` (`a0=10,t=2um`): `02:23:43`, `153.30 core-hours`, `15.33 CNY`.
+  - `1937308` (`a0=10,t=3um`): `02:21:14`, `150.65 core-hours`, `15.06 CNY`.
+  - `1937309` (`a0=15,t=3um`): `02:10:46`, `139.48 core-hours`, `13.95 CNY`.
+  - `1937310` (`a0=20,t=3um`): `02:03:53`, `132.14 core-hours`, `13.21 CNY`.
+  - `1937311` (`a0=10,t=4um`): `02:18:41`, `147.93 core-hours`, `14.79 CNY`.
+- Total measured compute: `920.91 core-hours`, about `92.09 CNY`.
