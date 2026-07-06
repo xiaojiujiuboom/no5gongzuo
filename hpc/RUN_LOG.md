@@ -1831,3 +1831,42 @@ Additional quota cleanup and a0=5 rerun:
 - Project usage dropped to about `26G`.
 - `1855864` was cancelled and replacement full rerun `1874262` was submitted
   with Slurm walltime `18:00:00` and `stop_at_walltime = 61200.0`.
+
+Cost-control reset of the 2D matrix:
+
+- The `dx=dy=10 nm`, large-box formal 2D matrix proved too expensive for a
+  seven-point scan. The slow jobs were stopped after restart dumps were
+  verified instead of letting them continue toward walltime.
+- Completed 10 nm resolution-check points kept:
+  - `1873138`: `a0=10,t=1um`, completed to `6.000 ps`, elapsed `02:43:41`.
+  - `1873136`: `a0=10,t=2um`, completed to `6.000 ps`, elapsed `06:11:52`.
+- Cancelled 10 nm slow points and their latest verified restart times:
+  - `1874262`: `a0=5,t=3um`, `2.352 ps`.
+  - `1869667`: `a0=10,t=3um`, `2.583 ps`.
+  - `1873137`: `a0=15,t=3um`, `2.372 ps`.
+  - `1869669`: `a0=20,t=3um`, `2.353 ps`.
+  - `1869670`: `a0=10,t=4um`, `2.409 ps`.
+- New 3D-matched low-cost 2D matrix submitted on 2026-07-06:
+  - box `x=-6..26 um`, `y=-10..10 um`;
+  - grid `2000 x 500`, `dx=16 nm`, `dy=40 nm`;
+  - PPC `electron/deuteron/carbon = 16/32/4`;
+  - probes `rear+2/5/10/15/20`;
+  - `t_end=6 ps`, Slurm `64` ranks, walltime `18:00:00`,
+    `stop_at_walltime = 61200.0`.
+- New jobs:
+  - `1937305`: `a0=5,t=3um`.
+  - `1937306`: `a0=10,t=1um`.
+  - `1937307`: `a0=10,t=2um`.
+  - `1937308`: `a0=10,t=3um`.
+  - `1937309`: `a0=15,t=3um`.
+  - `1937310`: `a0=20,t=3um`.
+  - `1937311`: `a0=10,t=4um`.
+- All seven jobs started running shortly after submission. Runtime cost rate is
+  `7 x 64 x 0.1 = 44.8 CNY/hour`.
+- First completion: `1937306` (`a0=10,t=1um`) finished normally in `00:20:55`,
+  costing about `64 x 0.3486 x 0.1 = 2.23 CNY`.
+- At the same check, the other six jobs were still running with EPOCH ETA values
+  of roughly `0.9-1.2 h`, far inside the `18 h` walltime.
+- Cost estimate at `0.1 CNY/core-hour`: early runtime suggests likely below
+  `100 CNY` total if ETA remains stable; conservative planning range
+  `100-250 CNY`; hard full-wall cap `7 x 64 x 18 x 0.1 = 806.4 CNY`.

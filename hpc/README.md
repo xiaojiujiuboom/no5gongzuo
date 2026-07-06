@@ -5,7 +5,7 @@
 The active Stage 1 strategy is now:
 
 1. Use the completed 3D anchor as the realism/dimensionality reference.
-2. Use the formal 2D matrix as the lower-cost parameter scan.
+2. Use a 3D-matched, lower-cost 2D matrix as the parameter scan.
 3. Feed the accepted `rear+10`, D-D-yield-weighted deuteron source into
    Stage B and Stage C after the 2D scan is postprocessed.
 
@@ -19,23 +19,37 @@ Accepted 3D anchor:
   `5.75-6.00 ps / 0-6 ps = 5.57%` for `E_D >= 0.4 MeV`
 - key job: `1837996`
 
-Current formal 2D matrix:
+Current low-cost 2D matrix:
 
-- current effective jobs: `1874262`, `1873138`, `1873136`, `1869667`,
-  `1873137`, `1869669`, and `1869670`
-- original high-risk jobs `1855865`, `1855866`, `1855867`, and `1855870`
-  were cancelled only after `Data/0004.sdf` restart dumps were verified
-- quota-failed/stuck jobs: `1855864`, `1855868`, `1855869`, and `1869668`
+- current effective jobs: `1937305`, `1937306`, `1937307`, `1937308`,
+  `1937309`, `1937310`, and `1937311`
 - `t_end = 6 ps`
-- `1` node, `256` ranks
-- original low-risk runs use `10 h` walltime; restart continuations use `18 h`
-  walltime and `stop_at_walltime = 61200.0`
+- box `x=-6..26 um`, `y=-10..10 um`
+- grid `2000 x 500`, `dx=16 nm`, `dy=40 nm`
+- PPC `electron/deuteron/carbon = 16/32/4`, matching the 3D anchor PPC
+- `1` node, `64` ranks
+- Slurm walltime `18 h`, EPOCH `stop_at_walltime = 61200.0`
 - `force_final_to_be_restartable = T`
-- original low-risk runs keep `stop_at_walltime = 34200.0`
-- source planes: `rear+5/10/15/20`, primary `rear+10`
+- source planes: `rear+2/5/10/15/20`, primary `rear+10`
 - matrix:
   - fixed `thickness=3 um`, scan `a0={5,10,15,20}`
   - fixed `a0=10`, scan `thickness={1,2,3,4} um`
+
+The earlier `dx=dy=10 nm` large-box 2D matrix was stopped for cost control.
+Completed `a0=10,t=1um` and `a0=10,t=2um` 10 nm runs are kept as resolution
+checks. The other slow 10 nm runs were cancelled after restart dumps were
+verified, so their partial data remain available but are not the main scan.
+
+Estimated cost for the new 7-point matrix, using the previous macro-particle
+counts and wall-clock behavior as a guide:
+
+- first measured point `a0=10,t=1um` completed in `00:20:55`, about `2.23 CNY`;
+- after the first 20 min, remaining points reported ETA values of roughly
+  `0.9-1.2 h`;
+- current best estimate: likely below `100 CNY` total if the ETA remains stable;
+- conservative planning range: roughly `100-250 CNY` total;
+- hard Slurm cap if every job ran to the full `18 h`: `7 x 64 x 18 x 0.1 =
+  806.4 CNY`.
 
 See `hpc/IMPORTANT_RUNS.md` for the authoritative job/resource index.
 

@@ -62,7 +62,7 @@ Primary 3D result files:
 - `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_spectrum_summary.csv`
 - `hpc/results/pic3d_stage1_rear10_5ps_vs_6ps_normalized_spectrum.png`
 
-## Current Formal 2D Matrix
+## Current 2D Matrix
 
 Purpose:
 
@@ -71,33 +71,52 @@ Purpose:
 - Treat 2D mainly as trend/optimization evidence; do not claim raw 2D absolute
   yield as the final physical yield without 3D anchoring.
 
-Common 2D settings:
+Current low-cost 2D settings:
 
-- box `x=-6..36 um`, `y=-15..15 um`
-- grid `4200 x 3000`, `dx=dy=10 nm`
-- PPC `electron/deuteron/carbon = 16/48/8`
-- probes `rear+5/10/15/20`
+- box `x=-6..26 um`, `y=-10..10 um`, matching the accepted 3D anchor footprint
+- grid `2000 x 500`, `dx=16 nm`, `dy=40 nm`
+- PPC `electron/deuteron/carbon = 16/32/4`, matching the accepted 3D anchor PPC
+- probes `rear+2/5/10/15/20`
 - primary source plane `rear+10`
 - `t_end = 6 ps`
 - `dt_snapshot = 250 fs`
-- Slurm `amd_m9_768`, `1` node, `256` ranks, walltime `10 h`
+- Slurm `amd_m9_768`, `1` node, `64` ranks, walltime `18 h`
 - final output is restartable: `force_final_to_be_restartable = T`
-- `stop_at_walltime = 34200 s`
-- Running job walltime extension was attempted and denied by Slurm
-  permissions. For jobs that may exceed the `10 h` limit, use EPOCH restart
-  dumps and continuation rather than rerunning from zero.
+- `stop_at_walltime = 61200 s`
+- the 18 h walltime is an upper bound; normal completion should stop billing
+  before that. Hard cap for all seven jobs at full walltime is about `806 CNY`
+  at `0.1 CNY/core-hour`; expected cost is lower.
 
-Current 7 active/effective 2D scan points after quota recovery:
+Current 7 active/effective 2D scan points after cost-control reset:
 
 | job | run | a0 | thickness um | state at latest check | node |
 |---:|---|---:|---:|---|---|
-| `1874262` | `pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r002` | 5 | 3 | RUNNING full rerun after quota cleanup | `wqd10nbc13c13` |
-| `1873138` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r002` | 10 | 1 | RUNNING full rerun after quota cleanup | `wqd10nbd02c17` |
-| `1873136` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r002` | 10 | 2 | RUNNING full rerun after quota cleanup | `wqd10nbc13c12` |
-| `1869667` | `pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002` | 10 | 3 | RUNNING restart continuation | `wqd10nbc11c12` |
-| `1873137` | `pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r003` | 15 | 3 | RUNNING restart rerun after quota cleanup | `wqd10nbc13c14` |
-| `1869669` | `pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002` | 20 | 3 | RUNNING restart continuation | `wqd10nbd05c15` |
-| `1869670` | `pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002` | 10 | 4 | RUNNING restart continuation | `wqd10nbd06c13` |
+| `1937305` | `pic2d_stage1_scan6ps_16x40nm_a0_05_t_3um_20260706_r001` | 5 | 3 | RUNNING | `wqd10nbc06c05` |
+| `1937306` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_1um_20260706_r001` | 10 | 1 | COMPLETED, elapsed `00:20:55` | `wqd10nbc06c12` |
+| `1937307` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_2um_20260706_r001` | 10 | 2 | RUNNING | `wqd10nbc06c13` |
+| `1937308` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_3um_20260706_r001` | 10 | 3 | RUNNING | `wqd10nbc07c11` |
+| `1937309` | `pic2d_stage1_scan6ps_16x40nm_a0_15_t_3um_20260706_r001` | 15 | 3 | RUNNING | `wqd10nbc07c14` |
+| `1937310` | `pic2d_stage1_scan6ps_16x40nm_a0_20_t_3um_20260706_r001` | 20 | 3 | RUNNING | `wqd10nbc07c15` |
+| `1937311` | `pic2d_stage1_scan6ps_16x40nm_a0_10_t_4um_20260706_r001` | 10 | 4 | RUNNING | `wqd10nbc07c15` |
+
+The previous `dx=dy=10 nm` large-box matrix was stopped because the slow points
+were more expensive than the 3D anchor. Two completed 10 nm points are kept as
+resolution checks:
+
+| job | run | a0 | thickness um | status |
+|---:|---|---:|---:|---|
+| `1873138` | `pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r002` | 10 | 1 | completed to `6 ps` |
+| `1873136` | `pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r002` | 10 | 2 | completed to `6 ps` |
+
+The other slow 10 nm runs were cancelled after restart dumps were verified:
+
+| job | point | restartable physical time |
+|---:|---|---:|
+| `1874262` | `a0=5,t=3um` | `2.352 ps` |
+| `1869667` | `a0=10,t=3um` | `2.583 ps` |
+| `1873137` | `a0=15,t=3um` | `2.372 ps` |
+| `1869669` | `a0=20,t=3um` | `2.353 ps` |
+| `1869670` | `a0=10,t=4um` | `2.409 ps` |
 
 Pre-restart walltime-risk status at about elapsed `01:47:54`:
 
@@ -186,24 +205,31 @@ and `submit.slurm`; this is the accepted 6 ps 3D reference.
 Critical active 2D runs:
 
 ```text
-runs/pic2d_stage1_formal6ps_10nm_a0_05_t_3um_20260706_r001
-runs/pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r001
-runs/pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r001
-runs/pic2d_stage1_formal6ps_10nm_a0_10_t_3um_restart0004_20260706_r002
-runs/pic2d_stage1_formal6ps_10nm_a0_15_t_3um_restart0004_20260706_r002
-runs/pic2d_stage1_formal6ps_10nm_a0_20_t_3um_restart0004_20260706_r002
-runs/pic2d_stage1_formal6ps_10nm_a0_10_t_4um_restart0004_20260706_r002
+runs/pic2d_stage1_scan6ps_16x40nm_a0_05_t_3um_20260706_r001
+runs/pic2d_stage1_scan6ps_16x40nm_a0_10_t_1um_20260706_r001
+runs/pic2d_stage1_scan6ps_16x40nm_a0_10_t_2um_20260706_r001
+runs/pic2d_stage1_scan6ps_16x40nm_a0_10_t_3um_20260706_r001
+runs/pic2d_stage1_scan6ps_16x40nm_a0_15_t_3um_20260706_r001
+runs/pic2d_stage1_scan6ps_16x40nm_a0_20_t_3um_20260706_r001
+runs/pic2d_stage1_scan6ps_16x40nm_a0_10_t_4um_20260706_r001
 ```
 
-Keep the four original high-risk r001 directories too, at least until the r002
-continuations complete and their outputs are validated, because their
-`Data/0004.sdf` files are hard-linked into the continuation directories.
+Keep the completed 10 nm resolution-check runs:
+
+```text
+runs/pic2d_stage1_formal6ps_10nm_a0_10_t_1um_20260706_r002
+runs/pic2d_stage1_formal6ps_10nm_a0_10_t_2um_20260706_r002
+```
+
+The other paused 10 nm run directories may still contain useful partial
+restart/probe data. Do not delete them casually; if space pressure returns,
+delete only after confirming no current analysis references them.
 
 Disk snapshot on 2026-07-06 CST:
 
 ```text
-/publicfs10 filesystem: 5.8P total, 1.8P used, 4.1P available, 30% used
-project directory: /publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr = 94G
+/publicfs10 filesystem: 5.8P total, 1.8P used, 4.1P available, 31% used
+project directory: /publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr = 38G
 ```
 
 The quota commands available to the user account did not report a smaller
