@@ -135,7 +135,7 @@ def main() -> None:
     gate_kinematics()
     with tempfile.TemporaryDirectory() as td:
         gate_schema_and_pipeline(Path(td))
-    print("PASS: config, schema, provisional sigma/stopping sanity, kinematics, and Stage A->B interface checks")
+    print("PASS: config, schema, Stage B physics-data sanity, kinematics, and Stage A->B interface checks")
 
 
 if __name__ == "__main__":

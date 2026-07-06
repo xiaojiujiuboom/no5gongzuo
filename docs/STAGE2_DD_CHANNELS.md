@@ -23,9 +23,9 @@ TPR_Li_total_per_source_neutron
 ```
 
 The robust claim is source-fidelity / spectral-angular distortion, not absolute
-tritium per shot. Any `T/shot` numbers currently in result tables are diagnostic
-normalizations and must be marked provisional until the cross-section and
-stopping-power gates below pass.
+tritium per shot. Existing `T/shot` numbers from the old full-chain tables are
+diagnostic normalizations and must be regenerated with the new stopping table
+before they are treated as final.
 
 ## Adopted Channels
 
@@ -77,12 +77,13 @@ claims:
 
 ```text
 GATE-sigma:
-  Check D(d,n)He3 and D(d,p)T absolute cross sections against ENDF/NRL
-  at least two energies over the used E_cm range.
+  Current D(d,n)He3 branch passed the Bosch-Hale point check in
+  hpc/results/physics_gates_20260706/ddn_cross_section_check.csv.
+  D(d,p)T remains future work.
 
 GATE-stopping:
-  Replace the current D-in-CD2 stopping placeholder with a documented
-  SRIM/PSTAR/equivalent table.
+  The old D-in-CD2 placeholder has been replaced by a documented NIST PSTAR
+  same-velocity table. Strict SRIM D-in-CD2 closure is still pending.
 ```
 
 If TiD2 is revived later, Stage B also needs:

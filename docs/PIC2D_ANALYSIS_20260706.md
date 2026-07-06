@@ -125,8 +125,10 @@ Stage B/C 设置：
   同条件收敛测试。
 - Stage B 当前仍是 CD2 converter 的中子分支。TiD2 和 `D(d,p)T`
   直接氚分支已经从当前论文承诺移到未来工作。
-- 当前 D-D 截面和 D-in-CD2 阻止本领仍需通过硬 GATE；在此之前，每 shot
-  绝对值只能作为诊断数，稳健结论应写成 per-source-neutron TPR/n。
+- `D(d,n)3He` 截面已通过 Bosch-Hale 逐点核对；D-in-CD2 阻止本领已从旧
+  占位表替换为 NIST PSTAR 同速实体表。旧 full-chain 每 shot 绝对值仍需
+  用新表重算；严格 SRIM 表仍未闭合。因此稳健结论仍优先写成
+  per-source-neutron TPR/n。
 - 当前 3D 粒子源因缺少 `0020` 窗口，不能直接形成严格完整的 `0-6 ps`
   3D `deuteron_beam.h5`。后续应补一个干净 3D 验证点，而不是用缺窗归一化
   做最终论文结果。
@@ -137,8 +139,8 @@ Stage B/C 设置：
 
 1. 用本报告中的 2D 排名决定 3D 补点。
 2. 先把论文图框架搭起来：2D dashboard、自然锂分道表、富集锂对照表。
-3. 补 `GATE-sigma` 和 `GATE-stopping`；在它们通过前，论文文字避免把
-   绝对 `T/shot` 当最终定量结论。
+3. 用新 NIST PSTAR 阻止本领重跑 Stage B/C 的最终表；如果要写
+   SRIM 级别结论，再补 SRIM D-in-CD2 导出表对比。
 
 中期：
 

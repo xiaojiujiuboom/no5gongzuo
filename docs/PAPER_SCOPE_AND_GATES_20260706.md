@@ -40,19 +40,25 @@ the `Li7` threshold contribution.
 - Do not claim final absolute `T/shot` or absolute neutron yield.
 - Do not claim TiD2 converter results.
 - Do not claim direct converter tritium from `D(d,p)T`.
-- Do not present the current CD2 stopping table or D-D cross sections as fully
-  validated final physics input.
+- Do not present SRIM-level stopping closure until an actual SRIM D-in-CD2
+  output table is supplied and compared.
 
 ## Hard Gates Before Absolute-Yield Claims
 
 ### GATE-sigma
 
-Before absolute neutron yield or direct-tritium yield is publishable:
+Status for current paper branch:
 
 ```text
-Check D(d,n)3He and D(d,p)T absolute cross sections
-against ENDF/NRL or an equivalent documented source
-at least two energies in the used E_cm range.
+D(d,n)3He: passed against independent Bosch-Hale implementation.
+Artifact: hpc/results/physics_gates_20260706/ddn_cross_section_check.csv
+```
+
+Before any future direct-tritium yield is publishable:
+
+```text
+Add D(d,p)T absolute cross-section checks against ENDF/NRL or an equivalent
+documented source in the used E_cm range.
 ```
 
 This gate controls the thick-target yield normalization and reaction-energy
@@ -60,11 +66,12 @@ sampling.
 
 ### GATE-stopping
 
-Before absolute yield is publishable:
+Status:
 
 ```text
-Replace the current D-in-CD2 stopping placeholder
-with a documented SRIM/PSTAR/equivalent stopping table.
+The old D-in-CD2 placeholder has been replaced by a documented NIST PSTAR
+same-velocity table:
+data/stopping_D_in_CD2.csv
 ```
 
 The stopping table directly controls the thick-target integral:
@@ -74,6 +81,14 @@ Y(E0) = integral n_D sigma(E_cm) / S(E) dE
 ```
 
 Thus it controls the neutron spectrum and absolute source normalization.
+
+Current limitation:
+
+```text
+This is not yet a SRIM D-in-CD2 export. Exact SRIM closure remains pending.
+Old-vs-new impact is quantified in:
+hpc/results/physics_gates_20260706/stopping_spectrum_comparison.csv
+```
 
 ## Material Decision
 

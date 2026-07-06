@@ -38,7 +38,13 @@
   [hpc/IMPORTANT_RUNS.md](hpc/IMPORTANT_RUNS.md)，未验证完成前不要删除旧 r001
   目录。
 
-**2026-07-06 论文范围收窄**：当前小论文主线改为 **CD2 converter 的每源中子 Li-TPR 保真度研究**。Stage B 当前只使用 `D(d,n)3He` 中子分支，OpenMC 只计算中子进入 Li 后的 `Li6/Li7` 分道 TPR/n。TiD2 converter 和 `D(d,p)T` 直接氚分支列为未来工作；`T/shot` 绝对数只作为诊断归一化，不能在 `GATE-sigma` 和 `GATE-stopping` 通过前写成最终定量结论。
+**2026-07-06 论文范围收窄**：当前小论文主线改为 **CD2 converter 的每源中子 Li-TPR 保真度研究**。Stage B 当前只使用 `D(d,n)3He` 中子分支，OpenMC 只计算中子进入 Li 后的 `Li6/Li7` 分道 TPR/n。TiD2 converter 和 `D(d,p)T` 直接氚分支列为未来工作；旧阻止本领下的 `T/shot` 绝对数只作为诊断归一化，不能直接写成最终定量结论。
+
+**2026-07-06 G1/G2 更新**：`D(d,n)3He` 截面已按 Bosch-Hale 逐点核对通过；旧
+D-in-CD2 阻止本领占位表已替换为 NIST PSTAR 同速实体表，并量化了旧/新表对
+Stage B 中子谱的影响。严格 SRIM D-in-CD2 导出表仍未闭合，不能把当前表写成
+SRIM 结果。产物见 [docs/PHYSICS_GATES_G1_G2_20260706.md](docs/PHYSICS_GATES_G1_G2_20260706.md)
+和 [hpc/results/physics_gates_20260706](hpc/results/physics_gates_20260706)。
 
 ## 核心问题
 
@@ -74,6 +80,8 @@ deuteron_beam.h5              neutron_source.h5                 Li6/Li7 分道 +
 - [docs/COMPUTE_STRATEGY.md](docs/COMPUTE_STRATEGY.md)：本地 M4 Pro 与超算的计算分工、运行顺序和数据传输原则。
 - [docs/PROJECT_POSITIONING.md](docs/PROJECT_POSITIONING.md)：项目重新定位、3D 可信度策略和论文主张边界。
 - [docs/PAPER_SCOPE_AND_GATES_20260706.md](docs/PAPER_SCOPE_AND_GATES_20260706.md)：当前小论文范围、允许/禁止主张，以及截面和阻止本领硬 GATE。
+- [docs/PHYSICS_GATES_G1_G2_20260706.md](docs/PHYSICS_GATES_G1_G2_20260706.md)：`D(d,n)3He`
+  截面核对、NIST PSTAR 同速阻止本领替换、旧/新中子谱影响和 SRIM 未闭合边界。
 - [docs/PIC2D_ANALYSIS_20260706.md](docs/PIC2D_ANALYSIS_20260706.md)：当前 7 点 2D
   PIC -> D-D source -> OpenMC 全链路参数趋势、候选点和限制条件。
 - [hpc/README.md](hpc/README.md)：超算运行策略、墙时保护和远端布局。
@@ -88,7 +96,7 @@ python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 python3 moduleA_pic/parametric_scan.py --n 50000
 ```
 
-说明：当前 Stage B 代码仍从 `data/stopping_D_in_CD2.csv` 读取 D-in-CD2 阻止本领，只实现 CD2 converter 的中子分支。这个实现现在就是当前小论文的材料范围，但阻止本领和 D-D 截面仍是绝对产额的硬 GATE；通过前只把绝对 `T/shot` 当诊断数。TiD2 和 `D(d,p)T` 直接氚分支保留为未来扩展。
+说明：当前 Stage B 代码从 `data/stopping_D_in_CD2.csv` 读取 D-in-CD2 阻止本领，只实现 CD2 converter 的中子分支。`D(d,n)3He` 截面已通过 Bosch-Hale 逐点核对；阻止本领已从旧占位模型替换为 NIST PSTAR 同速实体表，但严格 SRIM 导出表仍待补。旧 full-chain 的绝对 `T/shot` 表需要用新阻止本领重算后才能写成最终定量数。TiD2 和 `D(d,p)T` 直接氚分支保留为未来扩展。
 
 本机 OpenMC 运行记录见 [docs/OPENMC_LOCAL_RUN.md](docs/OPENMC_LOCAL_RUN.md)。机器相关路径放在本地 `.env`，不要提交。
 
@@ -118,7 +126,7 @@ config.yaml
 | GATE | 内容 | 通过标准 |
 |---|---|---|
 | env | OpenMC 环境 | 最小固定源算例跑通 |
-| sigma | Bosch-Hale 截面 | 对 ENDF/NRL 两点核对数量级和趋势 |
+| sigma | Bosch-Hale 截面 | 当前 D(d,n) 分支已通过 Bosch-Hale 逐点核对；D(d,p)T 为未来工作 |
 | kin | 两体 boost | `E_d -> 0` 得约 2.45 MeV；1 MeV 前向约 4.14 MeV、后向约 1.76 MeV |
 | B | 中子源项 | 能谱有 2.45 MeV 峰和越阈高能尾，角分布前向偏置 |
 | C | 锂靶 TPR | `6Li` 通道 A≈B，`7Li` 通道差异集中在 MT205 阈值以上（当前库为 >3.1454 MeV） |
@@ -126,8 +134,8 @@ config.yaml
 
 ## 必须核实的占位项
 
-1. `D(d,n)3He` 与 `D(d,p)T` 截面绝对值：至少对照 ENDF/B 或 NRL Formulary 两个能量点。
-2. D 在 CD2 中的阻止本领：正式绝对产额前使用 SRIM/PSTAR/可靠表格替换占位模型。TiD2 为未来材料扩展。
+1. `D(d,n)3He` 截面：当前 Stage B 中子分支已通过 Bosch-Hale 逐点核对；`D(d,p)T` 直接氚为未来工作，不属于当前小论文主线。
+2. D 在 CD2 中的阻止本领：占位模型已替换为 NIST PSTAR 同速实体表并完成旧/新谱对比；严格 SRIM D-in-CD2 表仍待补。TiD2 为未来材料扩展。
 3. OpenMC 产氚 score/MT：当前已确认 `H3-production` 对 `Li7` 使用 MT205 `(n,Xt)` 总产氚生产截面；论文中按 3.1454 MeV 阈值标图，不写成单一排他反应道。
 4. TiD2/CD2 密度、锂密度、Li6 富集度、靶几何尺寸：按实验或论文设定锁定。
 

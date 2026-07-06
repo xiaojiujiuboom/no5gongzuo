@@ -2022,3 +2022,39 @@ Paper-scope reset after upstream review:
     plan, compute strategy, 2D analysis report, and tests;
   - renamed the existing sigma/stopping checks in `tests/test_gates.py` as
     provisional sanity checks rather than final physics-data gates.
+
+Physics gates G1/G2 update:
+
+- Date: 2026-07-06.
+- Added reproducible script:
+  `scripts/run_physics_gates.py`.
+- G1:
+  - checked Stage B `D(d,n)3He` cross section against an independent
+    Bosch-Hale implementation at `E_cm = 25, 100, 250, 500, 1000, 2500,
+    4500 keV`;
+  - result file:
+    `hpc/results/physics_gates_20260706/ddn_cross_section_check.csv`;
+  - all ratios are `1.000`, so the current D(d,n) implementation passes the
+    Bosch-Hale formula gate.
+- Bosch-Hale domain guardrail:
+  - `hpc/results/physics_gates_20260706/ddn_cross_section_domain_summary.csv`;
+  - only `pic2d_a0_20_t_3um` has any deuteron weight above the nonzero
+    `E_cm <= 4900 keV` range, with fraction `4.85e-4`.
+- G2:
+  - replaced `data/stopping_D_in_CD2.csv` with a documented NIST PSTAR
+    same-velocity D-in-CD2 proxy;
+  - backed up the old placeholder as
+    `data/stopping_D_in_CD2_placeholder_20260706.csv`;
+  - updated the HPC SDF probe-yield helper stopping arrays to the same table;
+  - this is still not a SRIM export, so exact SRIM closure remains pending.
+- Old-vs-new Stage B impact:
+  - result file:
+    `hpc/results/physics_gates_20260706/stopping_spectrum_comparison.csv`;
+  - `Y_pstar/Y_placeholder = 0.195-0.237`;
+  - mean neutron energy shifts by `-0.103` to `-0.019 MeV`;
+  - fraction above the `Li7` MT205 threshold decreases by `0.0208-0.0478`
+    absolute.
+- Consequence:
+  - any final absolute `T/shot` table must be regenerated using the new
+    stopping table;
+  - existing old full-chain absolute values are diagnostic only.

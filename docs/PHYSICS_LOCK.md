@@ -33,8 +33,9 @@ TPR_Li7_per_source_neutron
 TPR_Li_total_per_source_neutron
 ```
 
-`T/shot` 只作为诊断归一化展示，不能作为最终定量结论，直到 `GATE-sigma`
-和 `GATE-stopping` 通过。
+`T/shot` 只作为诊断归一化展示，不能把旧 full-chain 表直接当最终定量结论。
+当前 `D(d,n)3He` 截面已通过 Bosch-Hale 逐点核对，D-in-CD2 阻止本领已替换为
+NIST PSTAR 同速实体表；最终绝对表需要用新阻止本领重算，SRIM 级别闭合仍待补。
 
 ## 当前第一轮 PIC 扫描
 

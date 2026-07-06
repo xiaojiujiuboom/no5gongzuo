@@ -14,13 +14,16 @@
 #define EGRID_MIN_MEV 1.0e-4
 #define EGRID_MAX_MEV 20.0
 
+/* NIST PSTAR same-velocity D-in-CD2 proxy; see data/stopping_D_in_CD2.csv. */
 static const double stopping_E[] = {
-    0.010, 0.020, 0.050, 0.100, 0.200, 0.500, 1.000,
-    2.000, 3.000, 5.000, 7.500, 10.000, 15.000, 20.000};
+    0.002, 0.005, 0.010, 0.020, 0.050, 0.100, 0.200,
+    0.500, 1.000, 2.000, 3.000, 5.000, 7.500, 10.000,
+    15.000, 20.000, 30.000};
 static const double stopping_S[] = {
-    1270.0, 1060.0, 795.0, 583.0, 350.0, 159.0, 90.0,
-    49.8, 35.0, 23.3, 17.0, 13.8, 10.4, 8.5};
-static const int stopping_N = 14;
+    253.34, 343.016, 458.98, 632.29, 907.996, 1109.82,
+    1119.36, 761.822, 493.218, 306.658, 228.96, 156.35,
+    114.374, 91.1812, 65.9108, 52.2156, 37.5028};
+static const int stopping_N = 17;
 
 static double yield_E[EGRID_N];
 static double yield_cum[EGRID_N];

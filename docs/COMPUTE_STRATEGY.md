@@ -46,7 +46,7 @@ python3 moduleA_pic/parametric_beam.py --n 200000 -o deuteron_beam.h5
 python3 moduleB_source/build_source.py deuteron_beam.h5 -o neutron_source.h5
 ```
 
-当前 `moduleB_source/thick_target.py` 使用 CD2 占位阻止本领并只输出中子分支。当前小论文范围已经收窄为 CD2 converter 的每源中子 Li-TPR 保真度，因此它可以支撑 A/B 谱角畸变比较；但绝对 `T/shot` 需要先通过 D-D 截面和 D-in-CD2 阻止本领 GATE。TiD2 和 `D(d,p)T` 直接氚分支列为未来扩展。
+当前 `moduleB_source/thick_target.py` 使用 CD2 的 NIST PSTAR 同速阻止本领表并只输出中子分支。当前小论文范围已经收窄为 CD2 converter 的每源中子 Li-TPR 保真度，因此它可以支撑 A/B 谱角畸变比较；但旧 full-chain 绝对 `T/shot` 需要用新阻止本领重算，严格 SRIM D-in-CD2 闭合仍待补。TiD2 和 `D(d,p)T` 直接氚分支列为未来扩展。
 
 ## 第二阶段：本地 OpenMC
 

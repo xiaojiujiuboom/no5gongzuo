@@ -1,18 +1,27 @@
-# Provisional D-in-CD2 stopping table for pipeline use.
-# Method: PSTAR-style same-velocity seed, S_D(E_D) ~= S_p(E_D/2) in polyethylene, scaled to rho_CD2=1.06 g/cm3.
-# Replace with SRIM or exported NIST PSTAR-derived table before final absolute yields.
+# D-in-CD2 stopping table for Stage B.
+# Source: NIST PSTAR proton stopping in polyethylene, material 221, accessed 2026-07-06.
+# Source URL: https://physics.nist.gov/PhysRefData/Star/Text/PSTAR.html
+# Method: same-velocity proxy for deuterons, E_p = E_D / 2 in the nonrelativistic MeV range.
+# Linear stopping: S_D(E_D) = PSTAR_STOP_t(E_p=E_D/2) * rho_CD2.
+# rho_CD2_g_cm3 = 1.06.
+# Units: E_MeV is deuteron kinetic energy; S_MeV_cm is linear stopping power.
+# NOTE: This is a documented PSTAR-derived entity table, not a SRIM export.
+# Exact SRIM G2 closure still requires a SRIM D-in-CD2 output table.
 E_MeV,S_MeV_cm
-0.010,1270.0
-0.020,1060.0
-0.050,795.0
-0.100,583.0
-0.200,350.0
-0.500,159.0
-1.000,90.0
-2.000,49.8
-3.000,35.0
-5.000,23.3
-7.500,17.0
-10.000,13.8
-15.000,10.4
-20.000,8.5
+0.002,253.34
+0.005,343.016
+0.01,458.98
+0.02,632.29
+0.05,907.996
+0.1,1109.82
+0.2,1119.36
+0.5,761.822
+1,493.218
+2,306.658
+3,228.96
+5,156.35
+7.5,114.374
+10,91.1812
+15,65.9108
+20,52.2156
+30,37.5028
