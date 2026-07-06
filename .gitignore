@@ -13,6 +13,7 @@ __pycache__/
 *.pdf
 outputs/
 runs/
+claude_2d_key_data_*/
 local_geant4_data/
 data/phase_space/
 hpc/results/phase_space/
