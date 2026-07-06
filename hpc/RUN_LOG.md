@@ -1886,3 +1886,45 @@ Low-cost 2D matrix completion:
   - `1937310` (`a0=20,t=3um`): `02:03:53`, `132.14 core-hours`, `13.21 CNY`.
   - `1937311` (`a0=10,t=4um`): `02:18:41`, `147.93 core-hours`, `14.79 CNY`.
 - Total measured compute: `920.91 core-hours`, about `92.09 CNY`.
+
+Low-cost 2D matrix first postprocessing:
+
+- Analysis directory on remote:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/analysis/pic2d_scan16x40_20260706`.
+- Compact result files copied into:
+  `hpc/results/pic2d_scan16x40_20260706/`.
+- Method:
+  - read native EPOCH particle-probe SDF blocks with `sdf_probe_dd_yield_metrics`;
+  - use `rear+10` as the primary source plane;
+  - gate deuterons with `E_D > 0.4 MeV`;
+  - weight each deuteron by the thick-target D-D neutron yield proxy used in
+    the 3D source-convergence analysis.
+- `rear+10`, `E_D>0.4 MeV` summary:
+
+| point | n macro | D weight | D-D-yield proxy | last-window yield frac | yield-weighted mean E MeV | Emax MeV | rel. to `a0=10,t=3um` |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `a0=10,t=1um` | `15325` | `2.4397e16` | `3.9552e11` | `1.39e-4` | `1.73` | `6.02` | `0.049` |
+| `a0=10,t=2um` | `90244` | `1.4367e17` | `1.3670e12` | `1.74e-3` | `0.591` | `4.15` | `0.170` |
+| `a0=5,t=3um` | `274144` | `4.3644e17` | `7.5073e12` | `1.66e-3` | `0.704` | `2.00` | `0.931` |
+| `a0=10,t=3um` | `286401` | `4.5595e17` | `8.0600e12` | `9.44e-4` | `0.717` | `2.16` | `1.000` |
+| `a0=15,t=3um` | `307731` | `4.8991e17` | `1.0827e13` | `4.49e-4` | `0.887` | `7.39` | `1.343` |
+| `a0=20,t=3um` | `327699` | `5.2170e17` | `1.8175e13` | `2.01e-4` | `1.91` | `19.1` | `2.255` |
+| `a0=10,t=4um` | `468820` | `7.4636e17` | `2.4528e13` | `5.69e-4` | `0.953` | `2.76` | `3.043` |
+
+- All seven low-cost 2D sources pass the 6 ps D-D-yield-weighted timing check:
+  the final 250 fs window contributes `<0.2%` of the cumulative yield proxy.
+- Low-cost 2D trend inside this numerical setup:
+  - for fixed `t=3um`, increasing `a0` from `10` to `20` raises the D-D yield
+    proxy by about `2.25x`;
+  - for fixed `a0=10`, increasing thickness from `3um` to `4um` raises the
+    proxy by about `3.04x`;
+  - `a0=15/20` show much larger high-energy cutoffs, so they are the more
+    interesting candidates for `7Li` threshold sensitivity.
+- Resolution cross-check using the two completed old `dx=dy=10nm` points:
+  - `t=1um`: low-cost `16x40nm` / old `10nm` D-D proxy ratio `0.399`;
+  - `t=2um`: low-cost `16x40nm` / old `10nm` D-D proxy ratio `3.50`;
+  - this is not a strict convergence test because the old `10nm` runs use a
+    larger box and different PPC (`16/48/8` instead of `16/32/4`).
+- Interpretation boundary: treat the `16x40nm` matrix as a trend/optimization
+  scan. Before making a strong final claim about the thickness optimum, run at
+  least one strict same-box/same-PPC resolution check where only `dx,dy` change.

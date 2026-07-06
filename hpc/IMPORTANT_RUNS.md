@@ -107,6 +107,22 @@ Final SDF self-check:
 - total measured compute for this 7-point matrix is `920.91 core-hours`,
   about `92.09 CNY` at `0.1 CNY/core-hour`.
 
+Primary 2D scan result files:
+
+- `hpc/results/pic2d_scan16x40_20260706/pic2d_scan16x40_rear10_Egt0p4_trends.csv`
+- `hpc/results/pic2d_scan16x40_20260706/pic2d_scan16x40_probe_dd_yield_summary.csv`
+- `hpc/results/pic2d_scan16x40_20260706/pic2d_scan16x40_probe_dd_yield_windows.csv`
+- `hpc/results/pic2d_scan16x40_20260706/pic2d_scan16x40_rear10_a0_scan.png`
+- `hpc/results/pic2d_scan16x40_20260706/pic2d_scan16x40_rear10_thickness_scan.png`
+- `hpc/results/pic2d_scan16x40_20260706/pic2d_scan16x40_vs_10nm_resolution_check.csv`
+
+Current interpretation:
+
+- The low-cost matrix is useful for trends and candidate selection.
+- It is not yet a strict grid-convergence proof. The two completed old `10 nm`
+  checks differ in box and PPC as well as grid, so use them only as a warning
+  that thin-target cases are numerically sensitive.
+
 The previous `dx=dy=10 nm` large-box matrix was stopped because the slow points
 were more expensive than the 3D anchor. Two completed 10 nm points are kept as
 resolution checks:

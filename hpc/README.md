@@ -47,6 +47,25 @@ Measured cost for the new 7-point matrix:
 - at `0.1 CNY/core-hour`, total cost is about `92.09 CNY`;
 - the submitted `18 h` walltime was only a safety cap, not the billing duration.
 
+First postprocessing pass:
+
+- primary source plane: `rear+10`
+- gate: `E_D > 0.4 MeV`
+- source metric: D-D-yield-weighted deuteron source proxy
+- all seven points have final-window yield fractions below `0.2%`, so the
+  6 ps source is time-converged by the current yield-weighted criterion
+- trend files and plots live in `hpc/results/pic2d_scan16x40_20260706/`
+
+Early trend inside the low-cost matrix:
+
+- fixed `thickness=3um`: `a0=20` gives about `2.25x` the `a0=10` D-D source
+  proxy, and has a much higher observed D cutoff (`19.1 MeV`);
+- fixed `a0=10`: `thickness=4um` gives about `3.04x` the `3um` D-D source
+  proxy;
+- the old completed `10 nm` points do not form a strict convergence test
+  because they also changed box and PPC. Treat the `16x40nm` matrix as a trend
+  scan until a same-box/same-PPC resolution check is run.
+
 See `hpc/IMPORTANT_RUNS.md` for the authoritative job/resource index.
 
 ## Walltime Protection
