@@ -21,6 +21,29 @@ def make_case_a_source(E_MeV: float = 2.45):
     )
 
 
+def make_case_aprime_source(neutron_h5: str | Path, n_E: int = 100):
+    """Build Case A-prime: real neutron spectrum with isotropic angles.
+
+    This intentionally strips the energy-angle correlation preserved by
+    ``make_case_b_sources`` while retaining the weighted neutron energy
+    distribution. The source strength is normalized to one, so tallies remain
+    per source neutron.
+    """
+    openmc = require_openmc()
+    src = read_neutron_source(neutron_h5)
+    weight = src.weight
+    total_weight = float(np.sum(weight))
+    if total_weight <= 0.0:
+        raise ValueError(f"{neutron_h5} has non-positive total source weight")
+    return openmc.IndependentSource(
+        space=openmc.stats.Point((0.0, 0.0, 0.0)),
+        angle=openmc.stats.Isotropic(),
+        energy=_histogram_tabular(openmc, src.E * 1.0e6, weight, n_E),
+        strength=1.0,
+        particle="neutron",
+    )
+
+
 def _histogram_tabular(openmc, E_eV: np.ndarray, weight: np.ndarray, n_bins: int):
     lo = max(1.0, float(np.min(E_eV)))
     hi = max(lo * 1.001, float(np.max(E_eV)))
