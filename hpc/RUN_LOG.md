@@ -2058,3 +2058,40 @@ Physics gates G1/G2 update:
   - any final absolute `T/shot` table must be regenerated using the new
     stopping table;
   - existing old full-chain absolute values are diagnostic only.
+
+3D a0=20,t=3um validation source extraction:
+
+- Date: 2026-07-08.
+- Job `2143600` (`no5_3d_a20_6ps`) completed normally:
+  - run directory:
+    `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag6000fs_a0_20_t_3um_20260707_r001`;
+  - resources: `512` cores on `amd_m9_768`;
+  - elapsed: `13:42:11`;
+  - exit code: `0:0`;
+  - output: `Data/0000.sdf` through `Data/0023.sdf`;
+  - run directory size after completion: about `16G`.
+- Local compact Stage B inputs were extracted to:
+  `/Volumes/billboom/paperwork/no6/stageB_inputs_20260706/stageB_inputs_3d/pic3d_a0_20_t_3um_6ps`.
+- Extraction rule:
+  - probe: `D_rear10`;
+  - gate: `E_D > 0.4 MeV`;
+  - collection: `0-6 ps`;
+  - windows used: `0001.sdf` through `0023.sdf`; `0000.sdf` has no particle
+    probe block and was skipped;
+  - PIC `+x` mapped to OpenMC `+z`.
+- Deuteron source summary:
+  - macro rows: `3,238,030`;
+  - total D weight: `8.24791e11`;
+  - weighted mean D energy: `0.548866 MeV`;
+  - maximum D energy: `12.390841 MeV`;
+  - forward fraction `mu>0.8`: `0.958460`.
+- Stage B CD2 thick-converter neutron source summary:
+  - total neutron weight: `2.2645068e6`;
+  - weighted mean neutron energy: `2.905663 MeV`;
+  - maximum neutron energy: `12.416890 MeV`;
+  - fraction `E_n > 2.82 MeV`: `0.435290`;
+  - fraction `E_n > 3.1454 MeV`: `0.252885`;
+  - forward fraction `mu>0.8`: `0.131349`.
+- Local files include `deuteron_beam.h5`, `neutron_source_pstar.h5`, per-window
+  CSV extracts, summaries, `input.deck`, `slurm.2143600.out`, and a local
+  `README.md`. These heavy local products must not be committed to git.

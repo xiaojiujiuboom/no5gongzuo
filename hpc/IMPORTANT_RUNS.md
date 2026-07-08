@@ -358,3 +358,55 @@ Result files:
 - `hpc/results/full_chain_20260706/pic2d_stageB_neutron_yield_trends.png`
 - `hpc/results/full_chain_20260706/pic2d_full_chain_natural_tpr_trends.png`
 - `hpc/results/full_chain_20260706/pic2d_full_chain_li6_90_tpr_trends.png`
+
+## 3D a0=20,t=3um 6 ps Validation Source
+
+Date: 2026-07-08.
+
+This is the complete 3D validation source replacing the earlier incomplete
+3D `a0=10,t=3um` particle-level source chain.
+
+Remote run:
+
+- Job `2143600`, `no5_3d_a20_6ps`.
+- Run directory:
+  `/publicfs10/fs10-m9/home/m9s003861/pic/no5_dd_li_tpr/runs/pic3d_stage1_source_diag6000fs_a0_20_t_3um_20260707_r001`.
+- Status: `COMPLETED`, exit code `0:0`.
+- Resources: `512` cores, elapsed `13:42:11`.
+- Output: `Data/0000.sdf` through `Data/0023.sdf`; directory size about `16G`.
+
+Local compact products:
+
+`/Volumes/billboom/paperwork/no6/stageB_inputs_20260706/stageB_inputs_3d/pic3d_a0_20_t_3um_6ps`
+
+Extraction and interface:
+
+- source plane: `D_rear10`;
+- gate: `E_D > 0.4 MeV`;
+- collection: `0-6 ps`;
+- PIC `+x` mapped to OpenMC `+z`;
+- primary files:
+  - `deuteron_beam.h5`;
+  - `neutron_source_pstar.h5`;
+  - `deuteron_beam_summary.csv`;
+  - `neutron_source_summary.csv`;
+  - `README.md`.
+
+Key numbers:
+
+| quantity | value |
+|---|---:|
+| D macro rows | `3,238,030` |
+| D total weight | `8.24791e11` |
+| D weighted mean energy | `0.548866 MeV` |
+| D max energy | `12.390841 MeV` |
+| D forward fraction `mu>0.8` | `0.958460` |
+| Stage B neutron weight | `2.2645068e6` |
+| neutron weighted mean energy | `2.905663 MeV` |
+| neutron max energy | `12.416890 MeV` |
+| neutron fraction `E>2.82 MeV` | `0.435290` |
+| neutron fraction `E>3.1454 MeV` | `0.252885` |
+| neutron forward fraction `mu>0.8` | `0.131349` |
+
+Do not delete the remote SDF files or the local HDF5/CSV products without an
+explicit backup/approval step.
