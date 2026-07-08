@@ -410,3 +410,35 @@ Key numbers:
 
 Do not delete the remote SDF files or the local HDF5/CSV products without an
 explicit backup/approval step.
+
+Stage C validation:
+
+- Date: 2026-07-08.
+- Local C4 output:
+  `/Volumes/billboom/paperwork/no6/stageB_inputs_20260706/openmc_c4_3d_anchor_20260708`.
+- OpenMC library/statistics:
+  ENDF/B-VII.1, `100 x 1e6` particles.
+- Case A gate passed:
+  - natural lithium total TPR/n `0.011190`;
+  - enriched lithium total TPR/n `0.128324`;
+  - Li7 channel zero for the 2.45 MeV ideal source.
+- 3D source descriptors:
+  - `frac_E_gt_2p82 = 0.435290`;
+  - `frac_E_gt_3p1454 = 0.252885`;
+  - `li7_mt205_fluxavg_b = 0.015381`;
+  - `frac_mu_gt_0p8 = 0.131349`.
+- 3D Case B/Case A total TPR:
+  - natural lithium: `1.434950`;
+  - enriched lithium: `0.995430`.
+- 2D -> 3D correction for the corresponding `a0=20,t=3um` source:
+  - natural lithium: `1.540586 -> 1.434950` (`3D/2D = 0.931431`);
+  - enriched lithium: `0.986095 -> 0.995430` (`3D/2D = 1.009467`).
+- C1 universal-curve check:
+  - linear interpolation of existing C1 points predicts natural lithium
+    `B/A = 1.377682` and enriched lithium `B/A = 0.990005` at the 3D
+    `li7_mt205_fluxavg_b`;
+  - measured 3D values are `1.434950` and `0.995430`, respectively;
+  - with the production OpenMC statistical error alone, the 3D point is not
+    statistically consistent with the interpolated C1 curve. Treat the C1
+    curve as trend guidance and use this 3D anchor as the systematic
+    validation/correction point.

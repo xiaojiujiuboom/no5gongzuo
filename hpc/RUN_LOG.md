@@ -2095,3 +2095,50 @@ Physics gates G1/G2 update:
 - Local files include `deuteron_beam.h5`, `neutron_source_pstar.h5`, per-window
   CSV extracts, summaries, `input.deck`, `slurm.2143600.out`, and a local
   `README.md`. These heavy local products must not be committed to git.
+
+C4 3D anchor Stage C and 2D/3D validation:
+
+- Date: 2026-07-08.
+- Output directory:
+  `/Volumes/billboom/paperwork/no6/stageB_inputs_20260706/openmc_c4_3d_anchor_20260708`.
+- Input source:
+  `/Volumes/billboom/paperwork/no6/stageB_inputs_20260706/stageB_inputs_3d/pic3d_a0_20_t_3um_6ps/neutron_source_pstar.h5`.
+- OpenMC setup:
+  - nuclear data: ENDF/B-VII.1 local HDF5,
+    `/Users/oomb/Downloads/mcnp_endfb71/cross_sections.xml`;
+  - statistics: `100` batches x `1e6` particles;
+  - cases: A, A-prime, and B for natural lithium (`Li6=7.59 at%`) and
+    enriched lithium (`Li6=90 at%`);
+  - all results are per source neutron only.
+- Case A gate:
+  - natural lithium total TPR/n: `0.011190`;
+  - enriched lithium total TPR/n: `0.128324`;
+  - Li7 is zero for Case A, as expected at `2.45 MeV`.
+- 3D source descriptors:
+  - `frac_E_gt_2p82 = 0.435290`;
+  - `frac_E_gt_3p1454 = 0.252885`;
+  - `li7_mt205_fluxavg_b = 0.015381`;
+  - `frac_mu_gt_0p8 = 0.131349`.
+- 3D decomposition:
+  - natural lithium: `A'/A = 1.419853`, `B/A' = 1.010632`,
+    `B/A = 1.434950`;
+  - enriched lithium: `A'/A = 0.995023`, `B/A' = 1.000409`,
+    `B/A = 0.995430`.
+- 2D -> 3D validation against `pic2d_a0_20_t_3um`:
+  - natural lithium B/A changes `1.540586 -> 1.434950`
+    (`3D/2D = 0.931431`);
+  - enriched lithium B/A changes `0.986095 -> 0.995430`
+    (`3D/2D = 1.009467`).
+- Universal-curve check using linear interpolation of existing C1
+  `B/A` vs `li7_mt205_fluxavg_b`:
+  - natural lithium predicted `1.377682`, measured `1.434950`;
+  - enriched lithium predicted `0.990005`, measured `0.995430`;
+  - both differ by much more than the very small OpenMC statistical error, so
+    the current C1 curve is trend-consistent but not statistically predictive
+    for the 3D anchor without a 3D correction/systematic band.
+- Main files:
+  - `c4_3d_anchor_source_decomposition_summary.csv`;
+  - `c4_c1_plus_3d_source_decomposition_summary.csv`;
+  - `c4_2d_3d_validation.csv`;
+  - `c4_universal_curve_check.csv`;
+  - `figures/c4_3d_anchor_curve_check_li6_*.png`.
